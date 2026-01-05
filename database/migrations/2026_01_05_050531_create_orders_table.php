@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreignId('sr_position_id')->constrained('positions')->onDelete('cascade');
             $table->foreignId('area_city_id')->constrained()->onDelete('cascade');
             $table->foreignId('end_customer_id')->constrained('customers')->onDelete('cascade');
-            $table->foreignId('group_customer_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('customer_group_id')->nullable()->constrained()->onDelete('set null');
             $table->string('cd_ncd_type');
             $table->string('ncd_subtype')->nullable();
             $table->foreignId('segment_id')->constrained()->onDelete('cascade');
