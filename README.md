@@ -1,59 +1,66 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><img src="public/assets/logo/MMG-logo.png" width="200" alt="MMG Logo"></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# MMG Healthcare CRM
 
-## About Laravel
+A professional Healthcare Distribution CRM built with **Laravel 12**, **Filament 4**, and **Spatie Permission**. This system is designed to streamline healthcare product distribution, track sales performance, and manage customer relationships across the Java region.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Key Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 📊 Comprehensive Dashboard
+- **Sales Performance**: Real-time tracking of Total Net Sales, Average Order Value (AOV), and Overdue Revenue.
+- **CRM Analytics**: Visibility into Total Customers, Pipeline Value, and Stale Lead detection.
+- **Lead Pipeline**: Funnel visualization showing Won, Lost, and In-Progress opportunities.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🏥 CRM & Lead Management
+- **Healthcare Facilities**: Categorized management of Hospitals, Clinics, Pharmacies, and Labs with tiered classification (Tier 1-3).
+- **Activity Tracking**: Full audit trail of every interaction (Calls, Meetings, Demos) performed by Sales Representatives.
+- **Lead Lifecycle**: Track prospects from initial contact to conversion, including automated "Last Contact" tracking based on activities.
 
-## Learning Laravel
+### 🛒 Sales & Distribution
+- **Order Management**: Streamlined order tracking with automated IDR currency formatting and status-based badge systems.
+- **Regional Hierarchy**: Geographic organization focusing on the Java region (6 provinces) with city-level granularity.
+- **Distribution Partners**: Track orders through various distributors and principals.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 📦 Product & Inventory
+- **Master Data**: Manage Principals, Segments (Pharma, Med-Equip), and Sub-segments.
+- **Inventory Tracking**: Stock level monitoring with automated color-coded warnings for low-stock items.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 🛡️ Security & Organization
+- **RBAC**: Robust Role-Based Access Control using Spatie Permission (Super Admin, Head, RSM, ASM, SPV, SR).
+- **Reporting Hierarchy**: Built-in organizational structure tracking reporting lines from Sales Reps up to the Head of Department.
 
-## Laravel Sponsors
+## 🛠 Tech Stack
+- **Framework**: Laravel 12
+- **Admin Panel**: Filament 4 (using modular Schemas/Tables architecture)
+- **Database**: MariaDB
+- **Authentication**: Spatie Laravel-Permission
+- **Styling**: Tailwind CSS & Heroicons
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🚦 Getting Started
 
-### Premium Partners
+1. **Install Dependencies**:
+   ```bash
+   composer install
+   npm install && npm run build
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+2. **Environment Setup**:
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## Contributing
+3. **Database Migration & Seeding**:
+   ```bash
+   # Fresh migrate and seed with realistic sample data
+   php artisan migrate:fresh --seed
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+4. **Import Regional Data**:
+   ```bash
+   # Fetch provinces and cities from Wilayah.id
+   php artisan territories:import java
+   ```
 
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## ⚖️ License
+The MMG Healthcare CRM is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
