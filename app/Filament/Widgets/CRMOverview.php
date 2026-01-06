@@ -9,7 +9,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class CRMOverview extends BaseWidget
 {
-    protected static ?string $heading = 'CRM Analytics';
+    protected ?string $heading = 'CRM Analytics';
 
     protected function getStats(): array
     {

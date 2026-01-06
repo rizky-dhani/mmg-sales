@@ -9,7 +9,7 @@ use NumberFormatter;
 
 class SalesOverview extends BaseWidget
 {
-    protected static ?string $heading = 'Sales Performance';
+    protected ?string $heading = 'Sales Performance';
 
     protected function getStats(): array
     {
