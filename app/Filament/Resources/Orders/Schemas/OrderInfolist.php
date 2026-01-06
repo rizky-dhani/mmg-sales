@@ -13,6 +13,7 @@ class OrderInfolist
     {
         return $schema
             ->components([
+
                 Grid::make(2)
                     ->schema([
                         Section::make('General Information')
