@@ -10,15 +10,16 @@ use App\Filament\Resources\Territories\Tables\TerritoriesTable;
 use App\Models\Territory;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class TerritoryResource extends Resource
 {
     protected static ?string $model = Territory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-map';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedMap;
 
-    protected static ?string $navigationGroup = 'Organization';
+    protected static string|\UnitEnum|null $navigationGroup = 'Organization';
 
     protected static ?string $recordTitleAttribute = 'name';
 

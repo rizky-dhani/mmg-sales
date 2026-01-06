@@ -10,15 +10,16 @@ use App\Filament\Resources\Positions\Tables\PositionsTable;
 use App\Models\Position;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class PositionResource extends Resource
 {
     protected static ?string $model = Position::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
 
-    protected static ?string $navigationGroup = 'Organization';
+    protected static string|\UnitEnum|null $navigationGroup = 'Organization';
 
     protected static ?string $recordTitleAttribute = 'name';
 

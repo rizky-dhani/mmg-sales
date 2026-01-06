@@ -10,15 +10,16 @@ use App\Filament\Resources\Distributors\Tables\DistributorsTable;
 use App\Models\Distributor;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class DistributorResource extends Resource
 {
     protected static ?string $model = Distributor::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-truck';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedTruck;
 
-    protected static ?string $navigationGroup = 'Product & Inventory';
+    protected static string|\UnitEnum|null $navigationGroup = 'Product & Inventory';
 
     protected static ?string $recordTitleAttribute = 'name';
 

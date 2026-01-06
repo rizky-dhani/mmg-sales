@@ -10,15 +10,16 @@ use App\Filament\Resources\Departments\Tables\DepartmentsTable;
 use App\Models\Department;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class DepartmentResource extends Resource
 {
     protected static ?string $model = Department::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-group';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleGroup;
 
-    protected static ?string $navigationGroup = 'Organization';
+    protected static string|\UnitEnum|null $navigationGroup = 'Organization';
 
     protected static ?string $recordTitleAttribute = 'name';
 

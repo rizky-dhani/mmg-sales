@@ -10,15 +10,16 @@ use App\Filament\Resources\SubSegments\Tables\SubSegmentsTable;
 use App\Models\SubSegment;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class SubSegmentResource extends Resource
 {
     protected static ?string $model = SubSegment::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-adjustments-vertical';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedAdjustmentsVertical;
 
-    protected static ?string $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
     protected static ?string $recordTitleAttribute = 'name';
 

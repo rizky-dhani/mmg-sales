@@ -10,15 +10,16 @@ use App\Filament\Resources\Items\Tables\ItemsTable;
 use App\Models\Item;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class ItemResource extends Resource
 {
     protected static ?string $model = Item::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-cube';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedCube;
 
-    protected static ?string $navigationGroup = 'Product & Inventory';
+    protected static string|\UnitEnum|null $navigationGroup = 'Product & Inventory';
 
     protected static ?string $recordTitleAttribute = 'name';
 

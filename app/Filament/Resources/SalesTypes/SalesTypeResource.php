@@ -10,15 +10,16 @@ use App\Filament\Resources\SalesTypes\Tables\SalesTypesTable;
 use App\Models\SalesType;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class SalesTypeResource extends Resource
 {
     protected static ?string $model = SalesType::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
-    protected static ?string $navigationGroup = 'Sales';
+    protected static string|\UnitEnum|null $navigationGroup = 'Sales';
 
     protected static ?string $recordTitleAttribute = 'name';
 

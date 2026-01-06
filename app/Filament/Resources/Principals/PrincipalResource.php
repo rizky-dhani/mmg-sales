@@ -10,15 +10,16 @@ use App\Filament\Resources\Principals\Tables\PrincipalsTable;
 use App\Models\Principal;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class PrincipalResource extends Resource
 {
     protected static ?string $model = Principal::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-building-library';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingLibrary;
 
-    protected static ?string $navigationGroup = 'Product & Inventory';
+    protected static string|\UnitEnum|null $navigationGroup = 'Product & Inventory';
 
     protected static ?string $recordTitleAttribute = 'name';
 

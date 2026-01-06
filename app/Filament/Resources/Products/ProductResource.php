@@ -10,6 +10,7 @@ use App\Filament\Resources\Products\Tables\ProductsTable;
 use App\Models\Product;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -18,9 +19,9 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-beaker';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedBeaker;
 
-    protected static ?string $navigationGroup = 'Product & Inventory';
+    protected static string|\UnitEnum|null $navigationGroup = 'Product & Inventory';
 
     protected static ?string $recordTitleAttribute = 'name';
 

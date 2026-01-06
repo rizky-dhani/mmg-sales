@@ -10,15 +10,16 @@ use App\Filament\Resources\CustomerGroups\Tables\CustomerGroupsTable;
 use App\Models\CustomerGroup;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class CustomerGroupResource extends Resource
 {
     protected static ?string $model = CustomerGroup::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-folder';
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
 
-    protected static ?string $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
 
     protected static ?string $recordTitleAttribute = 'name';
 
