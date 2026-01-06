@@ -15,26 +15,29 @@ class SalesOverview extends BaseWidget
     {
         $totalOrders = Order::count();
         $totalSales = Order::sum('net_sales_total');
-        $pendingOrders = Order::where('status', 'pending')->count();
+        $overdueSales = Order::where('payment_status', 'overdue')->sum('net_sales_total');
+        $aov = $totalOrders > 0 ? $totalSales / $totalOrders : 0;
 
         $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
-        $formattedSales = $formatter->formatCurrency($totalSales, 'IDR');
+        $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
 
         return [
-            Stat::make('Total Orders', $totalOrders)
-                ->description('Overall orders placed')
-                ->descriptionIcon('heroicon-m-shopping-cart')
-                ->url(route('filament.admin.resources.orders.index')),
-            Stat::make('Total Net Sales', $formattedSales)
-                ->description('Sum of all net sales total')
+            Stat::make('Total Net Sales', $formatter->formatCurrency($totalSales, 'IDR'))
+                ->description('Sum of all net sales')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('success')
                 ->url(route('filament.admin.resources.orders.index')),
-            Stat::make('Pending Orders', $pendingOrders)
-                ->description('Orders awaiting confirmation')
-                ->descriptionIcon('heroicon-m-clock')
-                ->color('warning')
-                ->url(route('filament.admin.resources.orders.index', ['tableFilters[status][value]' => 'pending'])),
+
+            Stat::make('Avg Order Value (AOV)', $formatter->formatCurrency($aov, 'IDR'))
+                ->description('Average revenue per order')
+                ->descriptionIcon('heroicon-m-calculator')
+                ->color('info'),
+
+            Stat::make('Overdue Revenue', $formatter->formatCurrency($overdueSales, 'IDR'))
+                ->description('Unpaid orders past due date')
+                ->descriptionIcon('heroicon-m-exclamation-circle')
+                ->color($overdueSales > 0 ? 'danger' : 'gray')
+                ->url(route('filament.admin.resources.orders.index', ['tableFilters[payment_status][value]' => 'overdue'])),
         ];
     }
 }

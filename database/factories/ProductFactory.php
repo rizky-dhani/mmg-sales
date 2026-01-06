@@ -14,7 +14,7 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->words(3, true),
             'sku' => fake()->unique()->bothify('SKU-####-????'),
-            'category' => fake()->randomElement(['pharmaceutical', 'medical_device', 'diagnostic', 'disposable']),
+            'category' => fake()->randomElement(['medical_equipment', 'pharmaceutical', 'consumables', 'diagnostics', 'other']),
             'description' => fake()->paragraph(),
             'unit_price' => fake()->numberBetween(5000, 5000000),
             'unit_of_measure' => fake()->randomElement(['Box', 'Pcs', 'Vial', 'Bottle']),

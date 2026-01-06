@@ -4,8 +4,10 @@ namespace App\Filament\Widgets;
 
 use App\Models\Customer;
 use App\Models\Lead;
+use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use NumberFormatter;
 
 class CRMOverview extends BaseWidget
 {
@@ -15,10 +17,20 @@ class CRMOverview extends BaseWidget
     {
         $totalCustomers = Customer::count();
         $totalLeads = Lead::count();
-        $newLeads = Lead::where('status', 'new')->count();
 
-        $wonLeads = Lead::where('status', 'won')->count();
-        $conversionRate = $totalLeads > 0 ? round(($wonLeads / $totalLeads) * 100, 2) : 0;
+        // Pipeline Value: Sum of estimated value for open leads
+        $pipelineValue = Lead::whereNotIn('status', ['won', 'lost'])->sum('estimated_value');
+
+        // Stale Leads: No contact for > 30 days
+        $staleLeadsCount = Lead::whereNotIn('status', ['won', 'lost'])
+            ->where(function ($query) {
+                $query->where('last_contacted_at', '<', Carbon::now()->subDays(30))
+                    ->orWhereNull('last_contacted_at');
+            })
+            ->count();
+
+        $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
+        $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
 
         return [
             Stat::make('Total Customers', $totalCustomers)
@@ -26,16 +38,18 @@ class CRMOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('primary')
                 ->url(route('filament.admin.resources.customers.index')),
-            Stat::make('Total Leads', $totalLeads)
-                ->description($newLeads.' new leads to follow up')
-                ->descriptionIcon('heroicon-m-light-bulb')
-                ->color('info')
+
+            Stat::make('Pipeline Value', $formatter->formatCurrency($pipelineValue, 'IDR'))
+                ->description('Potential revenue from open leads')
+                ->descriptionIcon('heroicon-m-presentation-chart-line')
+                ->color('success')
                 ->url(route('filament.admin.resources.leads.index')),
-            Stat::make('Lead Conversion', $conversionRate.'%')
-                ->description('Leads converted to won')
-                ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->color($conversionRate > 20 ? 'success' : 'warning')
-                ->url(route('filament.admin.resources.leads.index', ['tableFilters[status][value]' => 'won'])),
+
+            Stat::make('Stale Leads', $staleLeadsCount)
+                ->description('No contact for > 30 days')
+                ->descriptionIcon('heroicon-m-clock')
+                ->color($staleLeadsCount > 0 ? 'warning' : 'gray')
+                ->url(route('filament.admin.resources.leads.index')),
         ];
     }
 }
