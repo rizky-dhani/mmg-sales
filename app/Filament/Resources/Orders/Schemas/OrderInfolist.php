@@ -13,8 +13,9 @@ class OrderInfolist
     {
         return $schema
             ->components([
-
-                Grid::make(2)
+                Grid::make()
+                    ->columns(2)
+                    ->columnSpanFull()
                     ->schema([
                         Section::make('General Information')
                             ->columns(2)
