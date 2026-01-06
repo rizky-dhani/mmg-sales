@@ -14,105 +14,117 @@ class OrdersTable
     {
         return $table
             ->columns([
-                TextColumn::make('tahun')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('bulan')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('department.name')
-                    ->searchable(),
-                TextColumn::make('headPosition.name')
-                    ->searchable(),
-                TextColumn::make('pmJpmPePosition.name')
-                    ->searchable(),
-                TextColumn::make('rsmAsmPosition.name')
-                    ->searchable(),
-                TextColumn::make('spvPosition.name')
-                    ->searchable(),
-                TextColumn::make('srPosition.name')
-                    ->searchable(),
-                TextColumn::make('area_city_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('end_customer_id')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('customerGroup.name')
-                    ->searchable(),
-                TextColumn::make('cd_ncd_type')
-                    ->searchable(),
-                TextColumn::make('ncd_subtype')
-                    ->searchable(),
-                TextColumn::make('segment.name')
-                    ->searchable(),
-                TextColumn::make('principal.name')
-                    ->searchable(),
-                TextColumn::make('reg_inst')
-                    ->searchable(),
-                TextColumn::make('salesType.name')
-                    ->searchable(),
-                TextColumn::make('item.name')
-                    ->searchable(),
-                TextColumn::make('qty_hna')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('total_hna_gross_sales')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('discount_on')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('net_sales_total')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('subSegment.name')
-                    ->searchable(),
-                TextColumn::make('jual_kso')
-                    ->searchable(),
-                TextColumn::make('distributor.name')
-                    ->searchable(),
                 TextColumn::make('order_number')
-                    ->searchable(),
-                TextColumn::make('originalCustomer.id')
-                    ->searchable(),
-                TextColumn::make('lead.id')
-                    ->searchable(),
-                TextColumn::make('status')
-                    ->badge(),
-                TextColumn::make('subtotal')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('tax_amount')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('discount_amount')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('total_amount')
-                    ->numeric()
-                    ->sortable(),
+                    ->label('Order #')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
                 TextColumn::make('order_date')
+                    ->label('Date')
                     ->date()
                     ->sortable(),
-                TextColumn::make('expected_delivery_date')
-                    ->date()
+
+                TextColumn::make('customer.facility_name')
+                    ->label('End Customer')
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('actual_delivery_date')
-                    ->date()
+
+                TextColumn::make('territory.name')
+                    ->label('Area/City')
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('payment_method')
-                    ->searchable(),
-                TextColumn::make('payment_status')
-                    ->badge(),
-                TextColumn::make('created_by')
+
+                TextColumn::make('item.name')
+                    ->label('Product Item')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('qty_hna')
+                    ->label('Qty')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('created_at')
-                    ->dateTime()
+
+                TextColumn::make('net_sales_total')
+                    ->label('Net Sales')
+                    ->money('IDR')
+                    ->sortable(),
+
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'draft' => 'gray',
+                        'pending' => 'warning',
+                        'confirmed' => 'info',
+                        'processing' => 'info',
+                        'shipped' => 'primary',
+                        'delivered' => 'success',
+                        'cancelled' => 'danger',
+                        'returned' => 'danger',
+                    }),
+
+                TextColumn::make('payment_status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'partial' => 'info',
+                        'paid' => 'success',
+                        'overdue' => 'danger',
+                    }),
+
+                // Metadata & Toggleable columns
+                TextColumn::make('tahun')
+                    ->label('Year')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
+
+                TextColumn::make('bulan')
+                    ->label('Month')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('department.name')
+                    ->label('Department')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('principal.name')
+                    ->label('Principal')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('distributor.name')
+                    ->label('Distributor')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('salesType.name')
+                    ->label('Sales Type')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                // Sales Hierarchy (Hidden by default)
+                TextColumn::make('headPosition.name')
+                    ->label('Head')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('pmJpmPePosition.name')
+                    ->label('PM/JPM/PE')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('rsmAsmPosition.name')
+                    ->label('RSM/ASM')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('spvPosition.name')
+                    ->label('Supervisor')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('srPosition.name')
+                    ->label('SR')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('creator.name')
+                    ->label('Created By')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
