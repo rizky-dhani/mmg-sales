@@ -51,11 +51,13 @@ class LeadInfolist
                         RepeatableEntry::make('activities')
                             ->label('')
                             ->schema([
-                                Grid::make(3)
+                                Grid::make(4)
                                     ->schema([
                                         TextEntry::make('performed_at')
                                             ->label('Date')
                                             ->dateTime('d M Y H:i'),
+                                        TextEntry::make('subject')
+                                            ->weight('bold'),
                                         TextEntry::make('type')
                                             ->badge()
                                             ->formatStateUsing(fn (string $state): string => ucfirst($state)),
@@ -70,8 +72,6 @@ class LeadInfolist
                                                 default => 'gray',
                                             }),
                                     ]),
-                                TextEntry::make('subject')
-                                    ->weight('bold'),
                                 TextEntry::make('description')
                                     ->markdown(),
                             ])
