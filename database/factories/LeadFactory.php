@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,15 +11,20 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class LeadFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            //
+            'company_name' => fake('id_ID')->company(),
+            'contact_person' => fake('id_ID')->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'phone' => fake('id_ID')->phoneNumber(),
+            'status' => fake()->randomElement(['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']),
+            'source' => fake()->randomElement(['website', 'referral', 'cold_call', 'trade_show', 'partner', 'other']),
+            'priority' => fake()->randomElement(['low', 'medium', 'high', 'urgent']),
+            'estimated_value' => fake()->numberBetween(10000000, 1000000000),
+            'notes' => fake()->paragraph(),
+            'customer_id' => fake()->boolean(30) ? Customer::factory() : null,
+            'assigned_to' => User::factory(),
         ];
     }
 }
