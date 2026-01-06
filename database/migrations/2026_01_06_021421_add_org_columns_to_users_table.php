@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreignId('department_id')->nullable()->after('password')->constrained()->onDelete('set null');
+            $table->foreignId('position_id')->nullable()->after('department_id')->constrained()->onDelete('set null');
+            $table->foreignId('territory_id')->nullable()->after('position_id')->constrained()->onDelete('set null');
+            $table->foreignId('manager_id')->nullable()->after('territory_id')->constrained('users')->onDelete('set null');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['department_id']);
+            $table->dropForeign(['position_id']);
+            $table->dropForeign(['territory_id']);
+            $table->dropForeign(['manager_id']);
+            $table->dropColumn(['department_id', 'position_id', 'territory_id', 'manager_id']);
+        });
+    }
+};
