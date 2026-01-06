@@ -53,6 +53,17 @@ class OrdersTable
 
                 TextColumn::make('status')
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'draft' => 'Draft',
+                        'pending' => 'Pending',
+                        'confirmed' => 'Confirmed',
+                        'processing' => 'Processing',
+                        'shipped' => 'Shipped',
+                        'delivered' => 'Delivered',
+                        'cancelled' => 'Cancelled',
+                        'returned' => 'Returned',
+                        default => ucfirst($state),
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'draft' => 'gray',
                         'pending' => 'warning',
@@ -62,15 +73,24 @@ class OrdersTable
                         'delivered' => 'success',
                         'cancelled' => 'danger',
                         'returned' => 'danger',
+                        default => 'gray',
                     }),
 
                 TextColumn::make('payment_status')
                     ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'pending' => 'Pending',
+                        'partial' => 'Partial',
+                        'paid' => 'Paid',
+                        'overdue' => 'Overdue',
+                        default => ucfirst($state),
+                    })
                     ->color(fn (string $state): string => match ($state) {
                         'pending' => 'warning',
                         'partial' => 'info',
                         'paid' => 'success',
                         'overdue' => 'danger',
+                        default => 'gray',
                     }),
 
                 // Metadata & Toggleable columns
