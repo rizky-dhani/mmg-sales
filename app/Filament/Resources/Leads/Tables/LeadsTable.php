@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Leads\Tables;
 
+use App\Models\Lead;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
@@ -86,9 +88,10 @@ class LeadsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                TextColumn::make('last_contacted_at')
+                TextColumn::make('latestActivity.performed_at')
                     ->label('Last Contact')
                     ->date('d M Y')
+                    ->description(fn (Lead $record): ?string => $record->latestActivity?->subject)
                     ->formatStateUsing(fn ($state) => $state ? strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')) : '-')
                     ->sortable(),
 
@@ -109,6 +112,7 @@ class LeadsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
+                ViewAction::make(),
                 EditAction::make(),
             ])
             ->toolbarActions([

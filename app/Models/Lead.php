@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lead extends Model
@@ -41,5 +42,15 @@ class Lead extends Model
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function activities(): HasMany
+    {
+        return $this->hasMany(Activity::class)->orderBy('performed_at', 'desc');
+    }
+
+    public function latestActivity(): HasOne
+    {
+        return $this->hasOne(Activity::class)->latestOfMany('performed_at');
     }
 }

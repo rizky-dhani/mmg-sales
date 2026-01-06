@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Activity;
 use App\Models\Contact;
 use App\Models\Customer;
 use App\Models\CustomerGroup;
@@ -66,10 +67,18 @@ class SampleDataSeeder extends Seeder
         }
 
         // 4. Generate Leads (picking from existing pools)
-        Lead::factory(20)->create([
+        $leads = Lead::factory(20)->create([
             'assigned_to' => fn () => $users->random()->id,
             'customer_id' => fn () => fake()->boolean(40) ? $customers->random()->id : null,
         ]);
+
+        // Generate Activities for each lead
+        foreach ($leads as $lead) {
+            Activity::factory(rand(2, 5))->create([
+                'lead_id' => $lead->id,
+                'user_id' => $lead->assigned_to,
+            ]);
+        }
 
         // 5. Generate Orders (the complex part)
         for ($i = 0; $i < 50; $i++) {
