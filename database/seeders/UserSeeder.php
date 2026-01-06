@@ -108,7 +108,7 @@ class UserSeeder extends Seeder
             ['email' => 'admin@mmg.id'],
             [
                 'name' => 'Super Admin',
-                'password' => $password,
+                'password' => 'Superadmin2025!',
             ]
         );
         $admin->syncRoles(['Super Admin']);
