@@ -22,7 +22,7 @@ return new class extends Migration
             $table->foreignId('rsm_asm_position_id')->constrained('positions')->onDelete('cascade');
             $table->foreignId('spv_position_id')->constrained('positions')->onDelete('cascade');
             $table->foreignId('sr_position_id')->constrained('positions')->onDelete('cascade');
-            $table->foreignId('area_city_id')->constrained()->onDelete('cascade');
+            $table->foreignId('area_city_id')->constrained('territories')->onDelete('cascade');
             $table->foreignId('end_customer_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('customer_group_id')->nullable()->constrained()->onDelete('set null');
             $table->string('cd_ncd_type');

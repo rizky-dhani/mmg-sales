@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('segment_id'); // Link to parent segment
             $table->text('description')->nullable(); // Description
             $table->timestamps();
-            
+
             $table->foreign('segment_id')->references('id')->on('segments')->onDelete('cascade');
         });
     }

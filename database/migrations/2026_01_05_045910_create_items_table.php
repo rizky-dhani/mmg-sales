@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('unit')->default('unit'); // Unit of measure
             $table->boolean('is_active')->default(true); // Active status
             $table->timestamps();
-            
+
             $table->foreign('principal_id')->references('id')->on('principals')->onDelete('cascade');
         });
     }

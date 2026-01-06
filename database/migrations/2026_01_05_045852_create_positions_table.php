@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('department_id'); // Link to department
             $table->text('description')->nullable();
             $table->timestamps();
-            
+
             $table->foreign('parent_id')->references('id')->on('positions')->onDelete('set null');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
         });
