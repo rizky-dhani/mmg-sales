@@ -21,6 +21,8 @@ class CustomerGroupResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';
 
+    protected static ?string $navigationParentItem = 'Customers';
+
     protected static ?int $navigationSort = 5;
 
     protected static ?string $recordTitleAttribute = 'name';

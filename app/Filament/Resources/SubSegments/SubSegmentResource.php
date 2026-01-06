@@ -21,6 +21,8 @@ class SubSegmentResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';
 
+    protected static ?string $navigationParentItem = 'Segments';
+
     protected static ?int $navigationSort = 7;
 
     protected static ?string $recordTitleAttribute = 'name';

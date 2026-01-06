@@ -21,6 +21,8 @@ class ItemResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Product & Inventory';
 
+    protected static ?string $navigationParentItem = 'Principals';
+
     protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'name';

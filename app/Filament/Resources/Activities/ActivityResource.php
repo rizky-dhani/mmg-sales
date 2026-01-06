@@ -23,6 +23,8 @@ class ActivityResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';
 
+    protected static ?string $navigationParentItem = 'Leads';
+
     protected static ?int $navigationSort = 2;
 
     protected static ?string $recordTitleAttribute = 'subject';
