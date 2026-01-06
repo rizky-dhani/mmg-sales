@@ -21,6 +21,8 @@ class SalesTypeResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Sales';
 
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema

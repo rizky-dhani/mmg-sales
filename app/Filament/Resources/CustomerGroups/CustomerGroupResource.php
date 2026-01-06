@@ -19,7 +19,9 @@ class CustomerGroupResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'CRM';
+
+    protected static ?int $navigationSort = 5;
 
     protected static ?string $recordTitleAttribute = 'name';
 

@@ -23,6 +23,8 @@ class OrderResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Sales';
 
+    protected static ?int $navigationSort = 1;
+
     protected static ?string $recordTitleAttribute = 'order_number';
 
     public static function form(Schema $schema): Schema

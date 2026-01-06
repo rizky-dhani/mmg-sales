@@ -25,6 +25,8 @@ class CustomerResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';
 
+    protected static ?int $navigationSort = 4;
+
     protected static ?string $recordTitleAttribute = 'facility_name';
 
     public static function form(Schema $schema): Schema

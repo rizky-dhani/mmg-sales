@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Orders\Schemas;
 
 use App\Models\Item;
 use App\Models\SubSegment;
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -17,112 +18,157 @@ class OrderForm
 {
     public static function configure(Schema $schema): Schema
     {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        $userPosition = $user?->position;
+
         return $schema
             ->components([
-                Section::make('Order Details')
-                    ->columns(3)
+                Grid::make()
+                    ->columnSpanFull()
+                    ->columns(6)
                     ->schema([
-                        TextInput::make('order_number')
-                            ->label('Order Number')
-                            ->default(fn () => 'MMG-ORD-'.now()->year.'-'.strtoupper(Str::random(8)))
-                            ->required()
-                            ->unique(ignoreRecord: true)
-                            ->readOnly(),
-                        DatePicker::make('order_date')
-                            ->label('Order Date')
-                            ->default(now())
-                            ->required()
-                            ->readOnly(),
-                        TextInput::make('payment_method')
-                            ->label('Payment Method')
-                            ->placeholder('e.g. Bank Transfer, Credit Card'),
+                        Section::make('Order Details')
+                            ->columnSpan(2)
+                            ->columns(3)
+                            ->schema([
+                                TextInput::make('order_number')
+                                    ->label('Order Number')
+                                    ->default(fn () => 'MMG-ORD-'.now()->year.'-'.strtoupper(Str::random(8)))
+                                    ->required()
+                                    ->unique(ignoreRecord: true)
+                                    ->readOnly(),
+                                DatePicker::make('order_date')
+                                    ->label('Order Date')
+                                    ->default(now())
+                                    ->required()
+                                    ->readOnly(),
+                                TextInput::make('payment_method')
+                                    ->label('Payment Method')
+                                    ->placeholder('e.g. Bank Transfer, Credit Card'),
 
-                        // Automatic/Hidden fields
-                        TextInput::make('tahun')
-                            ->default(now()->year)
-                            ->hidden(),
-                        TextInput::make('bulan')
-                            ->default(now()->month)
-                            ->hidden(),
-                        TextInput::make('status')
-                            ->default('pending')
-                            ->hidden(),
-                        TextInput::make('payment_status')
-                            ->default('pending')
-                            ->hidden(),
-                    ]),
+                                // Automatic/Hidden fields
+                                TextInput::make('tahun')
+                                    ->default(now()->year)
+                                    ->hidden(),
+                                TextInput::make('bulan')
+                                    ->default(now()->month)
+                                    ->hidden(),
+                                TextInput::make('status')
+                                    ->default('pending')
+                                    ->hidden(),
+                                TextInput::make('payment_status')
+                                    ->default('pending')
+                                    ->hidden(),
+                            ]),
 
-                Section::make('Organizational Hierarchy')
-                    ->columns(3)
-                    ->schema([
-                        Select::make('department_id')
-                            ->relationship('department', 'name')
-                            ->required()
-                            ->preload()
-                            ->searchable(),
-                        Select::make('head_position_id')
-                            ->label('Head')
-                            ->relationship('headPosition', 'name')
-                            ->required()
-                            ->preload()
-                            ->searchable(),
-                        Select::make('rsm_asm_position_id')
-                            ->label('RSM/ASM')
-                            ->relationship('rsmAsmPosition', 'name')
-                            ->required()
-                            ->preload()
-                            ->searchable(),
-                        Select::make('spv_position_id')
-                            ->label('Supervisor')
-                            ->relationship('spvPosition', 'name')
-                            ->required()
-                            ->preload()
-                            ->searchable(),
-                        Select::make('sr_position_id')
-                            ->label('Sales Rep')
-                            ->relationship('srPosition', 'name')
-                            ->required()
-                            ->preload()
-                            ->searchable(),
-                        Select::make('pm_jpm_pe_position_id')
-                            ->label('PM/JPM/PE')
-                            ->relationship('pmJpmPePosition', 'name')
-                            ->default(null)
-                            ->preload()
-                            ->searchable(),
+                        Section::make('Organizational Hierarchy')
+                            ->columnSpan(4)
+                            ->columns(6)
+                            ->schema([
+                                Select::make('department_id')
+                                    ->relationship('department', 'name')
+                                    ->default($user?->department_id)
+                                    ->required()
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('sr_position_id')
+                                    ->label('Sales Rep')
+                                    ->relationship('srPosition', 'name')
+                                    ->default($user?->position_id)
+                                    ->required()
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('spv_position_id')
+                                    ->label('Supervisor')
+                                    ->relationship('spvPosition', 'name')
+                                    ->default($userPosition?->parent_id)
+                                    ->required()
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('rsm_asm_position_id')
+                                    ->label('RSM/ASM')
+                                    ->relationship('rsmAsmPosition', 'name')
+                                    ->default($userPosition?->parent?->parent_id)
+                                    ->required()
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('head_position_id')
+                                    ->label('Head')
+                                    ->relationship('headPosition', 'name')
+                                    ->default($userPosition?->parent?->parent?->parent_id)
+                                    ->required()
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('pm_jpm_pe_position_id')
+                                    ->label('PM/JPM/PE')
+                                    ->relationship('pmJpmPePosition', 'name')
+                                    ->default(null)
+                                    ->preload()
+                                    ->searchable(),
+                            ]),
                     ]),
 
                 Section::make('Customer, Logistics & Notes')
                     ->columnSpanFull()
-                    ->columns(2)
                     ->schema([
-                        Select::make('end_customer_id')
-                            ->label('End Customer')
-                            ->relationship('customer', 'facility_name')
-                            ->searchable()
-                            ->required()
-                            ->preload(),
-                        Select::make('area_city_id')
-                            ->label('Area / City')
-                            ->relationship('territory', 'name')
-                            ->searchable()
-                            ->required()
-                            ->preload(),
-                        Select::make('customer_group_id')
-                            ->label('Customer Group')
-                            ->relationship('customerGroup', 'name')
-                            ->default(null)
-                            ->preload()
-                            ->searchable(),
-                        Select::make('distributor_id')
-                            ->relationship('distributor', 'name')
-                            ->required()
-                            ->preload()
-                            ->searchable(),
-                        Textarea::make('shipping_address')
-                            ->rows(3),
-                        Textarea::make('billing_address')
-                            ->rows(3),
+                        Grid::make(4)
+                            ->schema([
+                                Select::make('end_customer_id')
+                                    ->label('End Customer')
+                                    ->relationship('customer', 'facility_name')
+                                    ->searchable()
+                                    ->required()
+                                    ->preload(),
+                                Select::make('area_city_id')
+                                    ->label('Area / City')
+                                    ->relationship('territory', 'name')
+                                    ->searchable()
+                                    ->required()
+                                    ->preload(),
+                                Select::make('customer_group_id')
+                                    ->label('Customer Group')
+                                    ->relationship('customerGroup', 'name')
+                                    ->default(null)
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('distributor_id')
+                                    ->relationship('distributor', 'name')
+                                    ->required()
+                                    ->preload()
+                                    ->searchable(),
+                            ]),
+
+                        Grid::make(2)
+                            ->schema([
+                                Grid::make(1)
+                                    ->schema([
+                                        Textarea::make('billing_address')
+                                            ->rows(3)
+                                            ->live()
+                                            ->afterStateUpdated(function ($get, $set, $state) {
+                                                if ($get('shipping_same_as_billing')) {
+                                                    $set('shipping_address', $state);
+                                                }
+                                            }),
+                                        Checkbox::make('shipping_same_as_billing')
+                                            ->label('Shipping address same as billing')
+                                            ->default(true)
+                                            ->live()
+                                            ->afterStateUpdated(function ($get, $set, $state) {
+                                                if ($state) {
+                                                    $set('shipping_address', $get('billing_address'));
+                                                }
+                                            }),
+                                    ])->columnSpan(1),
+
+                                Textarea::make('shipping_address')
+                                    ->rows(3)
+                                    ->disabled(fn ($get) => $get('shipping_same_as_billing'))
+                                    ->dehydrated()
+                                    ->columnSpan(1),
+                            ]),
+
                         Textarea::make('notes')
                             ->columnSpanFull(),
                     ]),

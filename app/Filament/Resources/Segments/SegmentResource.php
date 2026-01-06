@@ -19,7 +19,9 @@ class SegmentResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedAdjustmentsHorizontal;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Configuration';
+    protected static string|\UnitEnum|null $navigationGroup = 'CRM';
+
+    protected static ?int $navigationSort = 6;
 
     protected static ?string $recordTitleAttribute = 'name';
 

@@ -23,6 +23,8 @@ class ActivityResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';
 
+    protected static ?int $navigationSort = 2;
+
     protected static ?string $recordTitleAttribute = 'subject';
 
     public static function form(Schema $schema): Schema
