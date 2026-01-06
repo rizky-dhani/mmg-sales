@@ -13,12 +13,10 @@ class OrderInfolist
     {
         return $schema
             ->components([
-                Grid::make()
-                    ->columns(2)
-                    ->columnSpanFull()
+                Grid::make(1)
                     ->schema([
                         Section::make('General Information')
-                            ->columns(2)
+                            ->columns(5)
                             ->schema([
                                 TextEntry::make('order_number')
                                     ->label('Order #')
@@ -66,7 +64,7 @@ class OrderInfolist
                             ]),
 
                         Section::make('Organizational Details')
-                            ->columns(2)
+                            ->columns(3)
                             ->schema([
                                 TextEntry::make('department.name')
                                     ->label('Department'),
@@ -85,7 +83,7 @@ class OrderInfolist
 
                 Section::make('Customer & Logistics')
                     ->columnSpanFull()
-                    ->columns(2)
+                    ->columns(5)
                     ->schema([
                         TextEntry::make('customer.facility_name')
                             ->label('End Customer')
@@ -107,8 +105,7 @@ class OrderInfolist
                     ->schema([
                         TextEntry::make('item.name')
                             ->label('Product Item')
-                            ->weight('bold')
-                            ->columnSpan(2),
+                            ->weight('bold'),
                         TextEntry::make('qty_hna')
                             ->label('Quantity'),
                         TextEntry::make('principal.name')
