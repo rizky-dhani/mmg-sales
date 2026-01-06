@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Filament\Resources\SubSegments\Pages;
+
+use App\Filament\Resources\SubSegments\SubSegmentResource;
+use Filament\Actions\DeleteAction;
+use Filament\Resources\Pages\EditRecord;
+
+class EditSubSegment extends EditRecord
+{
+    protected static string $resource = SubSegmentResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            DeleteAction::make(),
+        ];
+    }
+}
