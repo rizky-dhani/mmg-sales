@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Leads\Schemas;
 
-use Filament\Infolists\Components\Grid;
 use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class LeadInfolist
@@ -15,7 +15,8 @@ class LeadInfolist
         return $schema
             ->components([
                 Section::make('Lead Details')
-                    ->columns(2)
+                    ->columns(4)
+                    ->columnSpanFull()
                     ->schema([
                         TextEntry::make('company_name')
                             ->label('Company')
@@ -45,6 +46,7 @@ class LeadInfolist
                     ]),
 
                 Section::make('Activities History')
+                    ->columnSpanFull()
                     ->schema([
                         RepeatableEntry::make('activities')
                             ->label('')
@@ -59,7 +61,14 @@ class LeadInfolist
                                             ->formatStateUsing(fn (string $state): string => ucfirst($state)),
                                         TextEntry::make('outcome')
                                             ->badge()
-                                            ->color('success'),
+                                            ->color(fn (string $state): string => match ($state) {
+                                                'Interested' => 'success',
+                                                'Not Interested' => 'danger',
+                                                'No Answer' => 'warning',
+                                                'Need more info' => 'info',
+                                                'Postponed' => 'gray',
+                                                default => 'gray',
+                                            }),
                                     ]),
                                 TextEntry::make('subject')
                                     ->weight('bold'),
