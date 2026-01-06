@@ -28,6 +28,8 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('MMG Healthcare CRM')
+            ->brandLogo(asset('assets/logo/MMG-logo.png'))
+            ->brandLogoHeight('3rem')
             ->maxContentWidth(Width::Full)
             ->navigationGroups([
                 NavigationGroup::make()
