@@ -9,6 +9,8 @@ use NumberFormatter;
 
 class SalesOverview extends BaseWidget
 {
+    protected static ?string $heading = 'Sales Performance';
+
     protected function getStats(): array
     {
         $totalOrders = Order::count();
@@ -21,15 +23,18 @@ class SalesOverview extends BaseWidget
         return [
             Stat::make('Total Orders', $totalOrders)
                 ->description('Overall orders placed')
-                ->descriptionIcon('heroicon-m-shopping-cart'),
+                ->descriptionIcon('heroicon-m-shopping-cart')
+                ->url(route('filament.admin.resources.orders.index')),
             Stat::make('Total Net Sales', $formattedSales)
                 ->description('Sum of all net sales total')
                 ->descriptionIcon('heroicon-m-banknotes')
-                ->color('success'),
+                ->color('success')
+                ->url(route('filament.admin.resources.orders.index')),
             Stat::make('Pending Orders', $pendingOrders)
                 ->description('Orders awaiting confirmation')
                 ->descriptionIcon('heroicon-m-clock')
-                ->color('warning'),
+                ->color('warning')
+                ->url(route('filament.admin.resources.orders.index', ['tableFilters[status][value]' => 'pending'])),
         ];
     }
 }

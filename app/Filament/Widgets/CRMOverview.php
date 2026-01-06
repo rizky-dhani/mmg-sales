@@ -9,6 +9,8 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class CRMOverview extends BaseWidget
 {
+    protected static ?string $heading = 'CRM Analytics';
+
     protected function getStats(): array
     {
         $totalCustomers = Customer::count();
@@ -22,15 +24,18 @@ class CRMOverview extends BaseWidget
             Stat::make('Total Customers', $totalCustomers)
                 ->description('Active facilities')
                 ->descriptionIcon('heroicon-m-building-office-2')
-                ->color('primary'),
+                ->color('primary')
+                ->url(route('filament.admin.resources.customers.index')),
             Stat::make('Total Leads', $totalLeads)
                 ->description($newLeads.' new leads to follow up')
                 ->descriptionIcon('heroicon-m-light-bulb')
-                ->color('info'),
+                ->color('info')
+                ->url(route('filament.admin.resources.leads.index')),
             Stat::make('Lead Conversion', $conversionRate.'%')
                 ->description('Leads converted to won')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
-                ->color($conversionRate > 20 ? 'success' : 'warning'),
+                ->color($conversionRate > 20 ? 'success' : 'warning')
+                ->url(route('filament.admin.resources.leads.index', ['tableFilters[status][value]' => 'won'])),
         ];
     }
 }
