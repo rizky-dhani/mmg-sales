@@ -40,8 +40,8 @@ class RolesAndPermissionsSeeder extends Seeder
         // Create roles and assign permissions
 
         // Super Admin
-        $superAdmin = Role::findOrCreate('SuperAdmin');
-        // SuperAdmin gets all permissions via a gate in AuthServiceProvider (or similar)
+        $superAdmin = Role::findOrCreate('Super Admin');
+        // Super Admin gets all permissions via a gate in AuthServiceProvider (or similar)
         // but for Filament it's often better to assign them explicitly or use a policy.
 
         $head = Role::findOrCreate('Head');

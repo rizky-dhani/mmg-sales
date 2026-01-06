@@ -103,7 +103,7 @@ class UserSeeder extends Seeder
             $user->syncRoles([$userData['role']]);
         }
 
-        // Ensure there's a SuperAdmin for development
+        // Ensure there's a Super Admin for development
         $admin = User::updateOrCreate(
             ['email' => 'admin@mmg.id'],
             [
@@ -111,6 +111,6 @@ class UserSeeder extends Seeder
                 'password' => $password,
             ]
         );
-        $admin->syncRoles(['SuperAdmin']);
+        $admin->syncRoles(['Super Admin']);
     }
 }
