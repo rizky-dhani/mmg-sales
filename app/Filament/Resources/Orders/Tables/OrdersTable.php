@@ -23,7 +23,8 @@ class OrdersTable
 
                 TextColumn::make('order_date')
                     ->label('Date')
-                    ->date('d-M-Y')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->sortable(),
 
                 TextColumn::make('customer.facility_name')
