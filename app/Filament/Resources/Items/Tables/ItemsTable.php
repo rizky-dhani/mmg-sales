@@ -16,27 +16,39 @@ class ItemsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Item Name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
                 TextColumn::make('internal_code')
-                    ->searchable(),
-                TextColumn::make('principle_code')
-                    ->searchable(),
-                TextColumn::make('principal.name')
-                    ->searchable(),
-                TextColumn::make('unit_price')
-                    ->money()
+                    ->label('Internal Code')
+                    ->searchable()
                     ->sortable(),
+
+                TextColumn::make('principal.name')
+                    ->label('Principal')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('unit_price')
+                    ->label('Price')
+                    ->money('IDR')
+                    ->sortable(),
+
                 TextColumn::make('unit')
+                    ->label('UoM')
                     ->searchable(),
+
                 IconColumn::make('is_active')
-                    ->boolean(),
+                    ->label('Active')
+                    ->boolean()
+                    ->sortable(),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->label('Created')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

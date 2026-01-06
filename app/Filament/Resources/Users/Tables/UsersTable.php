@@ -15,28 +15,38 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('User Name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label('Email')
                     ->searchable(),
-                TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
+
                 TextColumn::make('department.name')
-                    ->searchable(),
+                    ->label('Department')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('position.name')
-                    ->searchable(),
-                TextColumn::make('territory.name')
-                    ->searchable(),
+                    ->label('Position')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('roles.name')
+                    ->label('Roles')
+                    ->badge()
+                    ->color('success'),
+
                 TextColumn::make('manager.name')
-                    ->searchable(),
+                    ->label('Manager')
+                    ->toggleable(),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->label('Created')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

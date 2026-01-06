@@ -15,25 +15,40 @@ class TerritoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('wilayah_code')
-                    ->searchable(),
-                TextColumn::make('type')
-                    ->badge(),
-                TextColumn::make('level')
-                    ->numeric()
+                    ->label('Territory Name')
+                    ->searchable()
                     ->sortable(),
+
+                TextColumn::make('type')
+                    ->label('Type')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->color(fn (string $state): string => match ($state) {
+                        'region' => 'primary',
+                        'province' => 'info',
+                        'city' => 'success',
+                        default => 'gray',
+                    }),
+
+                TextColumn::make('wilayah_code')
+                    ->label('Code')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('parent.name')
-                    ->searchable(),
+                    ->label('Parent Territory')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('manager.name')
-                    ->searchable(),
+                    ->label('Manager')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->label('Created')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

@@ -15,23 +15,35 @@ class PositionsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
-                TextColumn::make('code')
-                    ->searchable(),
-                TextColumn::make('level')
-                    ->numeric()
+                    ->label('Position Name')
+                    ->searchable()
                     ->sortable(),
-                TextColumn::make('parent.name')
-                    ->searchable(),
+
+                TextColumn::make('code')
+                    ->label('Code')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('level')
+                    ->label('Level')
+                    ->badge()
+                    ->color('info')
+                    ->sortable(),
+
                 TextColumn::make('department.name')
-                    ->searchable(),
+                    ->label('Department')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('parent.name')
+                    ->label('Reports To')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->label('Created')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

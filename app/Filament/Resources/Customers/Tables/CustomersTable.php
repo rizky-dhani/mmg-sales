@@ -19,52 +19,74 @@ class CustomersTable
         return $table
             ->columns([
                 TextColumn::make('facility_name')
-                    ->searchable(),
+                    ->label('Facility Name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
                 TextColumn::make('facility_type')
-                    ->badge(),
+                    ->label('Type')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->color(fn (string $state): string => match ($state) {
+                        'hospital' => 'primary',
+                        'clinic' => 'info',
+                        'pharmacy' => 'success',
+                        'laboratory' => 'warning',
+                        default => 'gray',
+                    }),
+
                 TextColumn::make('classification')
-                    ->badge(),
-                TextColumn::make('tax_number')
-                    ->searchable(),
-                TextColumn::make('address')
-                    ->searchable(),
+                    ->label('Tier')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => str_replace('_', ' ', ucfirst($state)))
+                    ->color(fn (string $state): string => match ($state) {
+                        'tier_1' => 'success',
+                        'tier_2' => 'info',
+                        'tier_3' => 'gray',
+                        default => 'gray',
+                    }),
+
                 TextColumn::make('city')
-                    ->searchable(),
-                TextColumn::make('state')
-                    ->searchable(),
-                TextColumn::make('postal_code')
-                    ->searchable(),
-                TextColumn::make('country')
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                TextColumn::make('phone')
-                    ->searchable(),
-                TextColumn::make('website')
-                    ->searchable(),
+                    ->label('City')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('credit_limit')
-                    ->numeric()
+                    ->label('Credit Limit')
+                    ->money('IDR')
                     ->sortable(),
-                TextColumn::make('payment_terms_days')
-                    ->numeric()
-                    ->sortable(),
+
                 IconColumn::make('is_active')
-                    ->boolean(),
-                TextColumn::make('assigned_to')
-                    ->numeric()
+                    ->label('Active')
+                    ->boolean()
                     ->sortable(),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
+
+                TextColumn::make('assignedUser.name')
+                    ->label('Assigned To')
+                    ->searchable()
+                    ->sortable(),
+
+                // Toggleable
+                TextColumn::make('tax_number')
+                    ->label('Tax ID')
+                    ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('email')
+                    ->label('Email')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('phone')
+                    ->label('Phone')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->label('Created')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

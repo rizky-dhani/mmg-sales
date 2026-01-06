@@ -15,18 +15,24 @@ class SubSegmentsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Sub-Segment Name')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('code')
-                    ->searchable(),
+                    ->label('Code')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('segment.name')
-                    ->searchable(),
+                    ->label('Parent Segment')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->label('Created')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

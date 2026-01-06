@@ -19,48 +19,53 @@ class ProductsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->searchable(),
+                    ->label('Product Name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
                 TextColumn::make('sku')
                     ->label('SKU')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('category')
-                    ->badge(),
+                    ->label('Category')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->color('info'),
+
                 TextColumn::make('unit_price')
-                    ->money()
+                    ->label('Price')
+                    ->money('IDR')
                     ->sortable(),
-                TextColumn::make('unit_of_measure')
-                    ->searchable(),
+
                 TextColumn::make('stock_quantity')
+                    ->label('Stock')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('minimum_stock')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('reorder_quantity')
-                    ->numeric()
-                    ->sortable(),
+
                 IconColumn::make('is_active')
-                    ->boolean(),
-                IconColumn::make('requires_prescription')
-                    ->boolean(),
-                TextColumn::make('manufacturer')
-                    ->searchable(),
-                TextColumn::make('expiry_date')
-                    ->date()
+                    ->label('Active')
+                    ->boolean()
                     ->sortable(),
-                TextColumn::make('storage_requirements')
-                    ->searchable(),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
+
+                TextColumn::make('manufacturer')
+                    ->label('Manufacturer')
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('expiry_date')
+                    ->label('Expiry')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => $state ? strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')) : '-')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->label('Created')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

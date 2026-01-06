@@ -18,38 +18,47 @@ class ContactsTable
     {
         return $table
             ->columns([
-                TextColumn::make('customer.id')
-                    ->searchable(),
+                TextColumn::make('customer.facility_name')
+                    ->label('Facility')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('first_name')
-                    ->searchable(),
+                    ->label('First Name')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('last_name')
-                    ->searchable(),
+                    ->label('Last Name')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('position')
+                    ->label('Position')
                     ->searchable(),
+
                 TextColumn::make('department')
-                    ->searchable(),
+                    ->label('Department')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label('Email')
                     ->searchable(),
+
                 TextColumn::make('phone')
+                    ->label('Phone')
                     ->searchable(),
-                TextColumn::make('mobile')
-                    ->searchable(),
+
                 IconColumn::make('is_primary')
-                    ->boolean(),
-                IconColumn::make('is_billing_contact')
-                    ->boolean(),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Primary')
+                    ->boolean()
+                    ->sortable(),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->label('Added')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
