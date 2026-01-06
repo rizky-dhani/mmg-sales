@@ -18,43 +18,89 @@ class LeadsTable
         return $table
             ->columns([
                 TextColumn::make('company_name')
-                    ->searchable(),
+                    ->label('Company')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
                 TextColumn::make('contact_person')
+                    ->label('Contact Person')
                     ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->searchable(),
-                TextColumn::make('phone')
-                    ->searchable(),
+
                 TextColumn::make('status')
-                    ->badge(),
-                TextColumn::make('source')
-                    ->badge(),
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->color(fn (string $state): string => match ($state) {
+                        'new' => 'gray',
+                        'contacted' => 'info',
+                        'qualified' => 'primary',
+                        'proposal' => 'warning',
+                        'negotiation' => 'warning',
+                        'won' => 'success',
+                        'lost' => 'danger',
+                        default => 'gray',
+                    })
+                    ->sortable(),
+
                 TextColumn::make('priority')
-                    ->badge(),
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->color(fn (string $state): string => match ($state) {
+                        'low' => 'gray',
+                        'medium' => 'info',
+                        'high' => 'warning',
+                        'urgent' => 'danger',
+                        default => 'gray',
+                    })
+                    ->sortable(),
+
                 TextColumn::make('estimated_value')
-                    ->numeric()
+                    ->label('Estimated Value')
+                    ->money('IDR')
                     ->sortable(),
-                TextColumn::make('customer.id')
-                    ->searchable(),
-                TextColumn::make('converted_at')
-                    ->dateTime()
+
+                TextColumn::make('source')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => str_replace('_', ' ', ucfirst($state)))
+                    ->color('gray')
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('email')
+                    ->label('Email')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('phone')
+                    ->label('Phone')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('assignedUser.name')
+                    ->label('Assigned To')
+                    ->searchable()
                     ->sortable(),
+
+                TextColumn::make('customer.facility_name')
+                    ->label('Linked Customer')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('last_contacted_at')
-                    ->dateTime()
+                    ->label('Last Contact')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => $state ? strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')) : '-')
                     ->sortable(),
-                TextColumn::make('assigned_to')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('deleted_at')
-                    ->dateTime()
+
+                TextColumn::make('converted_at')
+                    ->label('Converted')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => $state ? strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')) : '-')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('updated_at')
+                    ->label('Created')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
