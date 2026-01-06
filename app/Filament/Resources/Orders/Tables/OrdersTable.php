@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class OrdersTable
@@ -22,7 +23,7 @@ class OrdersTable
 
                 TextColumn::make('order_date')
                     ->label('Date')
-                    ->date()
+                    ->date('d-M-Y')
                     ->sortable(),
 
                 TextColumn::make('customer.facility_name')
@@ -130,7 +131,24 @@ class OrdersTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->options([
+                        'draft' => 'Draft',
+                        'pending' => 'Pending',
+                        'confirmed' => 'Confirmed',
+                        'processing' => 'Processing',
+                        'shipped' => 'Shipped',
+                        'delivered' => 'Delivered',
+                        'cancelled' => 'Cancelled',
+                        'returned' => 'Returned',
+                    ]),
+                SelectFilter::make('payment_status')
+                    ->options([
+                        'pending' => 'Pending',
+                        'partial' => 'Partial',
+                        'paid' => 'Paid',
+                        'overdue' => 'Overdue',
+                    ]),
             ])
             ->recordActions([
                 EditAction::make(),
