@@ -8,17 +8,17 @@ use App\Filament\Resources\CustomerGroups\Pages\ListCustomerGroups;
 use App\Filament\Resources\CustomerGroups\Schemas\CustomerGroupForm;
 use App\Filament\Resources\CustomerGroups\Tables\CustomerGroupsTable;
 use App\Models\CustomerGroup;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class CustomerGroupResource extends Resource
 {
     protected static ?string $model = CustomerGroup::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $navigationIcon = 'heroicon-o-folder';
+
+    protected static ?string $navigationGroup = 'Configuration';
 
     protected static ?string $recordTitleAttribute = 'name';
 

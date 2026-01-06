@@ -8,17 +8,17 @@ use App\Filament\Resources\Territories\Pages\ListTerritories;
 use App\Filament\Resources\Territories\Schemas\TerritoryForm;
 use App\Filament\Resources\Territories\Tables\TerritoriesTable;
 use App\Models\Territory;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class TerritoryResource extends Resource
 {
     protected static ?string $model = Territory::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $navigationIcon = 'heroicon-o-map';
+
+    protected static ?string $navigationGroup = 'Organization';
 
     protected static ?string $recordTitleAttribute = 'name';
 

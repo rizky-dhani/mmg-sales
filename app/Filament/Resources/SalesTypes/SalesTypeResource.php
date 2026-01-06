@@ -8,17 +8,17 @@ use App\Filament\Resources\SalesTypes\Pages\ListSalesTypes;
 use App\Filament\Resources\SalesTypes\Schemas\SalesTypeForm;
 use App\Filament\Resources\SalesTypes\Tables\SalesTypesTable;
 use App\Models\SalesType;
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class SalesTypeResource extends Resource
 {
     protected static ?string $model = SalesType::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
+
+    protected static ?string $navigationGroup = 'Sales';
 
     protected static ?string $recordTitleAttribute = 'name';
 

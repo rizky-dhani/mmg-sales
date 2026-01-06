@@ -105,7 +105,7 @@ class UserSeeder extends Seeder
 
         // Ensure there's a Super Admin for development
         $admin = User::updateOrCreate(
-            ['email' => 'admin@mmg.id'],
+            ['email' => 'superadmin@medquest.co.id'],
             [
                 'name' => 'Super Admin',
                 'password' => 'Superadmin2025!',
