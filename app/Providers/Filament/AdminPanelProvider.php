@@ -6,9 +6,11 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\Support\Enums\Width;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -28,6 +30,19 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('MMG Healthcare CRM')
+            ->maxContentWidth(Width::Full)
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->label('Sales'),
+                NavigationGroup::make()
+                    ->label('CRM'),
+                NavigationGroup::make()
+                    ->label('Product & Inventory'),
+                NavigationGroup::make()
+                    ->label('Organization'),
+                NavigationGroup::make()
+                    ->label('Configuration'),
+            ])
             ->colors([
                 'primary' => '#0891b2',
             ])
