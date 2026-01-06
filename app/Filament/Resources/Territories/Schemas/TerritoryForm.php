@@ -24,10 +24,12 @@ class TerritoryForm
                     ->numeric(),
                 Select::make('parent_id')
                     ->relationship('parent', 'name')
-                    ->default(null),
+                    ->default(null)
+                    ->preload(),
                 Select::make('manager_id')
                     ->relationship('manager', 'name')
-                    ->default(null),
+                    ->default(null)
+                    ->preload(),
             ]);
     }
 }

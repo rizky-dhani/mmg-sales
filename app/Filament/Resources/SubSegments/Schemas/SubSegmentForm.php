@@ -19,7 +19,8 @@ class SubSegmentForm
                     ->required(),
                 Select::make('segment_id')
                     ->relationship('segment', 'name')
-                    ->required(),
+                    ->required()
+                    ->preload(),
                 Textarea::make('description')
                     ->default(null)
                     ->columnSpanFull(),

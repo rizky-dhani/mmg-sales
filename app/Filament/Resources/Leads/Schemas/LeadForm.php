@@ -59,8 +59,9 @@ class LeadForm
                     ->default(null)
                     ->columnSpanFull(),
                 Select::make('customer_id')
-                    ->relationship('customer', 'id')
-                    ->default(null),
+                    ->relationship('customer', 'facility_name')
+                    ->default(null)
+                    ->preload(),
                 DateTimePicker::make('converted_at'),
                 DateTimePicker::make('last_contacted_at'),
                 TextInput::make('assigned_to')

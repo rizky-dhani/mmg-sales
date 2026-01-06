@@ -15,8 +15,9 @@ class ContactForm
         return $schema
             ->components([
                 Select::make('customer_id')
-                    ->relationship('customer', 'id')
-                    ->required(),
+                    ->relationship('customer', 'facility_name')
+                    ->required()
+                    ->preload(),
                 TextInput::make('first_name')
                     ->required(),
                 TextInput::make('last_name')

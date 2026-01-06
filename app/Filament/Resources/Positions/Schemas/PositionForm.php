@@ -22,10 +22,12 @@ class PositionForm
                     ->numeric(),
                 Select::make('parent_id')
                     ->relationship('parent', 'name')
-                    ->default(null),
+                    ->default(null)
+                    ->preload(),
                 Select::make('department_id')
                     ->relationship('department', 'name')
-                    ->required(),
+                    ->required()
+                    ->preload(),
                 Textarea::make('description')
                     ->default(null)
                     ->columnSpanFull(),

@@ -17,13 +17,15 @@ class ActivityForm
                 Select::make('lead_id')
                     ->relationship('lead', 'company_name')
                     ->searchable()
-                    ->required(),
+                    ->required()
+                    ->preload(),
 
                 Select::make('user_id')
                     ->label('Sales Rep')
                     ->relationship('user', 'name')
                     ->default(auth()->id())
-                    ->required(),
+                    ->required()
+                    ->preload(),
 
                 Select::make('type')
                     ->options([

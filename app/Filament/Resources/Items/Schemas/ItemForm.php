@@ -22,7 +22,8 @@ class ItemForm
                     ->default(null),
                 Select::make('principal_id')
                     ->relationship('principal', 'name')
-                    ->required(),
+                    ->required()
+                    ->preload(),
                 Textarea::make('description')
                     ->default(null)
                     ->columnSpanFull(),

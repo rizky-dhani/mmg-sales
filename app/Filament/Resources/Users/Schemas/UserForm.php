@@ -25,16 +25,20 @@ class UserForm
                     ->required(),
                 Select::make('department_id')
                     ->relationship('department', 'name')
-                    ->default(null),
+                    ->default(null)
+                    ->preload(),
                 Select::make('position_id')
                     ->relationship('position', 'name')
-                    ->default(null),
+                    ->default(null)
+                    ->preload(),
                 Select::make('territory_id')
                     ->relationship('territory', 'name')
-                    ->default(null),
+                    ->default(null)
+                    ->preload(),
                 Select::make('manager_id')
                     ->relationship('manager', 'name')
-                    ->default(null),
+                    ->default(null)
+                    ->preload(),
                 Select::make('roles')
                     ->relationship('roles', 'name')
                     ->multiple()
