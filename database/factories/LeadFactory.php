@@ -13,7 +13,19 @@ class LeadFactory extends Factory
 {
     public function definition(): array
     {
+        $opportunityTypes = [
+            'Medical Equipment Procurement',
+            'Surgical Supply Tender',
+            'Diagnostic Imaging Service Contract',
+            'Patient Monitoring System Upgrade',
+            'Lab Equipment Maintenance',
+            'Healthcare IT Implementation',
+            'Pharmaceutical Distribution Partnership',
+            'Emergency Room Refurbishment',
+        ];
+
         return [
+            'title' => fake()->randomElement($opportunityTypes).' - '.fake()->city(),
             'company_name' => fake('id_ID')->company(),
             'contact_person' => fake('id_ID')->name(),
             'email' => fake()->unique()->safeEmail(),
@@ -25,6 +37,7 @@ class LeadFactory extends Factory
             'notes' => fake()->paragraph(),
             'customer_id' => fake()->boolean(30) ? Customer::factory() : null,
             'assigned_to' => User::factory(),
+            'position' => str()->random(10), // Flowforge expects a string position
         ];
     }
 }

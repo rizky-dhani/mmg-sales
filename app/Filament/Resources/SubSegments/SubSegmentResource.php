@@ -17,6 +17,8 @@ class SubSegmentResource extends Resource
 {
     protected static ?string $model = SubSegment::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedAdjustmentsVertical;
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';

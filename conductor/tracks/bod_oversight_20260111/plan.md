@@ -9,9 +9,9 @@ Establish the foundational data structures for the BOD role.
   - Verify `RolesAndPermissionsSeeder.php` correctly creates the 'Board of Director' role with only view permissions.
   - Verify `DepartmentSeeder.php` includes the 'MGMT' department.
   - Verify `PositionSeeder.php` correctly places BOD at Level 0 and as the parent of HEAD.
-- [ ] **Task 2: Create Test to Verify Seeder Output**
+- [x] **Task 2: Create Test to Verify Seeder Output** (2060072)
   - Write a feature test to run seeders and assert the existence of the BOD role, position, and its permissions.
-- [ ] **Task 3: Implement Seeder Verification Test**
+- [x] **Task 3: Implement Seeder Verification Test** (2060072)
   - Run the test and ensure it passes with 99% coverage for the seeder logic.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 1: Database & Seeders' (Protocol in workflow.md)**
 

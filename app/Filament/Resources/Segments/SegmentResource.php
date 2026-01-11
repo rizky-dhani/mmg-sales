@@ -17,6 +17,8 @@ class SegmentResource extends Resource
 {
     protected static ?string $model = Segment::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedAdjustmentsHorizontal;
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';

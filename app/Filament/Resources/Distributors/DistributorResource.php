@@ -17,6 +17,8 @@ class DistributorResource extends Resource
 {
     protected static ?string $model = Distributor::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedTruck;
 
     protected static string|\UnitEnum|null $navigationGroup = 'Product & Inventory';

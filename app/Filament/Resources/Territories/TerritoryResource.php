@@ -17,6 +17,8 @@ class TerritoryResource extends Resource
 {
     protected static ?string $model = Territory::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedMap;
 
     protected static string|\UnitEnum|null $navigationGroup = 'Organization';

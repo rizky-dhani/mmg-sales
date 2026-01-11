@@ -17,6 +17,8 @@ class ItemResource extends Resource
 {
     protected static ?string $model = Item::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedCube;
 
     protected static string|\UnitEnum|null $navigationGroup = 'Product & Inventory';

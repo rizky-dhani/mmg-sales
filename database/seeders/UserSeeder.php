@@ -27,6 +27,14 @@ class UserSeeder extends Seeder
                 'manager_email' => null,
             ],
             [
+                'name' => 'Director One',
+                'email' => 'director@mmg.id',
+                'role' => 'Board of Director',
+                'position_code' => 'BOD',
+                'dept_code' => 'PROD', // Or another appropriate dept
+                'manager_email' => null,
+            ],
+            [
                 'name' => 'Budi',
                 'email' => 'budi@mmg.id',
                 'role' => 'ProductManager',

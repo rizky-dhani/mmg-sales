@@ -17,7 +17,9 @@ class PositionResource extends Resource
 {
     protected static ?string $model = Position::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedAcademicCap;
+    protected static bool $shouldRegisterNavigation = false;
+
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
 
     protected static string|\UnitEnum|null $navigationGroup = 'Organization';
 

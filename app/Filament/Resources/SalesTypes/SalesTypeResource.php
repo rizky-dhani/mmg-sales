@@ -17,6 +17,8 @@ class SalesTypeResource extends Resource
 {
     protected static ?string $model = SalesType::class;
 
+    protected static bool $shouldRegisterNavigation = false;
+
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedTag;
 
     protected static string|\UnitEnum|null $navigationGroup = 'Sales';

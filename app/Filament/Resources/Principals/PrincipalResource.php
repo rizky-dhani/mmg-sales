@@ -17,7 +17,9 @@ class PrincipalResource extends Resource
 {
     protected static ?string $model = Principal::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingLibrary;
+    protected static bool $shouldRegisterNavigation = false;
+
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
     protected static string|\UnitEnum|null $navigationGroup = 'Product & Inventory';
 

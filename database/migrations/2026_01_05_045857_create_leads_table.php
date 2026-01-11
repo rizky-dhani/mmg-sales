@@ -20,7 +20,7 @@ return new class extends Migration
             $table->enum('status', ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'])->default('new');
             $table->enum('source', ['website', 'referral', 'cold_call', 'trade_show', 'partner', 'other'])->default('other');
             $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
-            $table->decimal('estimated_value', 12, 2)->nullable();
+            $table->decimal('estimated_value', 16, 2)->nullable();
             $table->text('notes')->nullable();
             $table->foreignId('customer_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamp('converted_at')->nullable();

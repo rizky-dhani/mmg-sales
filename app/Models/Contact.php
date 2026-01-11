@@ -25,6 +25,11 @@ class Contact extends Model
         'notes',
     ];
 
+    public function getNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);

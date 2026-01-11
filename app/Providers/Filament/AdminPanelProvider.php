@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\LeadBoard;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,6 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->login()
             ->brandName('MMG Healthcare CRM')
             ->brandLogo(asset('assets/logo/MMG-logo.png'))
@@ -34,21 +36,14 @@ class AdminPanelProvider extends PanelProvider
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Sales'),
-                NavigationGroup::make()
-                    ->label('CRM'),
-                NavigationGroup::make()
-                    ->label('Product & Inventory'),
-                NavigationGroup::make()
-                    ->label('Organization'),
-                NavigationGroup::make()
-                    ->label('System Settings'),
             ])->colors([
-                            'primary' => '#0891b2',
-                        ])
+                'primary' => '#0891b2',
+            ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
                 Dashboard::class,
+                LeadBoard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([

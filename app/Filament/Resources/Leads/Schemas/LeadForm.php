@@ -21,6 +21,10 @@ class LeadForm
                             ->columnSpanFull()
                             ->columns(2)
                             ->schema([
+                                TextInput::make('title')
+                                    ->label('Lead Title')
+                                    ->required()
+                                    ->maxLength(255),
                                 TextInput::make('company_name')
                                     ->label('Company Name')
                                     ->required()

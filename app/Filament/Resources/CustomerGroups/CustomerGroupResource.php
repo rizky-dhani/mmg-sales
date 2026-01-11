@@ -17,7 +17,9 @@ class CustomerGroupResource extends Resource
 {
     protected static ?string $model = CustomerGroup::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedFolder;
+    protected static bool $shouldRegisterNavigation = false;
+
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';
 

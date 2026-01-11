@@ -45,10 +45,10 @@ return new class extends Migration
             $table->foreignId('original_customer_id')->nullable()->constrained('customers')->onDelete('set null'); // Original customer if different from end customer
             $table->foreignId('lead_id')->nullable()->constrained()->onDelete('set null');
             $table->enum('status', ['draft', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'])->default('draft');
-            $table->decimal('subtotal', 12, 2)->default(0);
-            $table->decimal('tax_amount', 12, 2)->default(0);
-            $table->decimal('discount_amount', 12, 2)->default(0);
-            $table->decimal('total_amount', 12, 2)->default(0);
+            $table->decimal('subtotal', 16, 2)->default(0);
+            $table->decimal('tax_amount', 16, 2)->default(0);
+            $table->decimal('discount_amount', 16, 2)->default(0);
+            $table->decimal('total_amount', 16, 2)->default(0);
             $table->date('order_date');
             $table->date('expected_delivery_date')->nullable();
             $table->date('actual_delivery_date')->nullable();

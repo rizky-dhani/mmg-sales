@@ -14,6 +14,7 @@ class Lead extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'title',
         'company_name',
         'contact_person',
         'email',
@@ -27,7 +28,16 @@ class Lead extends Model
         'converted_at',
         'last_contacted_at',
         'assigned_to',
+        'position',
     ];
+
+    public function getAgingAttribute(): string
+    {
+        $end = $this->converted_at ?? now();
+        $days = round($this->created_at->diffInHours($end) / 24, 1);
+
+        return $days.' '.str('day')->plural($days);
+    }
 
     public function customer(): BelongsTo
     {
