@@ -32,11 +32,11 @@ Ensure strict read-only enforcement across the application.
 ## Phase 3: Filament UI Verification
 Verify the user experience and UI restrictions for the BOD role.
 
-- [ ] **Task 8: Write Browser Tests for BOD Panel Access**
-  - Create a Pest browser test to log in as a BOD user.
-  - Assert that navigation items are visible but "Create" and "Edit" buttons are absent.
-- [ ] **Task 9: Verify Resource Table Actions**
-  - Ensure table actions in Filament resources correctly reflect the read-only status for BOD.
-- [ ] **Task 10: Run UI Verification Tests**
-  - Run browser tests and ensure all pass.
+- [x] **Task 8: Write Feature Tests for BOD Panel Access** (76be9ea)
+  - Create a feature test that attempts to visit Filament resource pages (List, Create, Edit) as a BOD user.
+  - Assert that List pages are accessible, but Create and Edit pages return a forbidden status (403).
+- [x] **Task 9: Verify Resource Table Actions** (76be9ea)
+  - Use Filament's testing helpers to assert that "create", "edit", and "delete" actions are hidden for BOD users on resource tables.
+- [x] **Task 10: Run UI Verification Tests** (76be9ea)
+  - Run the feature tests and ensure all pass.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 3: Filament UI Verification' (Protocol in workflow.md)**
