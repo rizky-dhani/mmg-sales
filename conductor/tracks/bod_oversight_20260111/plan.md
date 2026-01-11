@@ -18,14 +18,14 @@ Establish the foundational data structures for the BOD role.
 ## Phase 2: Authorization & Policies
 Ensure strict read-only enforcement across the application.
 
-- [ ] **Task 4: Write Tests for BOD Read-Only Enforcement**
+- [x] **Task 4: Write Tests for BOD Read-Only Enforcement** (8e3a47b)
   - Create a feature test that simulates a BOD user attempting to view, create, update, and delete resources (Lead, Order, Customer).
   - Assert success for `view` and `view_any`, and failure for others.
-- [ ] **Task 5: Refine BasePolicy for BOD Role**
+- [x] **Task 5: Refine BasePolicy for BOD Role** (8e3a47b)
   - Ensure `BasePolicy` explicitly handles the BOD role if the permission-based checks are insufficient or to provide an extra layer of security.
-- [ ] **Task 6: Implement BOD Authorization Logic**
+- [x] **Task 6: Implement BOD Authorization Logic** (8e3a47b)
   - Ensure all model policies inherit from `BasePolicy` or correctly check the BOD permissions.
-- [ ] **Task 7: Run Authorization Tests**
+- [x] **Task 7: Run Authorization Tests** (8e3a47b)
   - Run tests and ensure 99% coverage for policy logic.
 - [ ] **Task: Conductor - User Manual Verification 'Phase 2: Authorization & Policies' (Protocol in workflow.md)**
 
