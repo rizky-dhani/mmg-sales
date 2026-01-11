@@ -27,6 +27,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'lead',
             'product',
             'order',
+            'activity',
+            'visit',
         ];
 
         $actions = ['view', 'view_any', 'create', 'update', 'delete', 'restore', 'force_delete'];
