@@ -5,7 +5,7 @@ This plan outlines the steps to implement and verify the Board of Director role 
 ## Phase 1: Database & Seeders
 Establish the foundational data structures for the BOD role.
 
-- [ ] **Task 1: Verify Role and Position Seeders**
+- [x] **Task 1: Verify Role and Position Seeders** (91e2a9b)
   - Verify `RolesAndPermissionsSeeder.php` correctly creates the 'Board of Director' role with only view permissions.
   - Verify `DepartmentSeeder.php` includes the 'MGMT' department.
   - Verify `PositionSeeder.php` correctly places BOD at Level 0 and as the parent of HEAD.
