@@ -29,7 +29,7 @@ Ensure strict read-only enforcement across the application.
   - Run tests and ensure 99% coverage for policy logic.
 - [x] **Task: Conductor - User Manual Verification 'Phase 2: Authorization & Policies' (Protocol in workflow.md)** (3618e61)
 
-## Phase 3: Filament UI Verification
+## Phase 3: Filament UI Verification [checkpoint: 84b5331]
 Verify the user experience and UI restrictions for the BOD role.
 
 - [x] **Task 8: Write Feature Tests for BOD Panel Access** (76be9ea)
@@ -39,4 +39,4 @@ Verify the user experience and UI restrictions for the BOD role.
   - Use Filament's testing helpers to assert that "create", "edit", and "delete" actions are hidden for BOD users on resource tables.
 - [x] **Task 10: Run UI Verification Tests** (76be9ea)
   - Run the feature tests and ensure all pass.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 3: Filament UI Verification' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 3: Filament UI Verification' (Protocol in workflow.md)** (84b5331)
