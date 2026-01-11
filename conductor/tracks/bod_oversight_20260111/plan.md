@@ -15,7 +15,7 @@ Establish the foundational data structures for the BOD role.
   - Run the test and ensure it passes with 99% coverage for the seeder logic.
 - [x] **Task: Conductor - User Manual Verification 'Phase 1: Database & Seeders' (Protocol in workflow.md)** (81276c9)
 
-## Phase 2: Authorization & Policies
+## Phase 2: Authorization & Policies [checkpoint: 3618e61]
 Ensure strict read-only enforcement across the application.
 
 - [x] **Task 4: Write Tests for BOD Read-Only Enforcement** (8e3a47b)
@@ -27,7 +27,7 @@ Ensure strict read-only enforcement across the application.
   - Ensure all model policies inherit from `BasePolicy` or correctly check the BOD permissions.
 - [x] **Task 7: Run Authorization Tests** (8e3a47b)
   - Run tests and ensure 99% coverage for policy logic.
-- [ ] **Task: Conductor - User Manual Verification 'Phase 2: Authorization & Policies' (Protocol in workflow.md)**
+- [x] **Task: Conductor - User Manual Verification 'Phase 2: Authorization & Policies' (Protocol in workflow.md)** (3618e61)
 
 ## Phase 3: Filament UI Verification
 Verify the user experience and UI restrictions for the BOD role.
