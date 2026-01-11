@@ -13,10 +13,14 @@ class PositionSeeder extends Seeder
      */
     public function run(): void
     {
+        $mgmtDept = Department::where('code', 'MGMT')->first();
         $prodDept = Department::where('code', 'PROD')->first();
         $salesDept = Department::where('code', 'SALES')->first();
 
         $positions = [
+            // Management
+            ['name' => 'Board of Director', 'code' => 'BOD', 'department_id' => $mgmtDept->id, 'level' => 0],
+
             // PROD Department
             ['name' => 'Head', 'code' => 'HEAD', 'department_id' => $prodDept->id, 'level' => 1],
             ['name' => 'Product Manager', 'code' => 'PM', 'department_id' => $prodDept->id, 'level' => 2],
@@ -35,11 +39,13 @@ class PositionSeeder extends Seeder
         }
 
         // Setup hierarchy parents
+        $bod = Position::where('code', 'BOD')->first();
         $head = Position::where('code', 'HEAD')->first();
         $pm = Position::where('code', 'PM')->first();
         $jpm = Position::where('code', 'JPM')->first();
         $pe = Position::where('code', 'PE')->first();
 
+        $head->update(['parent_id' => $bod->id]);
         $pm->update(['parent_id' => $head->id]);
         $jpm->update(['parent_id' => $pm->id]);
         $pe->update(['parent_id' => $pm->id]);

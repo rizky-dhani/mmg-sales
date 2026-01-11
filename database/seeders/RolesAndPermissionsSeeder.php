@@ -44,6 +44,10 @@ class RolesAndPermissionsSeeder extends Seeder
         // Super Admin gets all permissions via a gate in AuthServiceProvider (or similar)
         // but for Filament it's often better to assign them explicitly or use a policy.
 
+        $bod = Role::findOrCreate('Board of Director');
+        $viewPermissions = Permission::where('name', 'like', 'view_%')->get();
+        $bod->givePermissionTo($viewPermissions);
+
         $head = Role::findOrCreate('Head');
         $head->givePermissionTo(Permission::all());
 
