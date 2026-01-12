@@ -17,7 +17,7 @@
     - [ ] Add a "Download Template" action to the modal pointing to the existing template file.
 - [ ] **Task: Conductor - User Manual Verification 'UI Implementation' (Protocol in workflow.md)**
 
-## Phase 3: Core Import Logic & Validation (TDD)
+## Phase 3: Core Import Logic & Validation (TDD) [checkpoint: b34ac9a]
 - [x] **Task 4: Excel Parsing & Structure Validation** (b2c3d4e)
     - [x] **Red:** Write tests for parsing files that match vs. don't match the existing template structure.
     - [x] **Green:** Implement parsing logic in the `ImportOrdersJob`.
