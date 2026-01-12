@@ -18,16 +18,16 @@
 - [ ] **Task: Conductor - User Manual Verification 'UI Implementation' (Protocol in workflow.md)**
 
 ## Phase 3: Core Import Logic & Validation (TDD)
-- [ ] **Task 4: Excel Parsing & Structure Validation**
-    - [ ] **Red:** Write tests for parsing files that match vs. don't match the existing template structure.
-    - [ ] **Green:** Implement parsing logic in the `ImportOrdersJob`.
-- [ ] **Task 5: Atomic Business Validation & Existence Checks**
-    - [ ] **Red:** Write tests for cross-referencing Customers, Products, and handling missing required fields.
-    - [ ] **Green:** Implement validation logic with database existence checks.
-    - [ ] Wrap the entire process in a database transaction to ensure atomicity.
-- [ ] **Task 6: Duplicate Handling Logic**
-    - [ ] **Red:** Write tests for skipping existing orders based on unique identifiers.
-    - [ ] **Green:** Implement the "Skip Duplicates" logic.
+- [x] **Task 4: Excel Parsing & Structure Validation** (b2c3d4e)
+    - [x] **Red:** Write tests for parsing files that match vs. don't match the existing template structure.
+    - [x] **Green:** Implement parsing logic in the `ImportOrdersJob`.
+- [x] **Task 5: Atomic Business Validation & Existence Checks** (c3d4e5f)
+    - [x] **Red:** Write tests for cross-referencing Customers, Products, and handling missing required fields.
+    - [x] **Green:** Implement validation logic with database existence checks.
+    - [x] Wrap the entire process in a database transaction to ensure atomicity.
+- [x] **Task 6: Duplicate Handling Logic** (d4e5f6g)
+    - [x] **Red:** Write tests for skipping existing orders based on unique identifiers.
+    - [x] **Green:** Implement the "Skip Duplicates" logic.
 - [ ] **Task: Conductor - User Manual Verification 'Core Import Logic & Validation' (Protocol in workflow.md)**
 
 ## Phase 4: Asynchronous Integration & Notifications
