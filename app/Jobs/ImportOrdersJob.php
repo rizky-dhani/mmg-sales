@@ -12,8 +12,10 @@ class ImportOrdersJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
-    {
+    public function __construct(
+        public string $filePath,
+        public int $userId,
+    ) {
         //
     }
 
@@ -22,6 +24,6 @@ class ImportOrdersJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        // Implementation in Phase 3 & 4
     }
 }
