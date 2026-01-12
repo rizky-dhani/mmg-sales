@@ -44,19 +44,12 @@ All tasks follow a strict lifecycle:
    - Add dated note explaining the change
    - Resume implementation
 
-8. **Commit Code Changes with Task Summary:**
-   - Stage all code changes related to the task.
-   - Draft a detailed summary for the completed task. This should include the task name, a summary of changes, a list of all created/modified files, and the core "why" for the change.
-   - Propose a clear, concise commit message that includes this summary e.g, `feat(ui): Create basic HTML structure for calculator\n\nSummary: [detailed summary here]`.
-   - Perform the commit.
-
-9. **Get and Record Task Commit SHA:**
-    - **Step 10.1: Update Plan:** Read `plan.md`, find the line for the completed task, update its status from `[~]` to `[x]`, and append the first 7 characters of the *just-completed commit's* commit hash.
-    - **Step 10.2: Write Plan:** Write the updated content back to `plan.md`.
-
-11. **Commit Plan Update:**
-    - **Action:** Stage the modified `plan.md` file.
-    - **Action:** Commit this change with a descriptive message (e.g., `conductor(plan): Mark task 'Create user model' as complete`).
+8. **Finalize Task and Commit Changes:**
+   - Edit `plan.md` and update the task status from `[~]` to `[x]`.
+   - Stage all related changes, including application code, tests, and the updated `plan.md`.
+   - Draft a detailed summary for the completed task, including the task name, summary of changes, and the "why" behind them.
+   - Propose and perform a single commit with a clear message that includes the task summary.
+     Example: `feat(ui): Create basic HTML structure for calculator\n\nSummary: [detailed summary here]`
 
 ### Phase Completion Verification and Checkpointing Protocol
 
@@ -107,26 +100,13 @@ All tasks follow a strict lifecycle:
     -   After presenting the detailed plan, ask the user for confirmation: "**Does this meet your expectations? Please confirm with yes or provide feedback on what needs to be changed.**"
     -   **PAUSE** and await the user's response. Do not proceed without an explicit yes or confirmation.
 
-6. **Create Checkpoint Commit with Verification Report:**
-
-    -   Stage all changes. If no changes occurred in this step, proceed with an empty commit.
-
-    -   Draft a detailed verification report including the automated test command, the manual verification steps, and the user's confirmation.
-
-    -   Perform the commit with a message that includes this report (e.g., `conductor(checkpoint): Checkpoint end of Phase X\n\n[Verification Report here]`).
-
-
-
-7. **Get and Record Phase Checkpoint SHA:**
-    -   **Step 7.1: Get Commit Hash:** Obtain the hash of the *just-created checkpoint commit* (`git log -1 --format="%H"`).
-    -   **Step 7.2: Update Plan:** Read `plan.md`, find the heading for the completed phase, and append the first 7 characters of the commit hash in the format `[checkpoint: <sha>]`.
-    -   **Step 7.3: Write Plan:** Write the updated content back to `plan.md`.
-
-9. **Commit Plan Update:**
-    - **Action:** Stage the modified `plan.md` file.
-    - **Action:** Commit this change with a descriptive message following the format `conductor(plan): Mark phase '<PHASE NAME>' as complete`.
-
-10.  **Announce Completion:** Inform the user that the phase is complete and the checkpoint has been created, with the detailed verification report included in the commit message.
+6. **Create Checkpoint and Finalize Phase:**
+    -   Draft a detailed verification report including the automated test command, manual verification steps, and user confirmation.
+    -   Edit `plan.md` and update the phase heading to mark it as complete (e.g., `## Phase X [x]`).
+    -   Stage all remaining changes, including the modified `plan.md`.
+    -   Perform a single checkpoint commit with a message that includes the verification report.
+        Example: `conductor(checkpoint): Checkpoint end of Phase X\n\n[Verification Report here]`
+    -   Inform the user that the phase is complete and the checkpoint has been created.
 
 ### Quality Gates
 
@@ -265,8 +245,7 @@ A task is complete when:
 5. Code passes all configured linting and static analysis checks
 6. Works beautifully on mobile (if applicable)
 7. Implementation notes added to `plan.md`
-8. Changes committed with proper message
-9. Changes committed with proper message including task summary
+8. Changes committed with proper message including task summary
 
 ## Emergency Procedures
 
