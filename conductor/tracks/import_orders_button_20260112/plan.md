@@ -5,7 +5,7 @@
     - [ ] Research and confirm the best library for Excel handling (likely `laravel-excel` / `maatwebsite/excel`).
     - [ ] Install necessary dependencies via Composer.
     - [ ] Create the background job class: `app/Jobs/ImportOrdersJob.php`.
-- [ ] **Task 2: Database & Model Preparation**
+- [x] **Task 2: Database & Model Preparation** (f4e5d6c)
     - [ ] Ensure `Order` and `OrderItem` models have appropriate mass-assignment protections.
     - [ ] Verify existence of unique identifiers (e.g., `order_number`) for duplicate checking.
 - [ ] **Task: Conductor - User Manual Verification 'Preparation & Infrastructure' (Protocol in workflow.md)**
