@@ -1,6 +1,6 @@
 # Implementation Plan: Full Refactor from Customer to Company
 
-## Phase 1: Database Schema Refactor
+## Phase 1: Database Schema Refactor [checkpoint: 88e8262]
 - [x] **Task 1: Create Migration for Table Renaming** (a1b2c3d)
     - [ ] Rename `customers` to `companies`.
     - [ ] Rename `customer_groups` to `company_groups`.
