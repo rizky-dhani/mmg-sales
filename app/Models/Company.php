@@ -52,4 +52,9 @@ class Company extends Model
     {
         return $this->hasMany(Order::class, 'end_company_id');
     }
+
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class, 'company_id');
+    }
 }

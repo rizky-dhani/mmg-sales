@@ -18,4 +18,4 @@
 
 ## Device Strategy
 - **Desktop-First:** Optimize primarily for the complex data management and dashboard needs of managers and administrators on desktop displays.
-- **Responsive Adaptation:** Ensure core field sales tools (activity logging, customer lookup) are seamlessly adapted and highly functional on mobile and tablet devices for representatives on the move.
+- **Responsive Adaptation:** Ensure core field sales tools (activity logging, company lookup) are seamlessly adapted and highly functional on mobile and tablet devices for representatives on the move.

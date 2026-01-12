@@ -34,7 +34,7 @@
     - [ ] Update labels in navigation groups and headers.
 - [ ] **Task: Conductor - User Manual Verification 'Filament UI Refactor' (Protocol in workflow.md)**
 
-## Phase 4: Verification & Cleanup
+## Phase 4: Verification & Cleanup [checkpoint: 2cb1950]
 - [x] **Task 8: Global Tests & Integrity Check** (h8i9j0k)
     - [ ] Update existing tests to reference new models.
     - [ ] Run all tests to ensure no regressions.
