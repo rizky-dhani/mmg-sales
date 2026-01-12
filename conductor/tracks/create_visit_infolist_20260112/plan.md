@@ -1,6 +1,6 @@
 # Implementation Plan: Create VisitInfolist for Visit Resource
 
-## Phase 1: Infolist Implementation
+## Phase 1: Infolist Implementation [checkpoint: ac537f7]
 - [x] **Task 1: Define VisitInfolist Schema** (e6f7g8h)
     - [ ] Create `app/Filament/Resources/Visits/Schemas/VisitInfolist.php`.
     - [ ] Implement sections matching the VisitForm logic for consistency.
