@@ -7,7 +7,7 @@
     - [ ] Write tests to ensure only Super Admins can access Distributor resources.
 - [ ] **Task: Conductor - User Manual Verification 'Visibility' (Protocol in workflow.md)**
 
-## Phase 2: Seeder Implementation
+## Phase 2: Seeder Implementation [checkpoint: dba3e78]
 - [x] **Task 3: Create and Implement DistributorSeeder** (c3d4e5f)
     - [ ] Create `database/seeders/DistributorSeeder.php`.
     - [ ] Add MMG and MJG data.
