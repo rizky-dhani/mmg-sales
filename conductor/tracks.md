@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [~] Track: Import button for Orders resource
-*Link: [./conductor/tracks/import_orders_button_20260112/](./conductor/tracks/import_orders_button_20260112/)*
+## [~] Track: Full Refactor from Customer to Company
+*Link: [./conductor/tracks/refactor_customer_to_company_20260112/](./conductor/tracks/refactor_customer_to_company_20260112/)*

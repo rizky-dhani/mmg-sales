@@ -17,6 +17,7 @@
 - **Database:** MariaDB (per README)
 - **API Clients:** Guzzle (GuzzleHTTP)
 - **CRM Logic:** Modular Schemas/Tables architecture in Filament
+- **Excel Processing:** Laravel Excel (Maatwebsite)
 
 ## Development & Quality
 - **Testing:** Pest 4

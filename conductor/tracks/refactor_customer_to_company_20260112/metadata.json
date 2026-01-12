@@ -1,0 +1,8 @@
+{
+  "track_id": "refactor_customer_to_company_20260112",
+  "type": "refactor",
+  "status": "new",
+  "created_at": "2026-01-12T11:00:00Z",
+  "updated_at": "2026-01-12T11:00:00Z",
+  "description": "Full Refactor from Customer to Company"
+}
