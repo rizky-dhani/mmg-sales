@@ -30,7 +30,7 @@
     - [x] **Green:** Implement the "Skip Duplicates" logic.
 - [ ] **Task: Conductor - User Manual Verification 'Core Import Logic & Validation' (Protocol in workflow.md)**
 
-## Phase 4: Asynchronous Integration & Notifications
+## Phase 4: Asynchronous Integration & Notifications [checkpoint: 46867d3]
 - [x] **Task 7: Background Job Wiring** (e5f6g7h)
     - [ ] Connect the Filament UI upload to dispatch the `ImportOrdersJob`.
     - [ ] Implement background notification logic using `Filament\Notifications\Notification`.
