@@ -7,6 +7,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class VisitsTable
@@ -48,7 +49,11 @@ class VisitsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('company_id')
+                    ->label('Company')
+                    ->relationship('company', 'facility_name')
+                    ->searchable()
+                    ->preload(),
             ])
             ->actions([
                 EditAction::make(),
