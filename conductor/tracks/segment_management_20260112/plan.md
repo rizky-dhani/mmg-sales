@@ -8,10 +8,10 @@
 - [ ] **Task: Conductor - User Manual Verification 'Visibility' (Protocol in workflow.md)**
 
 ## Phase 2: Seeder Implementation
-- [ ] **Task 3: Create and Implement SegmentSeeder**
+- [x] **Task 3: Create and Implement SegmentSeeder** (c3d4e5f)
     - [ ] Create `database/seeders/SegmentSeeder.php`.
     - [ ] Add standardized data from `@segment.txt`.
-- [ ] **Task 4: Register and Test Seeder**
+- [x] **Task 4: Register and Test Seeder** (d4e5f6g)
     - [ ] Add to `DatabaseSeeder.php`.
     - [ ] Write a test to verify database population.
 - [ ] **Task: Conductor - User Manual Verification 'Data Population' (Protocol in workflow.md)**
