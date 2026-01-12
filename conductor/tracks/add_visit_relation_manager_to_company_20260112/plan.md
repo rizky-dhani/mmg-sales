@@ -1,6 +1,6 @@
 # Implementation Plan: Add Visit Relation Manager to Company
 
-## Phase 1: Model & Infrastructure
+## Phase 1: Model & Infrastructure [checkpoint: 05385b3]
 - [x] **Task 1: Add visits relationship to Company Model** (a1b2c3d)
     - [ ] Update `app/Models/Company.php` to include the `visits()` relationship.
 - [x] **Task 2: Generate Relation Manager** (b2c3d4e)
