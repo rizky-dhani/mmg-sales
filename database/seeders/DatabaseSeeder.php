@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             PositionSeeder::class,
             UserSeeder::class,
             SegmentSeeder::class,
+            DistributorSeeder::class,
             SampleDataSeeder::class,
         ]);
     }
