@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Imports\OrdersImport;
+use App\Models\User;
 use App\Models\Order;
 use App\Models\Department;
 use App\Models\Position;
@@ -14,6 +15,7 @@ use App\Models\SalesType;
 use App\Models\Segment;
 use App\Models\Distributor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Maatwebsite\Excel\Facades\Excel;
 
 uses(RefreshDatabase::class);
 
@@ -126,5 +128,50 @@ test('orders import skips duplicates correctly', function () {
     // 3. Assertions: Only 1 order created despite 2 identical rows
     expect(Order::count())->toBe(1);
 });
+
+test('ImportOrdersJob dispatches and sends notification', function () {
+    // 1. Setup
+    $user = User::factory()->create();
+    $dept = Department::create(['name' => 'MMG', 'code' => 'MMG']);
+    Position::create(['name' => 'DONNY', 'code' => 'HEAD', 'level' => 1, 'department_id' => $dept->id]);
+    Position::create(['name' => 'Soni_PM', 'code' => 'PM', 'level' => 2, 'department_id' => $dept->id]);
+    Position::create(['name' => 'BARAT - Rendra', 'code' => 'RSM', 'level' => 3, 'department_id' => $dept->id]);
+    Position::create(['name' => 'SPV_Barat by RSM Barat', 'code' => 'SPV', 'level' => 4, 'department_id' => $dept->id]);
+    Position::create(['name' => 'SUMBAGUT_ARI', 'code' => 'SR', 'level' => 5, 'department_id' => $dept->id]);
+    Territory::create(['name' => 'BATAM', 'type' => 'city', 'level' => 3]);
+    Customer::create(['facility_name' => 'PT. Batam Karya Husada']);
+    Principal::create(['name' => 'Abbott', 'code' => 'ABB']);
+    Segment::create(['name' => 'UNIVERSITY', 'code' => 'UNIV']);
+    SalesType::create(['name' => 'E-Catalog', 'code' => 'ECAT']);
+    Item::create(['name' => '9H48.02 - EMERALD DILUENT', 'principal_id' => Principal::where('name', 'Abbott')->first()->id, 'unit_price' => 10000000, 'internal_code' => 'ABB-TD-00303', 'principle_code' => '9H48.02']);
+    Distributor::create(['name' => 'MJG', 'code' => 'MJG']);
+
+    $data = [
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+        [null, "Update: 181225", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
+        [null, "Tahun", "Bulan", "DEPT MMG", "HEAD", "PM/JPM/PE", "RSM/ASM", "SPV", "SR", "AREA/KOTA", "Customer Name", "End Customer", "Group Customer", "CD/ N-CD", "Segment", "Principle Name", "Reg/Inst", "Sales Type", "Principle Code", "Internal Code", "Item Name", "Qty", "HNA (Rp)", "TOTAL HNA (Gross Sales) (Rp)", "Discount (ON)", "Net Sales TOTAL (Rp)", "Segment - SUB", "JUAL/KSO", "DISTRIBUTOR", null],
+        [null, "2025", "8", "MMG", "DONNY", "Soni_PM", "BARAT - Rendra", "SPV_Barat by RSM Barat", "SUMBAGUT_ARI", "BATAM", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "CLINICAL", "UNIVERSITY", "Abbott", "Reg", "E-Catalog", "9H48.02", "ABB-TD-00303", "9H48.02 - EMERALD DILUENT", "2", "10000000", "20000000", "0.05", "19000000", "SUPPLIER", "JUAL", "MJG", null],
+    ];
+
+    // Create a temporary file
+    $tempFileName = 'import_test_' . uniqid() . '.xlsx';
+    Excel::store(new class($data) implements \Maatwebsite\Excel\Concerns\FromCollection {
+        public function __construct(public $data) {}
+        public function collection() { return collect($this->data); }
+    }, $tempFileName, 'public');
+    $fullPath = storage_path('app/public/' . $tempFileName);
+
+    // 2. Dispatch Job
+    $job = new \App\Jobs\ImportOrdersJob($fullPath, $user->id);
+    $job->handle();
+
+    // 3. Assertions
+    expect(Order::count())->toBe(1);
+
+    if (file_exists($fullPath)) {
+        unlink($fullPath);
+    }
+});
+
 
 
