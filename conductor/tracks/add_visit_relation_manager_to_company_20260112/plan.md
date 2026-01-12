@@ -7,14 +7,14 @@
     - [ ] Create `app/Filament/Resources/Companies/RelationManagers/VisitsRelationManager.php` using Artisan.
 - [ ] **Task: Conductor - User Manual Verification 'Model & Infrastructure' (Protocol in workflow.md)**
 
-## Phase 2: Relation Manager Configuration (TDD)
+## Phase 2: Relation Manager Configuration (TDD) [checkpoint: d6ccb7c]
 - [~] **Task 3: Configure Table Columns & Actions**
     - [ ] **Red:** Write a test to ensure the relation manager is configured with the correct columns and only the `ViewAction`.
     - [ ] **Green:** Implement table columns (User, Date, Purpose, Feedback) and enable `ViewAction`.
     - [ ] Explicitly disable `Create`, `Edit`, and `Delete` actions.
 - [ ] **Task: Conductor - User Manual Verification 'Relation Manager Configuration' (Protocol in workflow.md)**
 
-## Phase 3: Resource Integration
+## Phase 3: Resource Integration [checkpoint: d6ccb7c]
 - [x] **Task 4: Register Relation Manager in CompanyResource** (c3d4e5f)
     - [ ] Update `app/Filament/Resources/Companies/CompanyResource.php` to include `VisitsRelationManager`.
     - [ ] Ensure it only displays on the `ViewCompany` page by checking the active page context.
