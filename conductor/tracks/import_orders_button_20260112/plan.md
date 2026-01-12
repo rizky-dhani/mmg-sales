@@ -1,6 +1,6 @@
 # Implementation Plan: Import Orders via Excel
 
-## Phase 1: Preparation & Infrastructure
+## Phase 1: Preparation & Infrastructure [checkpoint: 8ab56b3]
 - [x] **Task 1: Project Setup & Dependencies** (e1a2b3c)
     - [ ] Research and confirm the best library for Excel handling (likely `laravel-excel` / `maatwebsite/excel`).
     - [ ] Install necessary dependencies via Composer.
