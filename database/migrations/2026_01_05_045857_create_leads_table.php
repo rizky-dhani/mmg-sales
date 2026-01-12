@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
             $table->decimal('estimated_value', 16, 2)->nullable();
             $table->text('notes')->nullable();
-            $table->foreignId('customer_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamp('converted_at')->nullable();
             $table->timestamp('last_contacted_at')->nullable();
             $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');

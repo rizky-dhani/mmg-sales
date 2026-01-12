@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\CustomerGroups\Tables;
+namespace App\Filament\Resources\CompanyGroups\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -9,7 +9,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class CustomerGroupsTable
+class CompanyGroupsTable
 {
     public static function configure(Table $table): Table
     {

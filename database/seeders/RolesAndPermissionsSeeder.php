@@ -22,7 +22,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'department',
             'position',
             'territory',
-            'customer',
+            'company',
+            'company_group',
             'contact',
             'lead',
             'product',
@@ -62,7 +63,7 @@ class RolesAndPermissionsSeeder extends Seeder
             $role->givePermissionTo([
                 'view_any_product', 'view_product', 'create_product', 'update_product',
                 'view_any_order', 'view_order',
-                'view_any_customer', 'view_customer',
+                'view_any_company', 'view_company',
             ]);
         }
 
@@ -74,7 +75,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $salesRoles = [$rsm, $asm, $spv, $sr];
         foreach ($salesRoles as $role) {
             $role->givePermissionTo([
-                'view_any_customer', 'view_customer', 'create_customer', 'update_customer',
+                'view_any_company', 'view_company', 'create_company', 'update_company',
                 'view_any_contact', 'view_contact', 'create_contact', 'update_contact',
                 'view_any_lead', 'view_lead', 'create_lead', 'update_lead',
                 'view_any_order', 'view_order', 'create_order', 'update_order',

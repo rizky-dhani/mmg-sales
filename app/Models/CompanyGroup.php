@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class CustomerGroup extends Model
+class CompanyGroup extends Model
 {
     use HasFactory;
+
+    protected $table = 'company_groups';
 
     protected $fillable = [
         'name',
@@ -17,8 +19,8 @@ class CustomerGroup extends Model
         'is_active',
     ];
 
-    public function customers(): HasMany
+    public function companies(): HasMany
     {
-        return $this->hasMany(Customer::class);
+        return $this->hasMany(Company::class, 'company_group_id');
     }
 }

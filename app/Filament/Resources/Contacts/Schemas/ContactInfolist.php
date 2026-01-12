@@ -16,7 +16,7 @@ class ContactInfolist
                 Section::make('Contact Details')
                     ->columns(2)
                     ->schema([
-                        TextEntry::make('customer.facility_name')
+                        TextEntry::make('company.facility_name')
                             ->label('Facility')
                             ->weight('bold'),
                         TextEntry::make('full_name')

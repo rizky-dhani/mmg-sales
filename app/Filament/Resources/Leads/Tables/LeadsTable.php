@@ -82,8 +82,8 @@ class LeadsTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('customer.facility_name')
-                    ->label('Linked Customer')
+                TextColumn::make('company.facility_name')
+                    ->label('Linked Company')
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

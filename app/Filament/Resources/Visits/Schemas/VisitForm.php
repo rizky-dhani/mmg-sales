@@ -21,8 +21,8 @@ class VisitForm
                 Section::make('Visit Logistics')
                     ->columns(2)
                     ->schema([
-                        Select::make('customer_id')
-                            ->relationship('customer', 'facility_name')
+                        Select::make('company_id')
+                            ->relationship('company', 'facility_name')
                             ->required()
                             ->searchable()
                             ->preload()
@@ -45,7 +45,7 @@ class VisitForm
                             ->live(),
                         Select::make('contact_id')
                             ->label('Contact Person')
-                            ->relationship('contact', 'first_name', fn ($query, $get) => $query->where('customer_id', $get('customer_id')))
+                            ->relationship('contact', 'first_name', fn ($query, $get) => $query->where('company_id', $get('company_id')))
                             ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->first_name} {$record->last_name}")
                             ->searchable(['first_name', 'last_name'])
                             ->preload()
@@ -59,7 +59,7 @@ class VisitForm
                                     ->placeholder('e.g. Head of Procurement'),
                             ])
                             ->createOptionUsing(function (array $data, $get) {
-                                $data['customer_id'] = $get('customer_id');
+                                $data['company_id'] = $get('company_id');
 
                                 return Contact::create($data)->getKey();
                             }),
@@ -106,7 +106,7 @@ class VisitForm
                         Textarea::make('stakeholder_feedback')
                             ->label('Manager/Stakeholder Feedback'),
                         Toggle::make('is_worth_keeping')
-                            ->label('Is this customer worth keeping?')
+                            ->label('Is this company worth keeping?')
                             ->onIcon('heroicon-m-check-circle')
                             ->offIcon('heroicon-m-x-circle')
                             ->inline(false),

@@ -2,13 +2,13 @@
 
 # MMG Healthcare CRM
 
-A professional Healthcare Distribution CRM built with **Laravel 12**, **Filament 4**, and **Spatie Permission**. This system is designed to streamline healthcare product distribution, track sales performance, and manage customer relationships across the Java region.
+A professional Healthcare Distribution CRM built with **Laravel 12**, **Filament 4**, and **Spatie Permission**. This system is designed to streamline healthcare product distribution, track sales performance, and manage company relationships across the Java region.
 
 ## 🚀 Key Features
 
 ### 📊 Comprehensive Dashboard
 - **Sales Performance**: Real-time tracking of Total Net Sales, Average Order Value (AOV), and Overdue Revenue.
-- **CRM Analytics**: Visibility into Total Customers, Pipeline Value, and Stale Lead detection.
+- **CRM Analytics**: Visibility into Total Companies, Pipeline Value, and Stale Lead detection.
 - **Lead Pipeline**: Funnel visualization showing Won, Lost, and In-Progress opportunities.
 
 ### 🏥 CRM & Lead Management

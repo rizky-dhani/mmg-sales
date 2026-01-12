@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\Customers\Schemas;
+namespace App\Filament\Resources\Companies\Schemas;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
-class CustomerForm
+class CompanyForm
 {
     public static function configure(Schema $schema): Schema
     {

@@ -20,8 +20,8 @@ class Order extends Model
         'spv_position_id',
         'sr_position_id',
         'area_city_id',
-        'end_customer_id',
-        'customer_group_id',
+        'end_company_id',
+        'company_group_id',
         'cd_ncd_type',
         'ncd_subtype',
         'segment_id',
@@ -37,7 +37,7 @@ class Order extends Model
         'jual_kso',
         'distributor_id',
         'order_number',
-        'original_customer_id',
+        'original_company_id',
         'lead_id',
         'status',
         'subtotal',
@@ -90,19 +90,19 @@ class Order extends Model
         return $this->belongsTo(Territory::class, 'area_city_id');
     }
 
-    public function customer(): BelongsTo
+    public function company(): BelongsTo
     {
-        return $this->belongsTo(Customer::class, 'end_customer_id');
+        return $this->belongsTo(Company::class, 'end_company_id');
     }
 
-    public function originalCustomer(): BelongsTo
+    public function originalCompany(): BelongsTo
     {
-        return $this->belongsTo(Customer::class, 'original_customer_id');
+        return $this->belongsTo(Company::class, 'original_company_id');
     }
 
-    public function customerGroup(): BelongsTo
+    public function companyGroup(): BelongsTo
     {
-        return $this->belongsTo(CustomerGroup::class);
+        return $this->belongsTo(CompanyGroup::class);
     }
 
     public function segment(): BelongsTo

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_groups', function (Blueprint $table) {
+        Schema::create('company_groups', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Customer group name
+            $table->string('name'); // Company group name
             $table->string('code')->unique(); // Unique group code
             $table->text('description')->nullable(); // Description
             $table->boolean('is_active')->default(true); // Active status
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customer_groups');
+        Schema::dropIfExists('company_groups');
     }
 };

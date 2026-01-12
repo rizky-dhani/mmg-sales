@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Customer;
+use App\Models\Company;
 use App\Models\Lead;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -15,7 +15,7 @@ class CRMOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        $totalCustomers = Customer::count();
+        $totalCompanies = Company::count();
         $totalLeads = Lead::count();
 
         // Pipeline Value: Sum of estimated value for open leads
@@ -33,11 +33,11 @@ class CRMOverview extends BaseWidget
         $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
 
         return [
-            Stat::make('Total Customers', $totalCustomers)
+            Stat::make('Total Companies', $totalCompanies)
                 ->description('Active facilities')
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('primary')
-                ->url(route('filament.admin.resources.customers.index')),
+                ->url(route('filament.admin.resources.companies.index')),
 
             Stat::make('Pipeline Value', $formatter->formatCurrency($pipelineValue, 'IDR'))
                 ->description('Potential revenue from open leads')

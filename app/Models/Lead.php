@@ -24,7 +24,7 @@ class Lead extends Model
         'priority',
         'estimated_value',
         'notes',
-        'customer_id',
+        'company_id',
         'converted_at',
         'last_contacted_at',
         'assigned_to',
@@ -39,9 +39,9 @@ class Lead extends Model
         return $days.' '.str('day')->plural($days);
     }
 
-    public function customer(): BelongsTo
+    public function company(): BelongsTo
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(Company::class);
     }
 
     public function assignedUser(): BelongsTo

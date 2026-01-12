@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Customer;
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -13,7 +13,7 @@ class ContactFactory extends Factory
     public function definition(): array
     {
         return [
-            'customer_id' => Customer::factory(),
+            'company_id' => Company::factory(),
             'first_name' => fake('id_ID')->firstName(),
             'last_name' => fake('id_ID')->lastName(),
             'position' => fake()->jobTitle(),

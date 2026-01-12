@@ -2,8 +2,8 @@
 
 namespace App\Imports;
 
-use App\Models\Customer;
-use App\Models\CustomerGroup;
+use App\Models\Company;
+use App\Models\CompanyGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
@@ -38,10 +38,10 @@ class OrdersImport implements ToCollection
                 }
 
                 // Deterministic Order Number for Duplicate Detection
-                // MMG-ORD-YYYY-MM-HASH(SR, Customer, Item, Qty, Total)
+                // MMG-ORD-YYYY-MM-HASH(SR, Company, Item, Qty, Total)
                 $hashInput = implode('|', [
                     $row[8],  // SR
-                    $row[11], // End Customer
+                    $row[11], // End Company
                     $row[20], // Item Name
                     $row[21], // Qty
                     $row[23], // Total HNA
@@ -62,7 +62,7 @@ class OrdersImport implements ToCollection
                 $sr = Position::where('name', $row[8])->first() ?? throw new Exception("SR Position not found: {$row[8]}");
                 
                 $area = Territory::where('name', $row[9])->first() ?? throw new Exception("Area/City not found: {$row[9]}");
-                $endCustomer = Customer::where('facility_name', $row[11])->first() ?? throw new Exception("End Customer not found: {$row[11]}");
+                $endCompany = Company::where('facility_name', $row[11])->first() ?? throw new Exception("End Company not found: {$row[11]}");
                 
                 $segment = Segment::where('name', $row[14])->first() ?? throw new Exception("Segment not found: {$row[14]}");
                 $principal = Principal::where('name', $row[15])->first() ?? throw new Exception("Principal not found: {$row[15]}");
@@ -71,8 +71,8 @@ class OrdersImport implements ToCollection
                 $distributor = Distributor::where('name', $row[28])->first() ?? throw new Exception("Distributor not found: {$row[28]}");
 
                 // Optional Lookups
-                $origCustomer = Customer::where('facility_name', $row[10])->first();
-                $custGroup = CustomerGroup::where('name', $row[12])->first();
+                $origCompany = Company::where('facility_name', $row[10])->first();
+                $custGroup = CompanyGroup::where('name', $row[12])->first();
                 $subSegment = SubSegment::where('name', $row[26])->first();
 
                 Order::create([
@@ -85,9 +85,9 @@ class OrdersImport implements ToCollection
                     'spv_position_id' => $spv->id,
                     'sr_position_id' => $sr->id,
                     'area_city_id' => $area->id,
-                    'original_customer_id' => $origCustomer?->id ?? $endCustomer->id,
-                    'end_customer_id' => $endCustomer->id,
-                    'customer_group_id' => $custGroup?->id,
+                    'original_company_id' => $origCompany?->id ?? $endCompany->id,
+                    'end_company_id' => $endCompany->id,
+                    'company_group_id' => $custGroup?->id,
                     'cd_ncd_type' => $row[13],
                     'segment_id' => $segment->id,
                     'principal_id' => $principal->id,

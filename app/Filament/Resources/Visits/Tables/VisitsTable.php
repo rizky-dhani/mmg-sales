@@ -31,8 +31,8 @@ class VisitsTable
                 TextColumn::make('user.name')
                     ->label('Sales Rep')
                     ->sortable(),
-                TextColumn::make('customer.facility_name')
-                    ->label('Customer')
+                TextColumn::make('company.facility_name')
+                    ->label('Company')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('purpose')

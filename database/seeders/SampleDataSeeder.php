@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Activity;
 use App\Models\Contact;
-use App\Models\Customer;
-use App\Models\CustomerGroup;
+use App\Models\Company;
+use App\Models\CompanyGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
@@ -118,20 +118,20 @@ class SampleDataSeeder extends Seeder
             $subSegments = $subSegments->merge(SubSegment::factory(2)->create(['segment_id' => $segment->id]));
         }
 
-        $customerGroups = CustomerGroup::factory(3)->create();
+        $companyGroups = CompanyGroup::factory(3)->create();
         $salesTypes = SalesType::factory(3)->create();
         $distributors = Distributor::factory(3)->create();
 
-        // 5. Customers
-        $customers = collect();
+        // 5. Companies
+        $companies = collect();
         foreach ($users->where('email', '!=', 'superadmin@medquest.co.id') as $user) {
-            $customers = $customers->merge(Customer::factory(5)->create([
+            $companies = $companies->merge(Company::factory(5)->create([
                 'assigned_to' => $user->id,
             ]));
         }
 
-        foreach ($customers as $customer) {
-            Contact::factory(rand(1, 3))->create(['customer_id' => $customer->id]);
+        foreach ($companies as $company) {
+            Contact::factory(rand(1, 3))->create(['company_id' => $company->id]);
         }
 
         // 6. Generate Realistic Leads with Aging
@@ -148,7 +148,7 @@ class SampleDataSeeder extends Seeder
 
         for ($i = 0; $i < 40; $i++) {
             $user = $users->random();
-            $customer = $customers->random();
+            $company = $companies->random();
             $status = fake()->randomElement(['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']);
 
             // Generate realistic aging: some fresh (1-7 days), some aging (15-30), some old (45+)
@@ -166,17 +166,17 @@ class SampleDataSeeder extends Seeder
             }
 
             $lead = Lead::create([
-                'title' => fake()->randomElement($leadTitles).' - '.$customer->facility_name,
-                'company_name' => $customer->facility_name,
-                'contact_person' => $customer->contacts->first()->name ?? fake()->name(),
-                'email' => $customer->email,
-                'phone' => $customer->phone,
+                'title' => fake()->randomElement($leadTitles).' - '.$company->facility_name,
+                'company_name' => $company->facility_name,
+                'contact_person' => $company->contacts->first()->name ?? fake()->name(),
+                'email' => $company->email,
+                'phone' => $company->phone,
                 'status' => $status,
                 'source' => fake()->randomElement(['website', 'referral', 'trade_show', 'partner']),
                 'priority' => fake()->randomElement(['low', 'medium', 'high', 'urgent']),
                 'estimated_value' => $items->random()->unit_price * rand(1, 5),
                 'notes' => fake()->paragraph(),
-                'customer_id' => $customer->id,
+                'company_id' => $company->id,
                 'assigned_to' => $user->id,
                 'created_at' => $createdAt,
                 'updated_at' => $convertedAt ?? $createdAt->addDays(rand(1, 5)),
@@ -204,9 +204,9 @@ class SampleDataSeeder extends Seeder
 
             Order::factory()->create([
                 'lead_id' => $lead->id,
-                'end_customer_id' => $lead->customer_id,
-                'original_customer_id' => $lead->customer_id,
-                'customer_group_id' => $customerGroups->random()->id,
+                'end_company_id' => $lead->company_id,
+                'original_company_id' => $lead->company_id,
+                'company_group_id' => $companyGroups->random()->id,
                 'item_id' => $item->id,
                 'principal_id' => $item->principal_id,
                 'segment_id' => $subSegment->segment_id,
@@ -236,15 +236,15 @@ class SampleDataSeeder extends Seeder
             'After-sales Support Visit',
         ];
 
-        foreach ($customers->random(min(30, $customers->count())) as $customer) {
+        foreach ($companies->random(min(30, $companies->count())) as $company) {
             $user = $users->random();
             $startedAt = Carbon::now()->subDays(rand(1, 60))->subHours(rand(1, 12));
             $endedAt = (clone $startedAt)->addMinutes(rand(30, 120));
 
             Visit::create([
                 'user_id' => $user->id,
-                'customer_id' => $customer->id,
-                'contact_id' => $customer->contacts->first()->id ?? null,
+                'company_id' => $company->id,
+                'contact_id' => $company->contacts->first()->id ?? null,
                 'visit_started_at' => $startedAt,
                 'visit_ended_at' => $endedAt,
                 'location' => fake()->randomElement(['Hospital Office', 'Doctor\'s Lounge', 'Hospital Lobby', 'Cafe nearby']),

@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Customer;
-use App\Models\CustomerGroup;
+use App\Models\Company;
+use App\Models\CompanyGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
@@ -41,8 +41,8 @@ class SampleSalesDataSeeder extends Seeder
         }
 
         // 2. Configuration Data
-        $govGroup = CustomerGroup::updateOrCreate(['code' => 'GOV'], ['name' => 'Government', 'is_active' => true]);
-        $privGroup = CustomerGroup::updateOrCreate(['code' => 'PRIV'], ['name' => 'Private', 'is_active' => true]);
+        $govGroup = CompanyGroup::updateOrCreate(['code' => 'GOV'], ['name' => 'Government', 'is_active' => true]);
+        $privGroup = CompanyGroup::updateOrCreate(['code' => 'PRIV'], ['name' => 'Private', 'is_active' => true]);
 
         $pharmaSegment = Segment::updateOrCreate(['code' => 'PHARMA'], ['name' => 'Pharmaceuticals']);
         $medEquipSegment = Segment::updateOrCreate(['code' => 'MEDEQ'], ['name' => 'Medical Equipment']);
@@ -93,16 +93,16 @@ class SampleSalesDataSeeder extends Seeder
         }
         $itemIds = Item::pluck('id')->toArray();
 
-        // 4. Customers
-        $customersData = [
+        // 4. Companies
+        $companiesData = [
             ['email' => 'rs_central@example.com', 'name' => 'RS Central Jakarta', 'type' => 'hospital', 'class' => 'tier_1'],
             ['email' => 'klinik_bunda@example.com', 'name' => 'Klinik Bunda', 'type' => 'clinic', 'class' => 'tier_2'],
             ['email' => 'apotek_jaya@example.com', 'name' => 'Apotek Jaya', 'type' => 'pharmacy', 'class' => 'tier_3'],
             ['email' => 'lab_pintar@example.com', 'name' => 'Lab Pintar', 'type' => 'laboratory', 'class' => 'tier_2'],
         ];
 
-        foreach ($customersData as $c) {
-            Customer::updateOrCreate(
+        foreach ($companiesData as $c) {
+            Company::updateOrCreate(
                 ['email' => $c['email']],
                 [
                     'facility_name' => $c['name'],
@@ -115,7 +115,7 @@ class SampleSalesDataSeeder extends Seeder
                 ]
             );
         }
-        $customerIds = Customer::pluck('id')->toArray();
+        $companyIds = Company::pluck('id')->toArray();
 
         // 5. Leads (Variative)
         $leadStatuses = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
@@ -132,7 +132,7 @@ class SampleSalesDataSeeder extends Seeder
                 'source' => $leadSources[array_rand($leadSources)],
                 'priority' => $leadPriorities[array_rand($leadPriorities)],
                 'estimated_value' => rand(5000000, 100000000),
-                'customer_id' => $i % 2 == 0 ? $customerIds[array_rand($customerIds)] : null,
+                'company_id' => $i % 2 == 0 ? $companyIds[array_rand($companyIds)] : null,
                 'assigned_to' => $user?->id,
             ]);
         }
@@ -157,8 +157,8 @@ class SampleSalesDataSeeder extends Seeder
                 'spv_position_id' => $spvPos->id,
                 'sr_position_id' => $srPos->id,
                 'area_city_id' => $cities->random()->id,
-                'end_customer_id' => $customerIds[array_rand($customerIds)],
-                'customer_group_id' => rand(0, 1) ? $govGroup->id : $privGroup->id,
+                'end_company_id' => $companyIds[array_rand($companyIds)],
+                'company_group_id' => rand(0, 1) ? $govGroup->id : $privGroup->id,
                 'cd_ncd_type' => rand(0, 1) ? 'CD' : 'NCD',
                 'segment_id' => rand(0, 1) ? $pharmaSegment->id : $medEquipSegment->id,
                 'principal_id' => $selectedItem->principal_id,

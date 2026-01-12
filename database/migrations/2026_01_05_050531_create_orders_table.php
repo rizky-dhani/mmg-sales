@@ -23,8 +23,8 @@ return new class extends Migration
             $table->foreignId('spv_position_id')->constrained('positions')->onDelete('cascade');
             $table->foreignId('sr_position_id')->constrained('positions')->onDelete('cascade');
             $table->foreignId('area_city_id')->constrained('territories')->onDelete('cascade');
-            $table->foreignId('end_customer_id')->constrained('customers')->onDelete('cascade');
-            $table->foreignId('customer_group_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('end_company_id')->constrained('companies')->onDelete('cascade');
+            $table->foreignId('company_group_id')->nullable()->constrained()->onDelete('set null');
             $table->string('cd_ncd_type');
             $table->string('ncd_subtype')->nullable();
             $table->foreignId('segment_id')->constrained()->onDelete('cascade');
@@ -42,7 +42,7 @@ return new class extends Migration
 
             // Standard order fields
             $table->string('order_number')->unique();
-            $table->foreignId('original_customer_id')->nullable()->constrained('customers')->onDelete('set null'); // Original customer if different from end customer
+            $table->foreignId('original_company_id')->nullable()->constrained('companies')->onDelete('set null'); // Original company if different from end company
             $table->foreignId('lead_id')->nullable()->constrained()->onDelete('set null');
             $table->enum('status', ['draft', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'])->default('draft');
             $table->decimal('subtotal', 16, 2)->default(0);

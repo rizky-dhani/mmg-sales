@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Customer;
-use App\Models\CustomerGroup;
+use App\Models\Company;
+use App\Models\CompanyGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
@@ -39,8 +39,8 @@ class OrderFactory extends Factory
             'spv_position_id' => Position::factory(),
             'sr_position_id' => Position::factory(),
             'area_city_id' => Territory::factory(),
-            'end_customer_id' => Customer::factory(),
-            'customer_group_id' => CustomerGroup::factory(),
+            'end_company_id' => Company::factory(),
+            'company_group_id' => CompanyGroup::factory(),
             'cd_ncd_type' => fake()->randomElement(['CD', 'NCD']),
             'ncd_subtype' => fake()->randomElement(['A', 'B', 'C', null]),
             'segment_id' => Segment::factory(),
@@ -56,7 +56,7 @@ class OrderFactory extends Factory
             'jual_kso' => fake()->randomElement(['Jual', 'KSO']),
             'distributor_id' => Distributor::factory(),
             'order_number' => 'MMG-ORD-'.now()->year.'-'.fake()->unique()->numerify('########'),
-            'original_customer_id' => Customer::factory(),
+            'original_company_id' => Company::factory(),
             'lead_id' => Lead::factory(),
             'status' => fake()->randomElement(['draft', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned']),
             'subtotal' => $subtotal,
