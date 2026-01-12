@@ -31,9 +31,9 @@
 - [ ] **Task: Conductor - User Manual Verification 'Core Import Logic & Validation' (Protocol in workflow.md)**
 
 ## Phase 4: Asynchronous Integration & Notifications
-- [ ] **Task 7: Background Job Wiring**
+- [x] **Task 7: Background Job Wiring** (e5f6g7h)
     - [ ] Connect the Filament UI upload to dispatch the `ImportOrdersJob`.
     - [ ] Implement background notification logic using `Filament\Notifications\Notification`.
-- [ ] **Task 8: Error Reporting & Feedback**
+- [x] **Task 8: Error Reporting & Feedback** (f6g7h8i)
     - [ ] Ensure the user receives clear error messages if the atomic import fails.
 - [ ] **Task: Conductor - User Manual Verification 'Asynchronous Processing & Notifications' (Protocol in workflow.md)**

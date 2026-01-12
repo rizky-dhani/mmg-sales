@@ -33,6 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(asset('assets/logo/MMG-logo.png'))
             ->brandLogoHeight('3rem')
             ->maxContentWidth(Width::Full)
+            ->databaseNotifications()
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Sales'),
