@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-## [~] Track: Create VisitInfolist for Visit resource
-*Link: [./conductor/tracks/create_visit_infolist_20260112/](./conductor/tracks/create_visit_infolist_20260112/)*
+## [~] Track: Enable Segment and Sub Segment navigation items to Super Admin only, add their data and create Seeder
+*Link: [./conductor/tracks/segment_management_20260112/](./conductor/tracks/segment_management_20260112/)*

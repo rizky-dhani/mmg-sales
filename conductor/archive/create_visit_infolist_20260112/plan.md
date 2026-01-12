@@ -6,7 +6,7 @@
     - [ ] Implement sections matching the VisitForm logic for consistency.
 - [ ] **Task: Conductor - User Manual Verification 'Infolist Implementation' (Protocol in workflow.md)**
 
-## Phase 2: Resource Integration & Verification
+## Phase 2: Resource Integration & Verification [checkpoint: d35b77c]
 - [x] **Task 2: Register Infolist in VisitResource** (i9j0k1l)
     - [ ] Update `app/Filament/Resources/Visits/VisitResource.php` to include the `infolist()` method.
 - [x] **Task 3: Verify View Page Rendering** (m1n2o3p)
