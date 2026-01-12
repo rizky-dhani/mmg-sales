@@ -1,6 +1,6 @@
 # Implementation Plan: Distributor Management
 
-## Phase 1: Resource Visibility & Access Control
+## Phase 1: Resource Visibility & Access Control [checkpoint: a43c73d]
 - [x] **Task 1: Enable Navigation for Super Admin** (a1b2c3d)
     - [ ] Update `DistributorResource.php` to show in navigation only for Super Admins.
 - [x] **Task 2: Verify Access Control (TDD)** (b2c3d4e)
