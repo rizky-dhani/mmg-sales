@@ -10,7 +10,7 @@
     - [ ] Verify existence of unique identifiers (e.g., `order_number`) for duplicate checking.
 - [ ] **Task: Conductor - User Manual Verification 'Preparation & Infrastructure' (Protocol in workflow.md)**
 
-## Phase 2: UI Implementation
+## Phase 2: UI Implementation [checkpoint: 5723f81]
 - [x] **Task 3: Orders Resource UI Enhancements** (a1b2c3d)
     - [ ] Add the "Import" Header Action to `App\Filament\Resources\OrderResource\Pages\ListOrders`.
     - [ ] Implement the upload modal and file validation (MIME type: `.xlsx`).
