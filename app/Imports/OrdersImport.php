@@ -98,6 +98,8 @@ class OrdersImport implements ToCollection
                     'total_hna_gross_sales' => (float)$row[23],
                     'discount_on' => (float)$row[24],
                     'net_sales_total' => (float)$row[25],
+                    'subtotal' => (float)$row[23],
+                    'total_amount' => (float)$row[25],
                     'sub_segment_id' => $subSegment?->id,
                     'jual_kso' => $row[27],
                     'distributor_id' => $distributor->id,
