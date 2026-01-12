@@ -1,0 +1,8 @@
+{
+  "track_id": "distributor_management_20260112",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-12T14:30:00Z",
+  "updated_at": "2026-01-12T14:30:00Z",
+  "description": "Enable Distributor resource to Super Admin only and create Seeder with only MMG and MJG"
+}

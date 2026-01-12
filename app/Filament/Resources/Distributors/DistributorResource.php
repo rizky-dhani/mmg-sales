@@ -17,7 +17,10 @@ class DistributorResource extends Resource
 {
     protected static ?string $model = Distributor::class;
 
-    protected static bool $shouldRegisterNavigation = false;
+    public static function shouldRegisterNavigation(): bool
+    {
+        return auth()->user()?->hasRole('Super Admin') ?? false;
+    }
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedTruck;
 
