@@ -1,6 +1,6 @@
 # Implementation Plan: Segment and Sub Segment Management
 
-## Phase 1: Resource Visibility & Access Control
+## Phase 1: Resource Visibility & Access Control [checkpoint: 7aabecc]
 - [x] **Task 1: Enable Navigation for Super Admin** (a1b2c3d)
     - [ ] Update `SegmentResource.php` and `SubSegmentResource.php` to show in navigation only for Super Admins.
 - [x] **Task 2: Verify Access Control (TDD)** (b2c3d4e)
