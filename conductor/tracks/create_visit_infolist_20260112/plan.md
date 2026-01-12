@@ -9,6 +9,6 @@
 ## Phase 2: Resource Integration & Verification
 - [x] **Task 2: Register Infolist in VisitResource** (i9j0k1l)
     - [ ] Update `app/Filament/Resources/Visits/VisitResource.php` to include the `infolist()` method.
-- [ ] **Task 3: Verify View Page Rendering**
+- [x] **Task 3: Verify View Page Rendering** (m1n2o3p)
     - [ ] Write a feature test to ensure the Visit view page renders with expected entries.
 - [ ] **Task: Conductor - User Manual Verification 'Resource Integration & Verification' (Protocol in workflow.md)**
