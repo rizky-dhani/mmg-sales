@@ -26,8 +26,16 @@
 - [x] Task: Add `CompanyVisitStatsWidget` and `CompanyRecentVisitsWidget` to `CompanyResource` view page.
 - [x] Task: Conductor - User Manual Verification 'Contextual Company Widget' (Protocol in workflow.md)
 
-## Phase 4: Final Polishing & Verification [ ]
-- [ ] Task: Run all tests to ensure no regressions.
-- [ ] Task: Manual verification of widget visibility across different roles (SR, ASM, Head).
-- [ ] Task: Ensure all code matches project style using `vendor/bin/pint`.
-- [ ] Task: Conductor - User Manual Verification 'Final Polishing & Verification' (Protocol in workflow.md)
+## Phase 4: Final Polishing & Verification [x]
+- [x] Task: Run all tests to ensure no regressions.
+- [x] Task: Manual verification of widget visibility across different roles (SR, ASM, Head).
+- [x] Task: Ensure all code matches project style using `vendor/bin/pint`.
+- [x] Task: Conductor - User Manual Verification 'Final Polishing & Verification' (Protocol in workflow.md)
+
+## Phase 5: Refinements [x]
+- [x] Task: Update `VisitScopeService` to support "SR with most visits to a company" logic.
+- [x] Task: Refactor `VisitStatsWidget` (Remove Total, Add Top SR/Company stat).
+- [x] Task: Update `RecentVisitsWidget` with a View action.
+- [x] Task: Refactor `SalesRepLeaderboardWidget` (Full width, User-Company grouping).
+- [x] Task: Update tests to match refined requirements.
+- [x] Task: Conductor - User Manual Verification 'Refinements' (Protocol in workflow.md)

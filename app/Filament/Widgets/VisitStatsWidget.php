@@ -19,14 +19,14 @@ class VisitStatsWidget extends StatsOverviewWidget
         $stats = $service->getVisitStats($user);
 
         return [
-            Stat::make('Total Visits', $stats['total'])
-                ->description('All time visits')
-                ->descriptionIcon('heroicon-m-clipboard-document-check')
-                ->color('primary'),
-            Stat::make('This Month', $stats['monthly'])
+            Stat::make('Monthly Visits', $stats['monthly'])
                 ->description($stats['growth'] . '% ' . ($stats['growth'] >= 0 ? 'increase' : 'decrease'))
                 ->descriptionIcon($stats['growth'] >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($stats['growth'] >= 0 ? 'success' : 'danger'),
+            Stat::make('Top Co. Engagement', $stats['top_rep_company_count'])
+                ->description('Most visits to one company by ' . $stats['top_rep_name'])
+                ->descriptionIcon('heroicon-m-building-office-2')
+                ->color('info'),
         ];
     }
 }

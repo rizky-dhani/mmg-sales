@@ -2,19 +2,27 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\User;
+use App\Models\Visit;
 use App\Services\VisitScopeService;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class SalesRepLeaderboardWidget extends TableWidget
 {
     protected static ?int $sort = 3;
 
-    protected static ?string $heading = 'Visit Leaderboard';
+    protected int|string|array $columnSpan = 'full';
+
+    protected static ?string $heading = 'Top Rep Company Engagement';
+
+    public function getTableRecordKey(Model|array $record): string
+    {
+        return $record->user_id . '-' . $record->company_id;
+    }
 
     public function table(Table $table): Table
     {
@@ -22,25 +30,21 @@ class SalesRepLeaderboardWidget extends TableWidget
         $user = Auth::user();
         $service = app(VisitScopeService::class);
 
-        // Get IDs of all subordinates recursively including the user
-        $subordinateIds = $service->getAllSubordinateIds($user)->push($user->id);
-
         return $table
-            ->query(
-                User::query()
-                    ->whereIn('id', $subordinateIds)
-                    ->withCount('visits')
-            )
+            ->query(fn (): Builder => $service->getRepCompanyLeaderboardQuery($user))
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->label('Sales Rep'),
-                Tables\Columns\TextColumn::make('visits_count')
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Sales Rep')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('company.facility_name')
+                    ->label('Company')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('visit_count')
                     ->label('Total Visits')
                     ->badge()
                     ->color('success')
                     ->sortable(),
             ])
-            ->defaultSort('visits_count', 'desc')
             ->paginated([5, 10])
             ->defaultPaginationPageOption(5);
     }

@@ -22,7 +22,7 @@ class VisitScopeService
 
         // Get IDs of all subordinates recursively
         $subordinateIds = $this->getAllSubordinateIds($user);
-        
+
         // Include the user's own ID
         $allowedUserIds = $subordinateIds->push($user->id);
 
@@ -34,6 +34,10 @@ class VisitScopeService
      */
     public function getAllSubordinateIds(User $user): Collection
     {
+        if ($user->hasRole('Super Admin') || $user->hasRole('Board of Director') || $user->hasRole('Head')) {
+            return User::pluck('id');
+        }
+
         $subordinateIds = collect();
 
         foreach ($user->subordinates as $subordinate) {
@@ -50,19 +54,17 @@ class VisitScopeService
     public function getVisitStats(User $user): array
     {
         $query = $this->getVisitQuery($user);
-        
-        $totalVisits = (clone $query)->count();
-        
+
         $currentMonthVisits = (clone $query)
             ->whereYear('visit_started_at', now()->year)
             ->whereMonth('visit_started_at', now()->month)
             ->count();
-            
+
         $lastMonthVisits = (clone $query)
             ->whereYear('visit_started_at', now()->subMonth()->year)
             ->whereMonth('visit_started_at', now()->subMonth()->month)
             ->count();
-            
+
         $growth = 0;
         if ($lastMonthVisits > 0) {
             $growth = (($currentMonthVisits - $lastMonthVisits) / $lastMonthVisits) * 100;
@@ -70,10 +72,18 @@ class VisitScopeService
             $growth = 100;
         }
 
+        // Top SR count with most visit to a company
+        $topRepCompany = (clone $query)
+            ->selectRaw('user_id, company_id, count(*) as visit_count')
+            ->groupBy('user_id', 'company_id')
+            ->orderByDesc('visit_count')
+            ->first();
+
         return [
-            'total' => $totalVisits,
             'monthly' => $currentMonthVisits,
             'growth' => round($growth, 1),
+            'top_rep_company_count' => $topRepCompany?->visit_count ?? 0,
+            'top_rep_name' => $topRepCompany?->user?->name ?? 'N/A',
         ];
     }
 
@@ -90,15 +100,28 @@ class VisitScopeService
     }
 
     /**
+     * Get query for leaderboard grouped by rep and company.
+     */
+    public function getRepCompanyLeaderboardQuery(User $user): Builder
+    {
+        return Visit::query()
+            ->whereIn('user_id', $this->getAllSubordinateIds($user)->push($user->id))
+            ->selectRaw('user_id, company_id, count(*) as visit_count')
+            ->groupBy('user_id', 'company_id')
+            ->with(['user:id,name', 'company:id,facility_name'])
+            ->orderByDesc('visit_count');
+    }
+
+    /**
      * Get visit breakdown by sales representative for a user's scope.
      */
     public function getRepBreakdown(User $user): Collection
     {
         // For the leaderboard, we only care about subordinates if they have visits
         // If the user is an SR, they only see themselves
-        
+
         $query = $this->getVisitQuery($user);
-        
+
         return $query->selectRaw('user_id, count(*) as visit_count')
             ->groupBy('user_id')
             ->with('user:id,name')
@@ -112,10 +135,10 @@ class VisitScopeService
     public function getCompanyVisitStats(User $user, int $companyId): array
     {
         $query = $this->getVisitQuery($user)->where('company_id', $companyId);
-        
+
         $total = (clone $query)->count();
         $lastVisit = (clone $query)->latest('visit_started_at')->first();
-        
+
         return [
             'total' => $total,
             'last_visit_date' => $lastVisit?->visit_started_at,

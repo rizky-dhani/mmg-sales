@@ -6,6 +6,7 @@ use App\Models\Visit;
 use App\Services\VisitScopeService;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Actions\Action;
 use Filament\Widgets\TableWidget;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +40,11 @@ class RecentVisitsWidget extends TableWidget
                 Tables\Columns\TextColumn::make('purpose')
                     ->label('Purpose')
                     ->limit(30),
+            ])
+            ->actions([
+                Action::make('view')
+                    ->icon('heroicon-m-eye')
+                    ->url(fn (Visit $record): string => route('filament.admin.resources.visits.view', $record)),
             ])
             ->paginated([5, 10])
             ->defaultPaginationPageOption(5);
