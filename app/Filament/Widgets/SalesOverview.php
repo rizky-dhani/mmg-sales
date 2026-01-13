@@ -11,6 +11,11 @@ class SalesOverview extends BaseWidget
 {
     protected ?string $heading = 'Sales Performance';
 
+    public static function canView(): bool
+    {
+        return false;
+    }
+
     protected function getStats(): array
     {
         $totalOrders = Order::count();

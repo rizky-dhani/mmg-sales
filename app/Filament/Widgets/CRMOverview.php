@@ -13,6 +13,11 @@ class CRMOverview extends BaseWidget
 {
     protected ?string $heading = 'CRM Analytics';
 
+    public static function canView(): bool
+    {
+        return false;
+    }
+
     protected function getStats(): array
     {
         $totalCompanies = Company::count();

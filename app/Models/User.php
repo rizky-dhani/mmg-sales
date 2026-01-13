@@ -93,4 +93,9 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(Activity::class);
     }
+
+    public function visits(): HasMany
+    {
+        return $this->hasMany(Visit::class);
+    }
 }

@@ -10,6 +10,11 @@ class LeadStatusOverview extends BaseWidget
 {
     protected ?string $heading = 'Lead Pipeline Status';
 
+    public static function canView(): bool
+    {
+        return false;
+    }
+
     protected function getStats(): array
     {
         $wonCount = Lead::where('status', 'won')->count();

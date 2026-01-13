@@ -9,14 +9,14 @@
     - [x] Heads/BOD see all visits.
 - [x] Task: Conductor - User Manual Verification 'Core Logic & Scoping' (Protocol in workflow.md)
 
-## Phase 2: Dashboard Widget Implementation [ ]
-- [ ] Task: Generate `VisitOverviewWidget` (Filament Stat & Table widget).
-- [ ] Task: Write tests for `VisitOverviewWidget` data calculations (Monthly Growth, Stats).
-- [ ] Task: Implement the Stats section (Total, Monthly, Growth %).
-- [ ] Task: Implement the "Recent Visits" table (Last 5-10 entries).
-- [ ] Task: Implement the "Sales Rep Leaderboard" (Visits per subordinate).
-- [ ] Task: Register `VisitOverviewWidget` in `app/Providers/Filament/AdminPanelProvider.php` or `Dashboard.php`.
-- [ ] Task: Conductor - User Manual Verification 'Dashboard Widget Implementation' (Protocol in workflow.md)
+## Phase 2: Dashboard Widget Implementation [x]
+- [x] Task: Generate `VisitStatsWidget`, `RecentVisitsWidget`, and `SalesRepLeaderboardWidget`.
+- [x] Task: Write tests for these widgets' data calculations.
+- [x] Task: Implement the Stats section (Total, Monthly, Growth %).
+- [x] Task: Implement the "Recent Visits" table (Last 5-10 entries).
+- [x] Task: Implement the "Sales Rep Leaderboard" (Visits per subordinate).
+- [x] Task: Register widgets in `AdminPanelProvider.php` if needed.
+- [x] Task: Conductor - User Manual Verification 'Dashboard Widget Implementation' (Protocol in workflow.md)
 
 ## Phase 3: Contextual Company Widget [ ]
 - [ ] Task: Generate `CompanyVisitWidget`.
