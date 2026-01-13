@@ -18,13 +18,13 @@
 - [x] Task: Register widgets in `AdminPanelProvider.php` if needed.
 - [x] Task: Conductor - User Manual Verification 'Dashboard Widget Implementation' (Protocol in workflow.md)
 
-## Phase 3: Contextual Company Widget [ ]
-- [ ] Task: Generate `CompanyVisitWidget`.
-- [ ] Task: Write tests for `CompanyVisitWidget` filtering by active Company record.
-- [ ] Task: Implement contextual Stats: "Last Visit" and "Total Visits for this Company".
-- [ ] Task: Implement contextual "Recent Activity" table.
-- [ ] Task: Add `CompanyVisitWidget` to `CompanyResource` view page.
-- [ ] Task: Conductor - User Manual Verification 'Contextual Company Widget' (Protocol in workflow.md)
+## Phase 3: Contextual Company Widget [x]
+- [x] Task: Generate `CompanyVisitStatsWidget` and `CompanyRecentVisitsWidget`.
+- [x] Task: Write tests for these widgets' data calculations.
+- [x] Task: Implement contextual Stats: "Last Visit" and "Total Visits for this Company".
+- [x] Task: Implement contextual "Recent Activity" table.
+- [x] Task: Add `CompanyVisitStatsWidget` and `CompanyRecentVisitsWidget` to `CompanyResource` view page.
+- [x] Task: Conductor - User Manual Verification 'Contextual Company Widget' (Protocol in workflow.md)
 
 ## Phase 4: Final Polishing & Verification [ ]
 - [ ] Task: Run all tests to ensure no regressions.

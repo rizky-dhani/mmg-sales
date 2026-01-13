@@ -16,4 +16,12 @@ class ViewCompany extends ViewRecord
             EditAction::make(),
         ];
     }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            \App\Filament\Widgets\CompanyVisitStatsWidget::class,
+            \App\Filament\Widgets\CompanyRecentVisitsWidget::class,
+        ];
+    }
 }
