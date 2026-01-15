@@ -15,6 +15,15 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // Ensure there's a Super Admin for development
+        $admin = User::updateOrCreate(
+            ['email' => 'superadmin@medquest.co.id'],
+            [
+                'name' => 'Super Admin',
+                'password' => 'Superadmin2025!',
+            ]
+        );
+        $admin->assignRole(['Super Admin']);
         $password = Hash::make('Mmg2025!');
 
         $users = [
@@ -108,17 +117,7 @@ class UserSeeder extends Seeder
                 ]
             );
 
-            $user->syncRoles([$userData['role']]);
+            $user->assignRole([$userData['role']]);
         }
-
-        // Ensure there's a Super Admin for development
-        $admin = User::updateOrCreate(
-            ['email' => 'superadmin@medquest.co.id'],
-            [
-                'name' => 'Super Admin',
-                'password' => 'Superadmin2025!',
-            ]
-        );
-        $admin->syncRoles(['Super Admin']);
     }
 }

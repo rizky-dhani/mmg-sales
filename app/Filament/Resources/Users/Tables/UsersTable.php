@@ -14,6 +14,7 @@ class UsersTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn($query) => $query->where('id', '!=', auth()->user()->id)->orWhere('id', '!=', 1))
             ->columns([
                 TextColumn::make('name')
                     ->label('User Name')

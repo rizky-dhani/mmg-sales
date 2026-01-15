@@ -19,7 +19,7 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
@@ -47,7 +47,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\VisitsRelationManager::class,
         ];
     }
 

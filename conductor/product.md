@@ -14,9 +14,9 @@ To provide a robust, hierarchical CRM platform that empowers every level of the 
 - **Field Sales (SR/SPV):** Daily activity logging, lead tracking, and order placement.
 
 ## Core Features
-- **Hierarchical Dashboard:** Role-based analytics for sales performance (Net Sales, AOV) and CRM health.
+- **Hierarchical Dashboard:** Role-based analytics for sales performance (Net Sales, AOV), CRM health, and real-time Visit activity tracking with hierarchical scoping.
 - **Lead Pipeline Management:** Comprehensive tracking of healthcare companies through the sales funnel.
-- **360-degree Company View:** Holistic view of company data, including a read-only history of interactions and visits.
+- **360-degree Company View:** Holistic view of company data, including a read-only history of interactions and contextual visit statistics.
 - **Bulk Order Import:** Streamlined asynchronous Excel-based import system for bulk data entry with atomic validation.
 - **Activity Audit Trail:** Detailed logging of calls, meetings, and demos to ensure accountability.
 - **Geographic Distribution Tracking:** Focused management of territories within the Java region (Provinces/Cities).
