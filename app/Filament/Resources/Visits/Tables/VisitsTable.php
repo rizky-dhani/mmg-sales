@@ -2,13 +2,22 @@
 
 namespace App\Filament\Resources\Visits\Tables;
 
+use App\Exports\VisitsExport;
+use App\Exports\VisitsMultiSheetExport;
+use App\Models\Visit;
+use Filament\Actions\Action;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Facades\Excel;
 
 class VisitsTable
 {
@@ -54,6 +63,39 @@ class VisitsTable
                     ->relationship('company', 'facility_name')
                     ->searchable()
                     ->preload(),
+                Filter::make('visit_started_at')
+                    ->form([
+                        DatePicker::make('from')->label('Date from'),
+                        DatePicker::make('until')->label('Date until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('visit_started_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('visit_started_at', '<=', $date),
+                            );
+                    }),
+            ])
+            ->headerActions([
+                Action::make('export')
+                    ->label('Export')
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->color('success')
+                    ->action(fn ($livewire, $data) => static::performExport($livewire->getFilteredSortedTableQuery(), $data['type']))
+                    ->form([
+                        \Filament\Forms\Components\Select::make('type')
+                            ->options([
+                                'standard' => 'Standard (Single Sheet)',
+                                'by_rep' => 'Grouped by Representative (Multiple Sheets)',
+                                'by_company' => 'Grouped by Company (Multiple Sheets)',
+                            ])
+                            ->default('standard')
+                            ->required(),
+                    ]),
             ])
             ->actions([
                 EditAction::make(),
@@ -61,7 +103,32 @@ class VisitsTable
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    BulkAction::make('export_selected')
+                        ->label('Export Selected')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->action(fn ($records, $data) => static::performExport(Visit::whereIn('id', $records->pluck('id')), $data['type']))
+                        ->form([
+                            \Filament\Forms\Components\Select::make('type')
+                                ->options([
+                                    'standard' => 'Standard (Single Sheet)',
+                                    'by_rep' => 'Grouped by Representative (Multiple Sheets)',
+                                    'by_company' => 'Grouped by Company (Multiple Sheets)',
+                                ])
+                                ->default('standard')
+                                ->required(),
+                        ]),
                 ]),
             ]);
+    }
+
+    protected static function performExport(Builder $query, string $type)
+    {
+        $filename = 'visits-export-'.now()->format('Y-m-d').'.xlsx';
+
+        return match ($type) {
+            'by_rep' => Excel::download(new VisitsMultiSheetExport($query, 'user'), $filename),
+            'by_company' => Excel::download(new VisitsMultiSheetExport($query, 'company'), $filename),
+            default => Excel::download(new VisitsExport($query), $filename),
+        };
     }
 }
