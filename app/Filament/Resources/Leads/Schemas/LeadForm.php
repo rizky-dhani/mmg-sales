@@ -25,8 +25,8 @@ class LeadForm
                                     ->label('Lead Title')
                                     ->required()
                                     ->maxLength(255),
-                                TextInput::make('company_name')
-                                    ->label('Company Name')
+                                TextInput::make('customer_name')
+                                    ->label('Customer Name')
                                     ->required()
                                     ->maxLength(255),
                                 TextInput::make('contact_person')

@@ -15,7 +15,7 @@ class ActivityForm
         return $schema
             ->components([
                 Select::make('lead_id')
-                    ->relationship('lead', 'company_name')
+                    ->relationship('lead', 'customer_name')
                     ->searchable()
                     ->required()
                     ->preload(),

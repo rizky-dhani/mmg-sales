@@ -23,7 +23,7 @@ class VisitsExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMappi
 
     public function query()
     {
-        return $this->query->with(['user', 'company']);
+        return $this->query->with(['user', 'customer']);
     }
 
     public function title(): string
@@ -54,7 +54,7 @@ class VisitsExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMappi
             'Date & Time',
             'Duration',
             'Sales Rep',
-            'Company',
+            'Customer',
             'Purpose',
             'Summary',
             'Stakeholder Feedback',
@@ -73,7 +73,7 @@ class VisitsExport implements FromQuery, ShouldAutoSize, WithHeadings, WithMappi
             $visit->visit_started_at?->format('d M Y H:i') ?? '-',
             $duration,
             $visit->user?->name ?? '-',
-            $visit->company?->facility_name ?? '-',
+            $visit->customer?->facility_name ?? '-',
             $visit->purpose,
             $visit->summary_notes,
             $visit->stakeholder_feedback,

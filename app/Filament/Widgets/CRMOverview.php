@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Company;
+use App\Models\Customer;
 use App\Models\Lead;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -20,7 +20,7 @@ class CRMOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        $totalCompanies = Company::count();
+        $totalCompanies = Customer::count();
         $totalLeads = Lead::count();
 
         // Pipeline Value: Sum of estimated value for open leads

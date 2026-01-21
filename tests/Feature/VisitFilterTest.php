@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Filament\Resources\Visits\Pages\ListVisits;
-use App\Models\Company;
+use App\Models\Customer;
 use App\Models\User;
 use App\Models\Visit;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -19,18 +19,18 @@ beforeEach(function () {
     $this->user->assignRole('Super Admin');
 });
 
-it('can filter visits by company', function () {
-    $companyA = Company::factory()->create(['facility_name' => 'Company A']);
-    $companyB = Company::factory()->create(['facility_name' => 'Company B']);
+it('can filter visits by customer', function () {
+    $customerA = Customer::factory()->create(['facility_name' => 'Customer A']);
+    $customerB = Customer::factory()->create(['facility_name' => 'Customer B']);
 
-    $visitA = Visit::factory()->create(['company_id' => $companyA->id, 'purpose' => 'Visit A']);
-    $visitB = Visit::factory()->create(['company_id' => $companyB->id, 'purpose' => 'Visit B']);
+    $visitA = Visit::factory()->create(['customer_id' => $customerA->id, 'purpose' => 'Visit A']);
+    $visitB = Visit::factory()->create(['customer_id' => $customerB->id, 'purpose' => 'Visit B']);
 
     actingAs($this->user);
 
     Livewire::test(ListVisits::class)
         ->assertCanSeeTableRecords([$visitA, $visitB])
-        ->filterTable('company_id', $companyA->id)
+        ->filterTable('customer_id', $customerA->id)
         ->assertCanSeeTableRecords([$visitA])
         ->assertCanNotSeeTableRecords([$visitB]);
 });

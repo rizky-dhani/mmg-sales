@@ -8,7 +8,7 @@ use App\Models\Order;
 use App\Models\Department;
 use App\Models\Position;
 use App\Models\Territory;
-use App\Models\Company;
+use App\Models\Customer;
 use App\Models\Principal;
 use App\Models\Item;
 use App\Models\SalesType;
@@ -29,7 +29,7 @@ test('orders import parses valid data correctly', function () {
     $sr = Position::create(['name' => 'SUMBAGUT_ARI', 'code' => 'P05', 'level' => 5, 'department_id' => $dept->id]);
     
     $territory = Territory::create(['name' => 'BATAM', 'type' => 'city', 'level' => 3]);
-    $company = Company::create(['facility_name' => 'PT. Batam Karya Husada']);
+    $customer = Customer::create(['facility_name' => 'PT. Batam Karya Husada']);
     $principal = Principal::create(['name' => 'Abbott', 'code' => 'ABBOTT']);
     $segment = Segment::create(['name' => 'UNIVERSITY', 'code' => 'UNIV']);
     $salesType = SalesType::create(['name' => 'E-Catalog', 'code' => 'ECAT']);
@@ -47,7 +47,7 @@ test('orders import parses valid data correctly', function () {
     $data = [
         [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
         [null, "Update: 181225", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-        [null, "Tahun", "Bulan", "DEPT MMG", "HEAD", "PM/JPM/PE", "RSM/ASM", "SPV", "SR", "AREA/KOTA", "Company Name", "End Company", "Group Company", "CD/ N-CD", "Segment", "Principle Name", "Reg/Inst", "Sales Type", "Principle Code", "Internal Code", "Item Name", "Qty", "HNA (Rp)", "TOTAL HNA (Gross Sales) (Rp)", "Discount (ON)", "Net Sales TOTAL (Rp)", "Segment - SUB", "JUAL/KSO", "DISTRIBUTOR", null],
+        [null, "Tahun", "Bulan", "DEPT MMG", "HEAD", "PM/JPM/PE", "RSM/ASM", "SPV", "SR", "AREA/KOTA", "Customer Name", "End Customer", "Group Customer", "CD/ N-CD", "Segment", "Principle Name", "Reg/Inst", "Sales Type", "Principle Code", "Internal Code", "Item Name", "Qty", "HNA (Rp)", "TOTAL HNA (Gross Sales) (Rp)", "Discount (ON)", "Net Sales TOTAL (Rp)", "Segment - SUB", "JUAL/KSO", "DISTRIBUTOR", null],
         [null, "2025", "8", "MMG", "DONNY", "Soni_PM", "BARAT - Rendra", "SPV_Barat by RSM Barat", "SUMBAGUT_ARI", "BATAM", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "CLINICAL", "UNIVERSITY", "Abbott", "Reg", "E-Catalog", "9H48.02", "ABB-TD-00303", "9H48.02 - EMERALD DILUENT", "2", "10000000", "20000000", "0.05", "19000000", "SUPPLIER", "JUAL", "MJG", null],
     ];
 
@@ -72,7 +72,7 @@ test('orders import fails atomically if master data is missing', function () {
     $data = [
         [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
         [null, "Update: 181225", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-        [null, "Tahun", "Bulan", "DEPT MMG", "HEAD", "PM/JPM/PE", "RSM/ASM", "SPV", "SR", "AREA/KOTA", "Company Name", "End Company", "Group Company", "CD/ N-CD", "Segment", "Principle Name", "Reg/Inst", "Sales Type", "Principle Code", "Internal Code", "Item Name", "Qty", "HNA (Rp)", "TOTAL HNA (Gross Sales) (Rp)", "Discount (ON)", "Net Sales TOTAL (Rp)", "Segment - SUB", "JUAL/KSO", "DISTRIBUTOR", null],
+        [null, "Tahun", "Bulan", "DEPT MMG", "HEAD", "PM/JPM/PE", "RSM/ASM", "SPV", "SR", "AREA/KOTA", "Customer Name", "End Customer", "Group Customer", "CD/ N-CD", "Segment", "Principle Name", "Reg/Inst", "Sales Type", "Principle Code", "Internal Code", "Item Name", "Qty", "HNA (Rp)", "TOTAL HNA (Gross Sales) (Rp)", "Discount (ON)", "Net Sales TOTAL (Rp)", "Segment - SUB", "JUAL/KSO", "DISTRIBUTOR", null],
         [null, "2025", "8", "NON_EXISTENT_DEPT", "DONNY", "Soni_PM", "BARAT - Rendra", "SPV_Barat by RSM Barat", "SUMBAGUT_ARI", "BATAM", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "CLINICAL", "UNIVERSITY", "Abbott", "Reg", "E-Catalog", "9H48.02", "ABB-TD-00303", "9H48.02 - EMERALD DILUENT", "2", "10000000", "20000000", "0.05", "19000000", "SUPPLIER", "JUAL", "MJG", null],
     ];
 
@@ -99,7 +99,7 @@ test('orders import skips duplicates correctly', function () {
     $sr = Position::create(['name' => 'SUMBAGUT_ARI', 'code' => 'P05', 'level' => 5, 'department_id' => $dept->id]);
     
     $territory = Territory::create(['name' => 'BATAM', 'type' => 'city', 'level' => 3]);
-    $company = Company::create(['facility_name' => 'PT. Batam Karya Husada']);
+    $customer = Customer::create(['facility_name' => 'PT. Batam Karya Husada']);
     $principal = Principal::create(['name' => 'Abbott', 'code' => 'ABBOTT']);
     $segment = Segment::create(['name' => 'UNIVERSITY', 'code' => 'UNIV']);
     $salesType = SalesType::create(['name' => 'E-Catalog', 'code' => 'ECAT']);
@@ -116,7 +116,7 @@ test('orders import skips duplicates correctly', function () {
     $data = [
         [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
         [null, "Update: 181225", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-        [null, "Tahun", "Bulan", "DEPT MMG", "HEAD", "PM/JPM/PE", "RSM/ASM", "SPV", "SR", "AREA/KOTA", "Company Name", "End Company", "Group Company", "CD/ N-CD", "Segment", "Principle Name", "Reg/Inst", "Sales Type", "Principle Code", "Internal Code", "Item Name", "Qty", "HNA (Rp)", "TOTAL HNA (Gross Sales) (Rp)", "Discount (ON)", "Net Sales TOTAL (Rp)", "Segment - SUB", "JUAL/KSO", "DISTRIBUTOR", null],
+        [null, "Tahun", "Bulan", "DEPT MMG", "HEAD", "PM/JPM/PE", "RSM/ASM", "SPV", "SR", "AREA/KOTA", "Customer Name", "End Customer", "Group Customer", "CD/ N-CD", "Segment", "Principle Name", "Reg/Inst", "Sales Type", "Principle Code", "Internal Code", "Item Name", "Qty", "HNA (Rp)", "TOTAL HNA (Gross Sales) (Rp)", "Discount (ON)", "Net Sales TOTAL (Rp)", "Segment - SUB", "JUAL/KSO", "DISTRIBUTOR", null],
         [null, "2025", "8", "MMG", "DONNY", "Soni_PM", "BARAT - Rendra", "SPV_Barat by RSM Barat", "SUMBAGUT_ARI", "BATAM", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "CLINICAL", "UNIVERSITY", "Abbott", "Reg", "E-Catalog", "9H48.02", "ABB-TD-00303", "9H48.02 - EMERALD DILUENT", "2", "10000000", "20000000", "0.05", "19000000", "SUPPLIER", "JUAL", "MJG", null],
         [null, "2025", "8", "MMG", "DONNY", "Soni_PM", "BARAT - Rendra", "SPV_Barat by RSM Barat", "SUMBAGUT_ARI", "BATAM", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "CLINICAL", "UNIVERSITY", "Abbott", "Reg", "E-Catalog", "9H48.02", "ABB-TD-00303", "9H48.02 - EMERALD DILUENT", "2", "10000000", "20000000", "0.05", "19000000", "SUPPLIER", "JUAL", "MJG", null], // Duplicate row
     ];
@@ -139,7 +139,7 @@ test('ImportOrdersJob dispatches and sends notification', function () {
     Position::create(['name' => 'SPV_Barat by RSM Barat', 'code' => 'SPV', 'level' => 4, 'department_id' => $dept->id]);
     Position::create(['name' => 'SUMBAGUT_ARI', 'code' => 'SR', 'level' => 5, 'department_id' => $dept->id]);
     Territory::create(['name' => 'BATAM', 'type' => 'city', 'level' => 3]);
-    Company::create(['facility_name' => 'PT. Batam Karya Husada']);
+    Customer::create(['facility_name' => 'PT. Batam Karya Husada']);
     Principal::create(['name' => 'Abbott', 'code' => 'ABB']);
     Segment::create(['name' => 'UNIVERSITY', 'code' => 'UNIV']);
     SalesType::create(['name' => 'E-Catalog', 'code' => 'ECAT']);
@@ -149,7 +149,7 @@ test('ImportOrdersJob dispatches and sends notification', function () {
     $data = [
         [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
         [null, "Update: 181225", null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null],
-        [null, "Tahun", "Bulan", "DEPT MMG", "HEAD", "PM/JPM/PE", "RSM/ASM", "SPV", "SR", "AREA/KOTA", "Company Name", "End Company", "Group Company", "CD/ N-CD", "Segment", "Principle Name", "Reg/Inst", "Sales Type", "Principle Code", "Internal Code", "Item Name", "Qty", "HNA (Rp)", "TOTAL HNA (Gross Sales) (Rp)", "Discount (ON)", "Net Sales TOTAL (Rp)", "Segment - SUB", "JUAL/KSO", "DISTRIBUTOR", null],
+        [null, "Tahun", "Bulan", "DEPT MMG", "HEAD", "PM/JPM/PE", "RSM/ASM", "SPV", "SR", "AREA/KOTA", "Customer Name", "End Customer", "Group Customer", "CD/ N-CD", "Segment", "Principle Name", "Reg/Inst", "Sales Type", "Principle Code", "Internal Code", "Item Name", "Qty", "HNA (Rp)", "TOTAL HNA (Gross Sales) (Rp)", "Discount (ON)", "Net Sales TOTAL (Rp)", "Segment - SUB", "JUAL/KSO", "DISTRIBUTOR", null],
         [null, "2025", "8", "MMG", "DONNY", "Soni_PM", "BARAT - Rendra", "SPV_Barat by RSM Barat", "SUMBAGUT_ARI", "BATAM", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "PT. Batam Karya Husada", "CLINICAL", "UNIVERSITY", "Abbott", "Reg", "E-Catalog", "9H48.02", "ABB-TD-00303", "9H48.02 - EMERALD DILUENT", "2", "10000000", "20000000", "0.05", "19000000", "SUPPLIER", "JUAL", "MJG", null],
     ];
 

@@ -109,14 +109,14 @@ class OrderForm
                             ]),
                     ]),
 
-                Section::make('Company, Logistics & Notes')
+                Section::make('Customer, Logistics & Notes')
                     ->columnSpanFull()
                     ->schema([
                         Grid::make(4)
                             ->schema([
-                                Select::make('end_company_id')
-                                    ->label('End Company')
-                                    ->relationship('company', 'facility_name')
+                                Select::make('end_customer_id')
+                                    ->label('End Customer')
+                                    ->relationship('customer', 'facility_name')
                                     ->searchable()
                                     ->required()
                                     ->preload(),
@@ -126,9 +126,9 @@ class OrderForm
                                     ->searchable()
                                     ->required()
                                     ->preload(),
-                                Select::make('company_group_id')
-                                    ->label('Company Group')
-                                    ->relationship('companyGroup', 'name')
+                                Select::make('customer_group_id')
+                                    ->label('Customer Group')
+                                    ->relationship('customerGroup', 'name')
                                     ->default(null)
                                     ->preload()
                                     ->searchable(),

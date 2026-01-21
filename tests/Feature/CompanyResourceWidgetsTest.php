@@ -2,9 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Widgets\CompanyRecentVisitsWidget;
-use App\Filament\Widgets\CompanyVisitStatsWidget;
-use App\Models\Company;
+use App\Filament\Widgets\CustomerRecentVisitsWidget;
+use App\Filament\Widgets\CustomerVisitStatsWidget;
+use App\Models\Customer;
 use App\Models\User;
 use App\Models\Visit;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -12,12 +12,12 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
 
-class CompanyResourceWidgetsTest extends TestCase
+class CustomerResourceWidgetsTest extends TestCase
 {
     use RefreshDatabase;
 
     protected User $user;
-    protected Company $company;
+    protected Customer $customer;
 
     protected function setUp(): void
     {
@@ -25,38 +25,38 @@ class CompanyResourceWidgetsTest extends TestCase
         $this->seed(RolesAndPermissionsSeeder::class);
         $this->user = User::factory()->create();
         $this->user->assignRole('Super Admin');
-        $this->company = Company::factory()->create();
+        $this->customer = Customer::factory()->create();
     }
 
-    public function test_company_visit_stats_widget_displays_correct_data()
+    public function test_customer_visit_stats_widget_displays_correct_data()
     {
         Visit::factory()->count(3)->create([
-            'company_id' => $this->company->id,
+            'customer_id' => $this->customer->id,
             'visit_started_at' => now(),
         ]);
 
         Livewire::actingAs($this->user)
-            ->test(CompanyVisitStatsWidget::class, ['record' => $this->company])
-            ->assertSee('Total Company Visits')
+            ->test(CustomerVisitStatsWidget::class, ['record' => $this->customer])
+            ->assertSee('Total Customer Visits')
             ->assertSee('3');
     }
 
-    public function test_company_recent_visits_widget_displays_only_this_company_data()
+    public function test_customer_recent_visits_widget_displays_only_this_customer_data()
     {
-        $visitThisCompany = Visit::factory()->create([
-            'company_id' => $this->company->id,
-            'purpose' => 'Correct Company Visit'
+        $visitThisCustomer = Visit::factory()->create([
+            'customer_id' => $this->customer->id,
+            'purpose' => 'Correct Customer Visit'
         ]);
         
-        $otherCompany = Company::factory()->create();
-        $visitOtherCompany = Visit::factory()->create([
-            'company_id' => $otherCompany->id,
-            'purpose' => 'Wrong Company Visit'
+        $otherCustomer = Customer::factory()->create();
+        $visitOtherCustomer = Visit::factory()->create([
+            'customer_id' => $otherCustomer->id,
+            'purpose' => 'Wrong Customer Visit'
         ]);
 
         Livewire::actingAs($this->user)
-            ->test(CompanyRecentVisitsWidget::class, ['record' => $this->company])
-            ->assertCanSeeTableRecords([$visitThisCompany])
-            ->assertCanNotSeeTableRecords([$visitOtherCompany]);
+            ->test(CustomerRecentVisitsWidget::class, ['record' => $this->customer])
+            ->assertCanSeeTableRecords([$visitThisCustomer])
+            ->assertCanNotSeeTableRecords([$visitOtherCustomer]);
     }
 }

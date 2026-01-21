@@ -81,18 +81,17 @@ class OrderInfolist
                             ]),
                     ]),
 
-                Section::make('Company & Logistics')
+                Section::make('Customer & Logistics')
                     ->columnSpanFull()
                     ->columns(5)
                     ->schema([
-                        TextEntry::make('company.facility_name')
-                            ->label('End Company')
+                        TextEntry::make('customer.facility_name')
+                            ->label('End Customer')
                             ->weight('bold'),
                         TextEntry::make('territory.name')
                             ->label('Area/City'),
-                        TextEntry::make('companyGroup.name')
-                            ->label('Company Group'),
-                        TextEntry::make('distributor.name')
+                        TextEntry::make('customerGroup.name')
+                            ->label('Customer Group'),                        TextEntry::make('distributor.name')
                             ->label('Distributor'),
                         TextEntry::make('shipping_address')
                             ->label('Shipping Address')

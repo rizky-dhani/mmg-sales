@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Company;
-use App\Models\CompanyGroup;
+use App\Models\Customer;
+use App\Models\CustomerGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
@@ -41,8 +41,8 @@ class SampleSalesDataSeeder extends Seeder
         }
 
         // 2. Configuration Data
-        $govGroup = CompanyGroup::updateOrCreate(['code' => 'GOV'], ['name' => 'Government', 'is_active' => true]);
-        $privGroup = CompanyGroup::updateOrCreate(['code' => 'PRIV'], ['name' => 'Private', 'is_active' => true]);
+        $govGroup = CustomerGroup::updateOrCreate(['code' => 'GOV'], ['name' => 'Government', 'is_active' => true]);
+        $privGroup = CustomerGroup::updateOrCreate(['code' => 'PRIV'], ['name' => 'Private', 'is_active' => true]);
 
         $pharmaSegment = Segment::updateOrCreate(['code' => 'PHARMA'], ['name' => 'Pharmaceuticals']);
         $medEquipSegment = Segment::updateOrCreate(['code' => 'MEDEQ'], ['name' => 'Medical Equipment']);
@@ -93,16 +93,16 @@ class SampleSalesDataSeeder extends Seeder
         }
         $itemIds = Item::pluck('id')->toArray();
 
-        // 4. Companies
-        $companiesData = [
+        // 4. Customers
+        $customersData = [
             ['email' => 'rs_central@example.com', 'name' => 'RS Central Jakarta', 'type' => 'hospital', 'class' => 'tier_1'],
             ['email' => 'klinik_bunda@example.com', 'name' => 'Klinik Bunda', 'type' => 'clinic', 'class' => 'tier_2'],
             ['email' => 'apotek_jaya@example.com', 'name' => 'Apotek Jaya', 'type' => 'pharmacy', 'class' => 'tier_3'],
             ['email' => 'lab_pintar@example.com', 'name' => 'Lab Pintar', 'type' => 'laboratory', 'class' => 'tier_2'],
         ];
 
-        foreach ($companiesData as $c) {
-            Company::updateOrCreate(
+        foreach ($customersData as $c) {
+            Customer::updateOrCreate(
                 ['email' => $c['email']],
                 [
                     'facility_name' => $c['name'],
@@ -115,7 +115,7 @@ class SampleSalesDataSeeder extends Seeder
                 ]
             );
         }
-        $companyIds = Company::pluck('id')->toArray();
+        $customerIds = Customer::pluck('id')->toArray();
 
         // 5. Leads (Variative)
         $leadStatuses = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
@@ -124,7 +124,7 @@ class SampleSalesDataSeeder extends Seeder
 
         for ($i = 1; $i <= 15; $i++) {
             Lead::create([
-                'company_name' => 'Prospect '.Str::random(5),
+                'customer_name' => 'Prospect '.Str::random(5),
                 'contact_person' => 'Contact '.$i,
                 'email' => 'contact'.$i.'@prospect.com',
                 'phone' => '0812'.rand(10000000, 99999999),
@@ -132,7 +132,7 @@ class SampleSalesDataSeeder extends Seeder
                 'source' => $leadSources[array_rand($leadSources)],
                 'priority' => $leadPriorities[array_rand($leadPriorities)],
                 'estimated_value' => rand(5000000, 100000000),
-                'company_id' => $i % 2 == 0 ? $companyIds[array_rand($companyIds)] : null,
+                'customer_id' => $i % 2 == 0 ? $customerIds[array_rand($customerIds)] : null,
                 'assigned_to' => $user?->id,
             ]);
         }
@@ -157,8 +157,8 @@ class SampleSalesDataSeeder extends Seeder
                 'spv_position_id' => $spvPos->id,
                 'sr_position_id' => $srPos->id,
                 'area_city_id' => $cities->random()->id,
-                'end_company_id' => $companyIds[array_rand($companyIds)],
-                'company_group_id' => rand(0, 1) ? $govGroup->id : $privGroup->id,
+                'end_customer_id' => $customerIds[array_rand($customerIds)],
+                'customer_group_id' => rand(0, 1) ? $govGroup->id : $privGroup->id,
                 'cd_ncd_type' => rand(0, 1) ? 'CD' : 'NCD',
                 'segment_id' => rand(0, 1) ? $pharmaSegment->id : $medEquipSegment->id,
                 'principal_id' => $selectedItem->principal_id,

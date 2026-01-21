@@ -51,7 +51,7 @@ class LeadBoard extends BoardPage
                         ->placeholder('Untitled Lead')
                         ->url(fn (Lead $record) => route('filament.admin.resources.leads.edit', $record)),
 
-                    TextEntry::make('company_name')
+                    TextEntry::make('customer_name')
                         ->label('')
                         ->size(TextSize::Small)
                         ->icon('heroicon-m-building-office')

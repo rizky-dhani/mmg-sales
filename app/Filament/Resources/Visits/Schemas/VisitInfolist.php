@@ -17,10 +17,10 @@ class VisitInfolist
                 Section::make('Visit Logistics')
                     ->columns(2)
                     ->schema([
-                        TextEntry::make('company.facility_name')
-                            ->label('Company')
+                        TextEntry::make('customer.facility_name')
+                            ->label('Customer')
                             ->weight('bold')
-                            ->url(fn ($record) => $record->company_id ? "/admin/companies/{$record->company_id}" : null),
+                            ->url(fn ($record) => $record->customer_id ? "/admin/companies/{$record->customer_id}" : null),
                         TextEntry::make('contact')
                             ->label('Contact Person')
                             ->formatStateUsing(fn ($record) => $record->contact ? "{$record->contact->first_name} {$record->contact->last_name}" : '-'),
@@ -62,7 +62,7 @@ class VisitInfolist
                             ->label('Manager/Stakeholder Feedback')
                             ->placeholder('No feedback yet.'),
                         IconEntry::make('is_worth_keeping')
-                            ->label('Is this company worth keeping?')
+                            ->label('Is this customer worth keeping?')
                             ->boolean(),
                     ])
                     ->visible(fn () => Auth::user()?->hasAnyRole(['Super Admin', 'Board of Director'])),

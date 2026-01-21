@@ -2,11 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Resources\Companies\CompanyResource;
-use App\Filament\Resources\Companies\Pages\EditCompany;
-use App\Filament\Resources\Companies\Pages\ViewCompany;
-use App\Filament\Resources\Companies\RelationManagers\VisitsRelationManager;
-use App\Models\Company;
+use App\Filament\Resources\Customers\CustomerResource;
+use App\Filament\Resources\Customers\Pages\EditCustomer;
+use App\Filament\Resources\Customers\Pages\ViewCustomer;
+use App\Filament\Resources\Customers\RelationManagers\VisitsRelationManager;
+use App\Models\Customer;
 use App\Models\User;
 use App\Models\Visit;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -22,15 +22,15 @@ beforeEach(function () {
     $this->user->assignRole('Super Admin');
 });
 
-it('can list visits for a company and only has view action', function () {
-    $company = Company::factory()->create();
-    $visits = Visit::factory()->count(3)->create(['company_id' => $company->id]);
+it('can list visits for a customer and only has view action', function () {
+    $customer = Customer::factory()->create();
+    $visits = Visit::factory()->count(3)->create(['customer_id' => $customer->id]);
 
     actingAs($this->user);
 
     Livewire::test(VisitsRelationManager::class, [
-        'ownerRecord' => $company,
-        'pageClass' => ViewCompany::class,
+        'ownerRecord' => $customer,
+        'pageClass' => ViewCustomer::class,
     ])
         ->assertCanSeeTableRecords($visits)
         ->assertTableColumnExists('user.name')
@@ -43,29 +43,29 @@ it('can list visits for a company and only has view action', function () {
 });
 
 it('is visible on view page and hidden on edit page', function () {
-    $company = Company::factory()->create();
+    $customer = Customer::factory()->create();
 
     actingAs($this->user);
 
-    expect(VisitsRelationManager::canViewForRecord($company, ViewCompany::class))->toBeTrue();
-    expect(VisitsRelationManager::canViewForRecord($company, EditCompany::class))->toBeFalse();
+    expect(VisitsRelationManager::canViewForRecord($customer, ViewCustomer::class))->toBeTrue();
+    expect(VisitsRelationManager::canViewForRecord($customer, EditCustomer::class))->toBeFalse();
 });
 
 it('renders on the view page but not on the edit page', function () {
-    $company = Company::factory()->create();
-    $visit = Visit::factory()->create(['company_id' => $company->id]);
+    $customer = Customer::factory()->create();
+    $visit = Visit::factory()->create(['customer_id' => $customer->id]);
 
     actingAs($this->user);
 
     // View Page
-    $this->get(CompanyResource::getUrl('view', ['record' => $company]))
+    $this->get(CustomerResource::getUrl('view', ['record' => $customer]))
         ->assertSuccessful()
         ->assertSee('Visits'); // This might still match sidebar
 
     // Edit Page
     // We expect the relation manager NOT to be there. 
     // Filament relation managers are rendered as livewire components.
-    $this->get(CompanyResource::getUrl('edit', ['record' => $company]))
+    $this->get(CustomerResource::getUrl('edit', ['record' => $customer]))
         ->assertSuccessful()
         ->assertDontSeeHtml('app.filament.resources.companies.relation-managers.visits-relation-manager');
 });

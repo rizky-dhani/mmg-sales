@@ -15,7 +15,7 @@ class Lead extends Model
 
     protected $fillable = [
         'title',
-        'company_name',
+        'customer_name',
         'contact_person',
         'email',
         'phone',
@@ -24,7 +24,7 @@ class Lead extends Model
         'priority',
         'estimated_value',
         'notes',
-        'company_id',
+        'customer_id',
         'converted_at',
         'last_contacted_at',
         'assigned_to',
@@ -39,9 +39,9 @@ class Lead extends Model
         return $days.' '.str('day')->plural($days);
     }
 
-    public function company(): BelongsTo
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function assignedUser(): BelongsTo

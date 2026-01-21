@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Company;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -26,7 +26,7 @@ class LeadFactory extends Factory
 
         return [
             'title' => fake()->randomElement($opportunityTypes).' - '.fake()->city(),
-            'company_name' => fake('id_ID')->company(),
+            'customer_name' => fake('id_ID')->company(),
             'contact_person' => fake('id_ID')->name(),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake('id_ID')->phoneNumber(),
@@ -35,7 +35,7 @@ class LeadFactory extends Factory
             'priority' => fake()->randomElement(['low', 'medium', 'high', 'urgent']),
             'estimated_value' => fake()->numberBetween(10000000, 1000000000),
             'notes' => fake()->paragraph(),
-            'company_id' => fake()->boolean(30) ? Company::factory() : null,
+            'customer_id' => fake()->boolean(30) ? Customer::factory() : null,
             'assigned_to' => User::factory(),
             'position' => str()->random(10), // Flowforge expects a string position
         ];

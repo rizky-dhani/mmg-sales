@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Models\Company;
+use App\Models\Customer;
 use App\Models\User;
 use App\Models\Visit;
 use App\Services\VisitScopeService;
@@ -102,27 +102,27 @@ class VisitScopeServiceTest extends TestCase
         $this->assertEquals(50.0, $stats['growth']); // (3-2)/2 * 100 = 50%
     }
 
-    public function test_it_calculates_company_stats_correctly()
+    public function test_it_calculates_customer_stats_correctly()
     {
         $user = User::factory()->create();
         $user->assignRole('Head');
-        $company = Company::factory()->create();
+        $customer = Customer::factory()->create();
 
         $lastMonth = now()->subMonth();
         Visit::factory()->create([
             'user_id' => $user->id,
-            'company_id' => $company->id,
+            'customer_id' => $customer->id,
             'visit_started_at' => $lastMonth,
         ]);
 
         $today = now();
         Visit::factory()->create([
             'user_id' => $user->id,
-            'company_id' => $company->id,
+            'customer_id' => $customer->id,
             'visit_started_at' => $today,
         ]);
 
-        $stats = $this->service->getCompanyVisitStats($user, $company->id);
+        $stats = $this->service->getCustomerVisitStats($user, $customer->id);
 
         $this->assertEquals(2, $stats['total']);
         $this->assertEquals($today->toDateTimeString(), $stats['last_visit_date']->toDateTimeString());

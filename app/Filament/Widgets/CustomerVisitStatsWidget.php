@@ -2,31 +2,31 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Company;
+use App\Models\Customer;
 use App\Services\VisitScopeService;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class CompanyVisitStatsWidget extends StatsOverviewWidget
+class CustomerVisitStatsWidget extends StatsOverviewWidget
 {
     public ?Model $record = null;
 
     protected function getStats(): array
     {
-        if (!$this->record instanceof Company) {
+        if (!$this->record instanceof Customer) {
             return [];
         }
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
         $service = app(VisitScopeService::class);
-        $stats = $service->getCompanyVisitStats($user, $this->record->id);
+        $stats = $service->getCustomerVisitStats($user, $this->record->id);
 
         return [
-            Stat::make('Total Company Visits', $stats['total'])
-                ->description('All time visits to this company')
+            Stat::make('Total Customer Visits', $stats['total'])
+                ->description('All time visits to this customer')
                 ->descriptionIcon('heroicon-m-building-office')
                 ->color('primary'),
             Stat::make('Last Visit', $stats['last_visit_date']?->format('d M Y') ?? 'No visits yet')

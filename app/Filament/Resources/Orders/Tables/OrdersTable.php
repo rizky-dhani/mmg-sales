@@ -28,8 +28,8 @@ class OrdersTable
                     ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->sortable(),
 
-                TextColumn::make('company.facility_name')
-                    ->label('End Company')
+                TextColumn::make('customer.facility_name')
+                    ->label('End Customer')
                     ->searchable()
                     ->sortable(),
 

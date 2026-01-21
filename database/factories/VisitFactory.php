@@ -3,7 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Contact;
-use App\Models\Company;
+use App\Models\Customer;
 use App\Models\User;
 use App\Models\Visit;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,7 +24,7 @@ class VisitFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'company_id' => Company::factory(),
+            'customer_id' => Customer::factory(),
             'contact_id' => Contact::factory(),
             'visit_started_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'visit_ended_at' => function (array $attributes) {

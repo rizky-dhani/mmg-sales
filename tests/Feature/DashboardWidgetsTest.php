@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Filament\Widgets\RecentVisitsWidget;
 use App\Filament\Widgets\SalesRepLeaderboardWidget;
 use App\Filament\Widgets\VisitStatsWidget;
-use App\Models\Company;
+use App\Models\Customer;
 use App\Models\User;
 use App\Models\Visit;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -30,11 +30,11 @@ class DashboardWidgetsTest extends TestCase
     public function test_visit_stats_widget_displays_correct_data()
     {
         $sr = User::factory()->create(['name' => 'John Rep']);
-        $company = Company::factory()->create(['facility_name' => 'Test Clinic']);
+        $customer = Customer::factory()->create(['facility_name' => 'Test Clinic']);
         
         Visit::factory()->count(5)->create([
             'user_id' => $sr->id,
-            'company_id' => $company->id,
+            'customer_id' => $customer->id,
             'visit_started_at' => now()
         ]);
 
@@ -56,14 +56,14 @@ class DashboardWidgetsTest extends TestCase
             ->assertTableActionExists('view');
     }
 
-    public function test_sales_rep_leaderboard_displays_scoped_data_with_company()
+    public function test_sales_rep_leaderboard_displays_scoped_data_with_customer()
     {
         $sr = User::factory()->create(['name' => 'John Doe']);
-        $company = Company::factory()->create(['facility_name' => 'Med Center']);
+        $customer = Customer::factory()->create(['facility_name' => 'Med Center']);
         
         Visit::factory()->count(3)->create([
             'user_id' => $sr->id,
-            'company_id' => $company->id
+            'customer_id' => $customer->id
         ]);
 
         Livewire::actingAs($this->user)

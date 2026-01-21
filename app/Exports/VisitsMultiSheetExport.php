@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Company;
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Concerns\Exportable;
@@ -14,7 +14,7 @@ class VisitsMultiSheetExport implements WithMultipleSheets
 
     public function __construct(
         protected Builder $query,
-        protected string $groupBy = 'user' // 'user' or 'company'
+        protected string $groupBy = 'user' // 'user' or 'customer'
     ) {}
 
     public function sheets(): array
@@ -31,14 +31,14 @@ class VisitsMultiSheetExport implements WithMultipleSheets
                     $user->name
                 );
             }
-        } elseif ($this->groupBy === 'company') {
-            $companyIds = (clone $this->query)->distinct()->pluck('company_id')->toArray();
-            $companies = Company::whereIn('id', $companyIds)->get();
+        } elseif ($this->groupBy === 'customer') {
+            $customerIds = (clone $this->query)->distinct()->pluck('customer_id')->toArray();
+            $companies = Customer::whereIn('id', $customerIds)->get();
 
-            foreach ($companies as $company) {
+            foreach ($companies as $customer) {
                 $sheets[] = new VisitsExport(
-                    (clone $this->query)->where('company_id', $company->id),
-                    $company->facility_name
+                    (clone $this->query)->where('customer_id', $customer->id),
+                    $customer->facility_name
                 );
             }
         }

@@ -23,8 +23,8 @@ class VisitStatsWidget extends StatsOverviewWidget
                 ->description($stats['growth'] . '% ' . ($stats['growth'] >= 0 ? 'increase' : 'decrease'))
                 ->descriptionIcon($stats['growth'] >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($stats['growth'] >= 0 ? 'success' : 'danger'),
-            Stat::make('Top Co. Engagement', $stats['top_rep_company_count'])
-                ->description('Most visits to one company by ' . $stats['top_rep_name'])
+            Stat::make('Top Co. Engagement', $stats['top_rep_customer_count'])
+                ->description('Most visits to one customer by ' . $stats['top_rep_name'])
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('info'),
         ];

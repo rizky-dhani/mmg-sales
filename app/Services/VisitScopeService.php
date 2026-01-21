@@ -72,18 +72,19 @@ class VisitScopeService
             $growth = 100;
         }
 
-        // Top SR count with most visit to a company
-        $topRepCompany = (clone $query)
-            ->selectRaw('user_id, company_id, count(*) as visit_count')
-            ->groupBy('user_id', 'company_id')
+        // Top SR count with most visit to a customer
+        $topRepCustomer = (clone $query)
+            ->selectRaw('user_id, customer_id, count(*) as visit_count')
+            ->groupBy('user_id', 'customer_id')
             ->orderByDesc('visit_count')
             ->first();
 
         return [
+            'total' => (clone $query)->count(),
             'monthly' => $currentMonthVisits,
             'growth' => round($growth, 1),
-            'top_rep_company_count' => $topRepCompany?->visit_count ?? 0,
-            'top_rep_name' => $topRepCompany?->user?->name ?? 'N/A',
+            'top_rep_customer_count' => $topRepCustomer?->visit_count ?? 0,
+            'top_rep_name' => $topRepCustomer?->user?->name ?? 'N/A',
         ];
     }
 
@@ -93,22 +94,22 @@ class VisitScopeService
     public function getRecentVisits(User $user, int $limit = 5): Collection
     {
         return $this->getVisitQuery($user)
-            ->with(['company', 'user'])
+            ->with(['customer', 'user'])
             ->latest('visit_started_at')
             ->limit($limit)
             ->get();
     }
 
     /**
-     * Get query for leaderboard grouped by rep and company.
+     * Get query for leaderboard grouped by rep and customer.
      */
-    public function getRepCompanyLeaderboardQuery(User $user): Builder
+    public function getRepCustomerLeaderboardQuery(User $user): Builder
     {
         return Visit::query()
             ->whereIn('user_id', $this->getAllSubordinateIds($user)->push($user->id))
-            ->selectRaw('user_id, company_id, count(*) as visit_count')
-            ->groupBy('user_id', 'company_id')
-            ->with(['user:id,name', 'company:id,facility_name'])
+            ->selectRaw('user_id, customer_id, count(*) as visit_count')
+            ->groupBy('user_id', 'customer_id')
+            ->with(['user:id,name', 'customer:id,facility_name'])
             ->orderByDesc('visit_count');
     }
 
@@ -130,11 +131,11 @@ class VisitScopeService
     }
 
     /**
-     * Get visit statistics for a specific company within user's scope.
+     * Get visit statistics for a specific customer within user's scope.
      */
-    public function getCompanyVisitStats(User $user, int $companyId): array
+    public function getCustomerVisitStats(User $user, int $customerId): array
     {
-        $query = $this->getVisitQuery($user)->where('company_id', $companyId);
+        $query = $this->getVisitQuery($user)->where('customer_id', $customerId);
 
         $total = (clone $query)->count();
         $lastVisit = (clone $query)->latest('visit_started_at')->first();

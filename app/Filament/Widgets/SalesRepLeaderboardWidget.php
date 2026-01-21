@@ -17,11 +17,11 @@ class SalesRepLeaderboardWidget extends TableWidget
 
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Top Rep Company Engagement';
+    protected static ?string $heading = 'Top Rep Customer Engagement';
 
     public function getTableRecordKey(Model|array $record): string
     {
-        return $record->user_id . '-' . $record->company_id;
+        return $record->user_id . '-' . $record->customer_id;
     }
 
     public function table(Table $table): Table
@@ -31,13 +31,13 @@ class SalesRepLeaderboardWidget extends TableWidget
         $service = app(VisitScopeService::class);
 
         return $table
-            ->query(fn (): Builder => $service->getRepCompanyLeaderboardQuery($user))
+            ->query(fn (): Builder => $service->getRepCustomerLeaderboardQuery($user))
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Sales Rep')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('company.facility_name')
-                    ->label('Company')
+                Tables\Columns\TextColumn::make('customer.facility_name')
+                    ->label('Customer')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('visit_count')
                     ->label('Total Visits')

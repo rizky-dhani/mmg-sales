@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
+        Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('facility_name');
             $table->enum('facility_type', ['hospital', 'clinic', 'pharmacy', 'laboratory', 'distributor', 'other'])->default('other');
@@ -29,6 +29,7 @@ return new class extends Migration
             $table->integer('payment_terms_days')->default(30);
             $table->boolean('is_active')->default(true);
             $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('customer_group_id')->nullable()->constrained()->onDelete('set null');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -39,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('companies');
+        Schema::dropIfExists('customers');
     }
 };

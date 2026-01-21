@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Customers\Schemas;
 
-use Filament\Schemas\Schema;
-use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 
 class CustomerInfolist
 {
@@ -40,14 +40,14 @@ class CustomerInfolist
                     ->schema([
                         TextEntry::make('city'),
                         TextEntry::make('state')
-                        ->label('Province'),
+                            ->label('Province'),
                         TextEntry::make('postal_code'),
                         TextEntry::make('country'),
                         TextEntry::make('email')
-                        ->copyable(),
+                            ->copyable(),
                         TextEntry::make('phone'),
                         TextEntry::make('address')
-                        ->columnSpan(3),
+                            ->columnSpan(3),
                         TextEntry::make('website')
                             ->columnSpan(3)
                             ->url(fn ($state) => $state, true),

@@ -12,7 +12,7 @@ class Visit extends Model
 
     protected $fillable = [
         'user_id',
-        'company_id',
+        'customer_id',
         'contact_id',
         'visit_started_at',
         'visit_ended_at',
@@ -36,9 +36,9 @@ class Visit extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function company(): BelongsTo
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function contact(): BelongsTo

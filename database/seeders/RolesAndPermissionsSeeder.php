@@ -22,8 +22,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'department',
             'position',
             'territory',
-            'company',
-            'company_group',
+            'customer',
+            'customer_group',
             'contact',
             'lead',
             'product',
@@ -33,6 +33,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'segment',
             'sub_segment',
             'distributor',
+            'principal',
+            'sales_type',
         ];
 
         $actions = ['view', 'view_any', 'create', 'update', 'delete', 'restore', 'force_delete'];
@@ -66,7 +68,7 @@ class RolesAndPermissionsSeeder extends Seeder
             $role->givePermissionTo([
                 'view_any_product', 'view_product', 'create_product', 'update_product',
                 'view_any_order', 'view_order',
-                'view_any_company', 'view_company',
+                'view_any_customer', 'view_customer',
             ]);
         }
 
@@ -78,11 +80,13 @@ class RolesAndPermissionsSeeder extends Seeder
         $salesRoles = [$rsm, $asm, $spv, $sr];
         foreach ($salesRoles as $role) {
             $role->givePermissionTo([
-                'view_any_company', 'view_company', 'create_company', 'update_company',
+                'view_any_customer', 'view_customer', 'create_customer', 'update_customer',
                 'view_any_contact', 'view_contact', 'create_contact', 'update_contact',
                 'view_any_lead', 'view_lead', 'create_lead', 'update_lead',
                 'view_any_order', 'view_order', 'create_order', 'update_order',
                 'view_any_product', 'view_product',
+                'view_any_visit', 'view_visit', 'create_visit', 'update_visit',
+                'view_any_activity', 'view_activity', 'create_activity', 'update_activity',
             ]);
         }
     }

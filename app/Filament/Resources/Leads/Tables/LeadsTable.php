@@ -19,8 +19,8 @@ class LeadsTable
     {
         return $table
             ->columns([
-                TextColumn::make('company_name')
-                    ->label('Company')
+                TextColumn::make('customer_name')
+                    ->label('Customer')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
@@ -82,8 +82,8 @@ class LeadsTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('company.facility_name')
-                    ->label('Linked Company')
+                TextColumn::make('customer.facility_name')
+                    ->label('Linked Customer')
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

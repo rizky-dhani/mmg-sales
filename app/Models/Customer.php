@@ -31,7 +31,13 @@ class Customer extends Model
         'payment_terms_days',
         'is_active',
         'assigned_to',
+        'customer_group_id',
     ];
+
+    public function customerGroup(): BelongsTo
+    {
+        return $this->belongsTo(CustomerGroup::class, 'customer_group_id');
+    }
 
     public function contacts(): HasMany
     {

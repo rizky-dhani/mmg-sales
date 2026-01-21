@@ -21,8 +21,8 @@ class ActivitiesTable
                     ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
                     ->sortable(),
 
-                TextColumn::make('lead.company_name')
-                    ->label('Lead Company')
+                TextColumn::make('lead.customer_name')
+                    ->label('Lead Customer')
                     ->searchable()
                     ->sortable(),
 

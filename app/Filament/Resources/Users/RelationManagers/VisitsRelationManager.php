@@ -48,8 +48,8 @@ class VisitsRelationManager extends RelationManager
 
                         return $record->visit_started_at->diffForHumans($record->visit_ended_at, true);
                     }),
-                TextColumn::make('company.facility_name')
-                    ->label('Company')
+                TextColumn::make('customer.facility_name')
+                    ->label('Customer')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('purpose')

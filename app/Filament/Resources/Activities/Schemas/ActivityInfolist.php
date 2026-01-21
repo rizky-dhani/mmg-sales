@@ -15,8 +15,8 @@ class ActivityInfolist
                 Section::make('Activity Details')
                     ->columns(2)
                     ->schema([
-                        TextEntry::make('lead.company_name')
-                            ->label('Lead Company')
+                        TextEntry::make('lead.customer_name')
+                            ->label('Lead Customer')
                             ->weight('bold'),
                         TextEntry::make('user.name')
                             ->label('Sales Rep'),

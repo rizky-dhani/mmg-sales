@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
-            $table->string('company_name');
+            $table->string('customer_name');
             $table->string('contact_person');
             $table->string('email');
             $table->string('phone');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('priority', ['low', 'medium', 'high', 'urgent'])->default('medium');
             $table->decimal('estimated_value', 16, 2)->nullable();
             $table->text('notes')->nullable();
-            $table->foreignId('company_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('customer_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamp('converted_at')->nullable();
             $table->timestamp('last_contacted_at')->nullable();
             $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');

@@ -27,7 +27,7 @@ class LeadResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    protected static ?string $recordTitleAttribute = 'company_name';
+    protected static ?string $recordTitleAttribute = 'customer_name';
 
     public static function form(Schema $schema): Schema
     {

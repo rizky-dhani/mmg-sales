@@ -18,8 +18,8 @@ class LeadInfolist
                     ->columns(4)
                     ->columnSpanFull()
                     ->schema([
-                        TextEntry::make('company_name')
-                            ->label('Company')
+                        TextEntry::make('customer_name')
+                            ->label('Customer')
                             ->weight('bold'),
                         TextEntry::make('contact_person')
                             ->label('Contact Person'),

@@ -12,7 +12,7 @@ class Contact extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'company_id',
+        'customer_id',
         'first_name',
         'last_name',
         'position',
@@ -30,8 +30,8 @@ class Contact extends Model
         return "{$this->first_name} {$this->last_name}";
     }
 
-    public function company(): BelongsTo
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(Company::class);
+        return $this->belongsTo(Customer::class);
     }
 }

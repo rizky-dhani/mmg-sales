@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('visits', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // The Sales Rep
-            $table->foreignId('company_id')->constrained()->onDelete('cascade');
+            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
             $table->foreignId('contact_id')->nullable()->constrained()->onDelete('set null');
 
             $table->dateTime('visit_started_at')->nullable();
@@ -31,7 +31,7 @@ return new class extends Migration
 
             // The "Stakeholder Evaluation" (Stakeholder's input)
             $table->text('stakeholder_feedback')->nullable();
-            $table->boolean('is_worth_keeping')->nullable(); // Decision on company value
+            $table->boolean('is_worth_keeping')->nullable(); // Decision on customer value
 
             $table->timestamps();
         });

@@ -41,8 +41,8 @@ class VisitsTable
                 TextColumn::make('user.name')
                     ->label('Sales Rep')
                     ->sortable(),
-                TextColumn::make('company.facility_name')
-                    ->label('Company')
+                TextColumn::make('customer.facility_name')
+                    ->label('Customer')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('purpose')
@@ -58,9 +58,9 @@ class VisitsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('company_id')
-                    ->label('Company')
-                    ->relationship('company', 'facility_name')
+                SelectFilter::make('customer_id')
+                    ->label('Customer')
+                    ->relationship('customer', 'facility_name')
                     ->searchable()
                     ->preload(),
                 Filter::make('visit_started_at')
@@ -85,17 +85,19 @@ class VisitsTable
                     ->label('Export')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
-                    ->action(fn ($livewire, $data) => static::performExport($livewire->getFilteredSortedTableQuery(), $data['type']))
                     ->form([
                         \Filament\Forms\Components\Select::make('type')
                             ->options([
                                 'standard' => 'Standard (Single Sheet)',
                                 'by_rep' => 'Grouped by Representative (Multiple Sheets)',
-                                'by_company' => 'Grouped by Company (Multiple Sheets)',
+                                'by_customer' => 'Grouped by Customer (Multiple Sheets)',
                             ])
                             ->default('standard')
                             ->required(),
-                    ]),
+                    ])
+                    ->action(function (array $data, $livewire) {
+                        return static::performExport($livewire->getFilteredSortedTableQuery(), $data['type']);
+                    }),
             ])
             ->actions([
                 EditAction::make(),
@@ -112,7 +114,7 @@ class VisitsTable
                                 ->options([
                                     'standard' => 'Standard (Single Sheet)',
                                     'by_rep' => 'Grouped by Representative (Multiple Sheets)',
-                                    'by_company' => 'Grouped by Company (Multiple Sheets)',
+                                    'by_customer' => 'Grouped by Customer (Multiple Sheets)',
                                 ])
                                 ->default('standard')
                                 ->required(),
@@ -123,11 +125,12 @@ class VisitsTable
 
     protected static function performExport(Builder $query, string $type)
     {
+        \Illuminate\Support\Facades\Log::info('Exporting with type: ' . $type);
         $filename = 'visits-export-'.now()->format('Y-m-d').'.xlsx';
 
         return match ($type) {
             'by_rep' => Excel::download(new VisitsMultiSheetExport($query, 'user'), $filename),
-            'by_company' => Excel::download(new VisitsMultiSheetExport($query, 'company'), $filename),
+            'by_customer' => Excel::download(new VisitsMultiSheetExport($query, 'customer'), $filename),
             default => Excel::download(new VisitsExport($query), $filename),
         };
     }
