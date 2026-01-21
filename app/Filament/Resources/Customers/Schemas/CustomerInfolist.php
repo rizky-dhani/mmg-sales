@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Filament\Resources\Companies\Schemas;
+namespace App\Filament\Resources\Customers\Schemas;
 
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 
-class CompanyInfolist
+class CustomerInfolist
 {
     public static function configure(Schema $schema): Schema
     {

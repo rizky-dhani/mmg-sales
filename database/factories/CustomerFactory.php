@@ -3,12 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Company>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Customer>
  */
-class CompanyFactory extends Factory
+class CustomerFactory extends Factory
 {
     public function definition(): array
     {

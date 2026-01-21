@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Companies\RelationManagers;
+namespace App\Filament\Resources\Customers\RelationManagers;
 
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\DatePicker;
@@ -19,7 +19,7 @@ class VisitsRelationManager extends RelationManager
 
     public static function canViewForRecord(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): bool
     {
-        return $pageClass === \App\Filament\Resources\Companies\Pages\ViewCompany::class;
+        return $pageClass === \App\Filament\Resources\Customers\Pages\ViewCustomer::class;
     }
 
     public function form(Schema $schema): Schema

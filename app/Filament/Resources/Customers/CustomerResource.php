@@ -1,26 +1,25 @@
 <?php
 
-namespace App\Filament\Resources\Companies;
+namespace App\Filament\Resources\Customers;
 
-
-use App\Models\Company;
+use App\Models\Customer;
 use Filament\Tables\Table;
 use Filament\Schemas\Schema;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\Companies\Pages\EditCompany;
-use App\Filament\Resources\Companies\Pages\ViewCompany;
-use App\Filament\Resources\Companies\Pages\CreateCompany;
-use App\Filament\Resources\Companies\Pages\ListCompanies;
-use App\Filament\Resources\Companies\Schemas\CompanyForm;
-use App\Filament\Resources\Companies\Tables\CompaniesTable;
-use App\Filament\Resources\Companies\Schemas\CompanyInfolist;
+use App\Filament\Resources\Customers\Pages\EditCustomer;
+use App\Filament\Resources\Customers\Pages\ViewCustomer;
+use App\Filament\Resources\Customers\Pages\CreateCustomer;
+use App\Filament\Resources\Customers\Pages\ListCustomers;
+use App\Filament\Resources\Customers\Schemas\CustomerForm;
+use App\Filament\Resources\Customers\Tables\CustomersTable;
+use App\Filament\Resources\Customers\Schemas\CustomerInfolist;
 
-class CompanyResource extends Resource
+class CustomerResource extends Resource
 {
-    protected static ?string $model = Company::class;
+    protected static ?string $model = Customer::class;
 
     protected static bool $shouldRegisterNavigation = true;
 
@@ -34,17 +33,17 @@ class CompanyResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return CompanyForm::configure($schema);
+        return CustomerForm::configure($schema);
     }
 
     public static function infolist(Schema $schema): Schema
     {
-        return CompanyInfolist::configure($schema);
+        return CustomerInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return CompaniesTable::configure($table);
+        return CustomersTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -57,10 +56,10 @@ class CompanyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListCompanies::route('/'),
-            'create' => CreateCompany::route('/create'),
-            'view' => ViewCompany::route('/{record}'),
-            'edit' => EditCompany::route('/{record}/edit'),
+            'index' => ListCustomers::route('/'),
+            'create' => CreateCustomer::route('/create'),
+            'view' => ViewCustomer::route('/{record}'),
+            'edit' => EditCustomer::route('/{record}/edit'),
         ];
     }
 

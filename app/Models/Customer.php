@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Company extends Model
+class Customer extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'companies';
+    protected $table = 'customers';
 
     protected $fillable = [
         'facility_name',
@@ -35,7 +35,7 @@ class Company extends Model
 
     public function contacts(): HasMany
     {
-        return $this->hasMany(Contact::class, 'company_id');
+        return $this->hasMany(Contact::class, 'customer_id');
     }
 
     public function assignedUser(): BelongsTo
@@ -45,16 +45,16 @@ class Company extends Model
 
     public function leads(): HasMany
     {
-        return $this->hasMany(Lead::class, 'company_id');
+        return $this->hasMany(Lead::class, 'customer_id');
     }
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class, 'end_company_id');
+        return $this->hasMany(Order::class, 'end_customer_id');
     }
 
     public function visits(): HasMany
     {
-        return $this->hasMany(Visit::class, 'company_id');
+        return $this->hasMany(Visit::class, 'customer_id');
     }
 }
