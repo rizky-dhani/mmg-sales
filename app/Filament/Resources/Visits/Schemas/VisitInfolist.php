@@ -26,10 +26,12 @@ class VisitInfolist
                             ->formatStateUsing(fn ($record) => $record->contact ? "{$record->contact->first_name} {$record->contact->last_name}" : '-'),
                         TextEntry::make('visit_started_at')
                             ->label('Start Visit')
-                            ->dateTime('d M Y H:i'),
+                            ->dateTime('d M Y H:i')
+                            ->timezone('Asia/Jakarta'),
                         TextEntry::make('visit_ended_at')
                             ->label('End Visit')
-                            ->dateTime('d M Y H:i'),
+                            ->dateTime('d M Y H:i')
+                            ->timezone('Asia/Jakarta'),
                         TextEntry::make('visit_type')
                             ->badge()
                             ->color(fn (string $state): string => match ($state) {

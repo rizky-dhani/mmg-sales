@@ -27,43 +27,43 @@ class VisitForm
                             ->required()
                             ->searchable()
                             ->preload()
-                            ->helperText('If the search result is empty, click the + button to create a new one.')
-                            ->createOptionForm([
-                                TextInput::make('facility_name')
-                                    ->required(),
-                                Select::make('facility_type')
-                                    ->options([
-                                        'hospital' => 'Hospital',
-                                        'clinic' => 'Clinic',
-                                        'pharmacy' => 'Pharmacy',
-                                        'laboratory' => 'Laboratory',
-                                        'distributor' => 'Distributor',
-                                        'other' => 'Other',
-                                    ])
-                                    ->default('other')
-                                    ->required(),
-                            ])
+                            // ->helperText('If the search result is empty, click the + button to create a new one.')
+                            // ->createOptionForm([
+                            //     TextInput::make('facility_name')
+                            //         ->required(),
+                            //     Select::make('facility_type')
+                            //         ->options([
+                            //             'hospital' => 'Hospital',
+                            //             'clinic' => 'Clinic',
+                            //             'pharmacy' => 'Pharmacy',
+                            //             'laboratory' => 'Laboratory',
+                            //             'distributor' => 'Distributor',
+                            //             'other' => 'Other',
+                            //         ])
+                            //         ->default('other')
+                            //         ->required(),
+                            // ])
                             ->live(),
                         Select::make('contact_id')
                             ->label('Contact Person')
                             ->relationship('contact', 'first_name', fn ($query, $get) => $query->where('customer_id', $get('customer_id')))
                             ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->first_name} {$record->last_name}")
                             ->searchable(['first_name', 'last_name'])
-                            ->preload()
-                            ->helperText('If the search result is empty, click the + button to create a new one.')
-                            ->createOptionForm([
-                                TextInput::make('first_name')
-                                    ->required(),
-                                TextInput::make('last_name')
-                                    ->required(),
-                                TextInput::make('position')
-                                    ->placeholder('e.g. Head of Procurement'),
-                            ])
-                            ->createOptionUsing(function (array $data, $get) {
-                                $data['customer_id'] = $get('customer_id');
+                            ->preload(),
+                            // ->helperText('If the search result is empty, click the + button to create a new one.')
+                            // ->createOptionForm([
+                            //     TextInput::make('first_name')
+                            //         ->required(),
+                            //     TextInput::make('last_name')
+                            //         ->required(),
+                            //     TextInput::make('position')
+                            //         ->placeholder('e.g. Head of Procurement'),
+                            // ])
+                            // ->createOptionUsing(function (array $data, $get) {
+                            //     $data['customer_id'] = $get('customer_id');
 
-                                return Contact::create($data)->getKey();
-                            }),
+                            //     return Contact::create($data)->getKey();
+                            // }),
                         Select::make('visit_type')
                             ->options([
                                 'In-person' => 'In-person',
@@ -72,17 +72,25 @@ class VisitForm
                                 'Messaging' => 'Messaging',
                             ])
                             ->required()
+                            ->columnSpanFull()
                             ->live(),
-                        TextInput::make('meeting_link')
-                            ->label('Meeting Link')
-                            ->url()
-                            ->placeholder('https://zoom.us/j/...')
-                            ->visible(fn ($get) => $get('visit_type') === 'Video Call')
-                            ->required(),
+                        TextInput::make('location')
+                            ->placeholder('e.g. Hospital Lobby, Cafe, Office')
+                            ->visible(fn ($get) => $get('visit_type') === 'In-person')
+                            ->columnSpanFull()
+                            ->maxLength(255),
+                        // TextInput::make('meeting_link')
+                        //     ->label('Meeting Link')
+                        //     ->url()
+                        //     ->columnSpanFull()
+                        //     ->placeholder('https://zoom.us/j/...')
+                        //     ->visible(fn ($get) => $get('visit_type') === 'Video Call')
+                        //     ->required(),
                         TextInput::make('messaging_platform')
                             ->label('Messaging Platform')
                             ->placeholder('e.g. WhatsApp, Telegram, Slack')
                             ->visible(fn ($get) => $get('visit_type') === 'Messaging')
+                            ->columnSpanFull()
                             ->required(),
                         DateTimePicker::make('visit_started_at')
                             ->label('Start Visit')
@@ -91,9 +99,6 @@ class VisitForm
                         DateTimePicker::make('visit_ended_at')
                             ->label('End Visit')
                             ->after('visit_started_at'),
-                        TextInput::make('location')
-                            ->placeholder('e.g. Hospital Lobby, Cafe, Office')
-                            ->maxLength(255),
                     ]),
 
                 Section::make('Strategic Intent (Pre-Visit)')

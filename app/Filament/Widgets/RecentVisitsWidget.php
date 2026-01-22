@@ -36,6 +36,7 @@ class RecentVisitsWidget extends TableWidget
                 Tables\Columns\TextColumn::make('visit_started_at')
                     ->label('Date')
                     ->dateTime()
+                    ->timezone('Asia/Jakarta')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('purpose')
                     ->label('Purpose')

@@ -24,10 +24,12 @@ class VisitsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['user', 'customer'])->orderByDesc('created_at'))
             ->columns([
                 TextColumn::make('visit_started_at')
                     ->label('Date & Time')
                     ->dateTime('d M Y H:i')
+                    ->timezone('Asia/Jakarta')
                     ->sortable(),
                 TextColumn::make('duration')
                     ->label('Duration')
@@ -61,12 +63,9 @@ class VisitsTable
                 TextColumn::make('purpose')
                     ->limit(30)
                     ->searchable(),
-                IconColumn::make('is_worth_keeping')
-                    ->label('Worth it?')
-                    ->boolean()
-                    ->placeholder('Pending Review'),
                 TextColumn::make('created_at')
                     ->dateTime()
+                    ->timezone('Asia/Jakarta')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

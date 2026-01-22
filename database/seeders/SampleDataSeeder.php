@@ -245,6 +245,7 @@ class SampleDataSeeder extends Seeder
                 'user_id' => $user->id,
                 'customer_id' => $customer->id,
                 'contact_id' => $customer->contacts->first()->id ?? null,
+                'visit_type' => fake()->randomElement(['In-person', 'Video Call', 'Phone Call', 'Messaging']),
                 'visit_started_at' => $startedAt,
                 'visit_ended_at' => $endedAt,
                 'location' => fake()->randomElement(['Hospital Office', 'Doctor\'s Lounge', 'Hospital Lobby', 'Cafe nearby']),
@@ -254,6 +255,7 @@ class SampleDataSeeder extends Seeder
                 'summary_notes' => 'Productive meeting. The head of radiology seems interested in the new CT scanner.',
                 'stakeholder_feedback' => fake()->boolean(70) ? 'Good progress. Follow up with a formal proposal.' : null,
                 'is_worth_keeping' => fake()->boolean(80),
+                'confidence_level' => fake()->numberBetween(0, 100),
             ]);
         }
     }
