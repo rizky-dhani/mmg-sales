@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\Visits\Schemas;
 
-use Illuminate\Support\Facades\Auth;
-use Filament\Schemas\Schema;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 
 class VisitInfolist
 {
@@ -30,6 +30,22 @@ class VisitInfolist
                         TextEntry::make('visit_ended_at')
                             ->label('End Visit')
                             ->dateTime('d M Y H:i'),
+                        TextEntry::make('visit_type')
+                            ->badge()
+                            ->color(fn (string $state): string => match ($state) {
+                                'In-person' => 'success',
+                                'Video Call' => 'info',
+                                'Phone Call' => 'warning',
+                                'Messaging' => 'gray',
+                                default => 'gray',
+                            }),
+                        TextEntry::make('meeting_link')
+                            ->label('Meeting Link')
+                            ->url(fn ($record) => $record->meeting_link)
+                            ->visible(fn ($record) => $record->visit_type === 'Video Call'),
+                        TextEntry::make('messaging_platform')
+                            ->label('Messaging Platform')
+                            ->visible(fn ($record) => $record->visit_type === 'Messaging'),
                         TextEntry::make('location')
                             ->placeholder('-'),
                         TextEntry::make('user.name')
@@ -53,6 +69,10 @@ class VisitInfolist
                         TextEntry::make('summary_notes')
                             ->label('Actual Result / Summary')
                             ->placeholder('No summary notes provided.'),
+                        TextEntry::make('confidence_level')
+                            ->label('Confidence Level')
+                            ->numeric()
+                            ->suffix('%'),
                     ]),
 
                 Section::make('Stakeholder Review')

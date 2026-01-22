@@ -45,6 +45,19 @@ class VisitsTable
                     ->label('Customer')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('visit_type')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'In-person' => 'success',
+                        'Video Call' => 'info',
+                        'Phone Call' => 'warning',
+                        'Messaging' => 'gray',
+                        default => 'gray',
+                    }),
+                TextColumn::make('confidence_level')
+                    ->numeric()
+                    ->sortable()
+                    ->suffix('%'),
                 TextColumn::make('purpose')
                     ->limit(30)
                     ->searchable(),
@@ -58,6 +71,13 @@ class VisitsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('visit_type')
+                    ->options([
+                        'In-person' => 'In-person',
+                        'Video Call' => 'Video Call',
+                        'Phone Call' => 'Phone Call',
+                        'Messaging' => 'Messaging',
+                    ]),
                 SelectFilter::make('customer_id')
                     ->label('Customer')
                     ->relationship('customer', 'facility_name')
@@ -125,7 +145,7 @@ class VisitsTable
 
     protected static function performExport(Builder $query, string $type)
     {
-        \Illuminate\Support\Facades\Log::info('Exporting with type: ' . $type);
+        \Illuminate\Support\Facades\Log::info('Exporting with type: '.$type);
         $filename = 'visits-export-'.now()->format('Y-m-d').'.xlsx';
 
         return match ($type) {

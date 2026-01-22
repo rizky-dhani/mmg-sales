@@ -14,6 +14,9 @@ class Visit extends Model
         'user_id',
         'customer_id',
         'contact_id',
+        'visit_type',
+        'meeting_link',
+        'messaging_platform',
         'visit_started_at',
         'visit_ended_at',
         'location',
@@ -23,12 +26,14 @@ class Visit extends Model
         'summary_notes',
         'stakeholder_feedback',
         'is_worth_keeping',
+        'confidence_level',
     ];
 
     protected $casts = [
         'visit_started_at' => 'datetime',
         'visit_ended_at' => 'datetime',
         'is_worth_keeping' => 'boolean',
+        'confidence_level' => 'integer',
     ];
 
     public function user(): BelongsTo

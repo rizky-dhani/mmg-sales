@@ -26,6 +26,7 @@ class VisitFactory extends Factory
             'user_id' => User::factory(),
             'customer_id' => Customer::factory(),
             'contact_id' => Contact::factory(),
+            'visit_type' => $this->faker->randomElement(['In-person', 'Video Call', 'Phone Call', 'Messaging']),
             'visit_started_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
             'visit_ended_at' => function (array $attributes) {
                 return \Illuminate\Support\Carbon::parse($attributes['visit_started_at'])->addMinutes(rand(30, 120));
@@ -37,6 +38,7 @@ class VisitFactory extends Factory
             'summary_notes' => $this->faker->paragraph(),
             'stakeholder_feedback' => $this->faker->paragraph(),
             'is_worth_keeping' => $this->faker->boolean(),
+            'confidence_level' => $this->faker->numberBetween(0, 100),
         ];
     }
 }
