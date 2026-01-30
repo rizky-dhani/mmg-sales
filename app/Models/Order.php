@@ -38,7 +38,7 @@ class Order extends Model
         'distributor_id',
         'order_number',
         'original_customer_id',
-        'lead_id',
+        'project_id',
         'status',
         'subtotal',
         'tax_amount',
@@ -135,9 +135,9 @@ class Order extends Model
         return $this->belongsTo(Distributor::class);
     }
 
-    public function lead(): BelongsTo
+    public function project(): BelongsTo
     {
-        return $this->belongsTo(Lead::class);
+        return $this->belongsTo(Project::class);
     }
 
     public function creator(): BelongsTo

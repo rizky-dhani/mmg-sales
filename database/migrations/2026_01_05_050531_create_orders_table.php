@@ -43,7 +43,7 @@ return new class extends Migration
             // Standard order fields
             $table->string('order_number')->unique();
             $table->foreignId('original_customer_id')->nullable()->constrained('customers')->onDelete('set null'); // Original customer if different from end customer
-            $table->foreignId('lead_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('project_id')->nullable()->constrained()->onDelete('set null');
             $table->enum('status', ['draft', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'])->default('draft');
             $table->decimal('subtotal', 16, 2)->default(0);
             $table->decimal('tax_amount', 16, 2)->default(0);

@@ -11,32 +11,32 @@ class ActivityObserver
      */
     public function created(Activity $activity): void
     {
-        $lead = $activity->lead;
+        $project = $activity->project;
 
-        if (! $lead) {
+        if (! $project) {
             return;
         }
 
         // Update the last contacted timestamp
-        $lead->last_contacted_at = $activity->performed_at ?? now();
+        $project->last_contacted_at = $activity->performed_at ?? now();
 
         // Automated Status Transitions
-        if ($lead->status === 'new') {
+        if ($project->status === 'new') {
             // New -> Contacted
-            $lead->status = 'contacted';
+            $project->status = 'contacted';
         } elseif ($activity->outcome === 'Not Interested') {
             // Hard Stop -> Lost
-            $lead->status = 'lost';
-            $lead->converted_at = now();
-        } elseif ($lead->status === 'contacted' && in_array(strtolower($activity->type), ['presentation', 'demo', 'meeting'])) {
+            $project->status = 'lost';
+            $project->converted_at = now();
+        } elseif ($project->status === 'contacted' && in_array(strtolower($activity->type), ['presentation', 'demo', 'meeting'])) {
             // Contacted -> Qualified
-            $lead->status = 'qualified';
-        } elseif (in_array($lead->status, ['contacted', 'qualified']) && (str_contains(strtolower($activity->subject), 'proposal') || str_contains(strtolower($activity->subject), 'quote'))) {
+            $project->status = 'qualified';
+        } elseif (in_array($project->status, ['contacted', 'qualified']) && (str_contains(strtolower($activity->subject), 'proposal') || str_contains(strtolower($activity->subject), 'quote'))) {
             // Contacted/Qualified -> Proposal (if a proposal is sent)
-            $lead->status = 'proposal';
+            $project->status = 'proposal';
         }
 
-        $lead->save();
+        $project->save();
     }
 
     /**

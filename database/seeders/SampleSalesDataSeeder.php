@@ -7,10 +7,10 @@ use App\Models\CustomerGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
-use App\Models\Lead;
 use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
+use App\Models\Project;
 use App\Models\SalesType;
 use App\Models\Segment;
 use App\Models\SubSegment;
@@ -117,20 +117,20 @@ class SampleSalesDataSeeder extends Seeder
         }
         $customerIds = Customer::pluck('id')->toArray();
 
-        // 5. Leads (Variative)
-        $leadStatuses = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
-        $leadSources = ['website', 'referral', 'cold_call', 'trade_show', 'partner', 'other'];
-        $leadPriorities = ['low', 'medium', 'high', 'urgent'];
+        // 5. Projects (Variative)
+        $projectStatuses = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
+        $projectSources = ['website', 'referral', 'cold_call', 'trade_show', 'partner', 'other'];
+        $projectPriorities = ['low', 'medium', 'high', 'urgent'];
 
         for ($i = 1; $i <= 15; $i++) {
-            Lead::create([
+            Project::create([
                 'customer_name' => 'Prospect '.Str::random(5),
                 'contact_person' => 'Contact '.$i,
                 'email' => 'contact'.$i.'@prospect.com',
                 'phone' => '0812'.rand(10000000, 99999999),
-                'status' => $leadStatuses[array_rand($leadStatuses)],
-                'source' => $leadSources[array_rand($leadSources)],
-                'priority' => $leadPriorities[array_rand($leadPriorities)],
+                'status' => $projectStatuses[array_rand($projectStatuses)],
+                'source' => $projectSources[array_rand($projectSources)],
+                'priority' => $projectPriorities[array_rand($projectPriorities)],
                 'estimated_value' => rand(5000000, 100000000),
                 'customer_id' => $i % 2 == 0 ? $customerIds[array_rand($customerIds)] : null,
                 'assigned_to' => $user?->id,

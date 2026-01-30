@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Lead;
+use App\Models\Project;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -29,7 +29,7 @@ class ActivityFactory extends Factory
         $subject = fake()->randomElement($types[$type]);
 
         return [
-            'lead_id' => Lead::factory(),
+            'project_id' => Project::factory(),
             'user_id' => User::factory(),
             'type' => $type,
             'subject' => $subject,

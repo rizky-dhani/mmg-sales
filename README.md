@@ -8,13 +8,13 @@ A professional Healthcare Distribution CRM built with **Laravel 12**, **Filament
 
 ### 📊 Comprehensive Dashboard
 - **Sales Performance**: Real-time tracking of Total Net Sales, Average Order Value (AOV), and Overdue Revenue.
-- **CRM Analytics**: Visibility into Total Companies, Pipeline Value, and Stale Lead detection.
-- **Lead Pipeline**: Funnel visualization showing Won, Lost, and In-Progress opportunities.
+- **CRM Analytics**: Visibility into Total Companies, Pipeline Value, and Stale Project detection.
+- **Project Pipeline**: Funnel visualization showing Won, Lost, and In-Progress opportunities.
 
-### 🏥 CRM & Lead Management
+### 🏥 CRM & Project Management
 - **Healthcare Facilities**: Categorized management of Hospitals, Clinics, Pharmacies, and Labs with tiered classification (Tier 1-3).
 - **Activity Tracking**: Full audit trail of every interaction (Calls, Meetings, Demos) performed by Sales Representatives.
-- **Lead Lifecycle**: Track prospects from initial contact to conversion, including automated "Last Contact" tracking based on activities.
+- **Project Lifecycle**: Track prospects from initial contact to conversion, including automated "Last Contact" tracking based on activities.
 
 ### 🛒 Sales & Distribution
 - **Order Management**: Streamlined order tracking with automated IDR currency formatting and status-based badge systems.

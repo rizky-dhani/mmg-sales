@@ -49,9 +49,9 @@ class Customer extends Model
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
-    public function leads(): HasMany
+    public function projects(): HasMany
     {
-        return $this->hasMany(Lead::class, 'customer_id');
+        return $this->hasMany(Project::class, 'customer_id');
     }
 
     public function orders(): HasMany
@@ -59,8 +59,8 @@ class Customer extends Model
         return $this->hasMany(Order::class, 'end_customer_id');
     }
 
-    public function visits(): HasMany
+    public function activities(): HasMany
     {
-        return $this->hasMany(Visit::class, 'customer_id');
+        return $this->hasMany(Activity::class, 'customer_id');
     }
 }

@@ -2,74 +2,40 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Widgets\RecentVisitsWidget;
-use App\Filament\Widgets\SalesRepLeaderboardWidget;
-use App\Filament\Widgets\VisitStatsWidget;
-use App\Models\Customer;
+use App\Filament\Widgets\RecentActivitiesWidget;
+use App\Filament\Widgets\ActivityStatsWidget;
+use App\Models\Activity;
 use App\Models\User;
-use App\Models\Visit;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Livewire\Livewire;
-use Tests\TestCase;
+use function Pest\Laravel\actingAs;
+use function Pest\Laravel\seed;
+use function Pest\Livewire\livewire;
 
-class DashboardWidgetsTest extends TestCase
-{
-    use RefreshDatabase;
+uses(RefreshDatabase::class);
 
-    protected User $user;
+beforeEach(function () {
+    seed(RolesAndPermissionsSeeder::class);
+    $this->user = User::factory()->create();
+    $this->user->assignRole('Super Admin');
+    actingAs($this->user);
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->seed(RolesAndPermissionsSeeder::class);
-        $this->user = User::factory()->create();
-        $this->user->assignRole('Super Admin');
-    }
+it('activity stats widget displays correct data', function () {
+    Activity::factory()->count(5)->create([
+        'user_id' => $this->user->id,
+        'performed_at' => now(),
+        'type' => 'In-person Meeting'
+    ]);
 
-    public function test_visit_stats_widget_displays_correct_data()
-    {
-        $sr = User::factory()->create(['name' => 'John Rep']);
-        $customer = Customer::factory()->create(['facility_name' => 'Test Clinic']);
-        
-        Visit::factory()->count(5)->create([
-            'user_id' => $sr->id,
-            'customer_id' => $customer->id,
-            'visit_started_at' => now()
-        ]);
+    livewire(ActivityStatsWidget::class)
+        ->assertSee('Monthly Interactions');
+});
 
-        Livewire::actingAs($this->user)
-            ->test(VisitStatsWidget::class)
-            ->assertSee('Monthly Visits')
-            ->assertSee('5')
-            ->assertSee('Top Co. Engagement')
-            ->assertSee('John Rep');
-    }
+it('recent activities widget has view action', function () {
+    $activity = Activity::factory()->create(['subject' => 'Unique Subject X']);
 
-    public function test_recent_visits_widget_has_view_action()
-    {
-        $visit = Visit::factory()->create(['purpose' => 'Unique Purpose X']);
-
-        Livewire::actingAs($this->user)
-            ->test(RecentVisitsWidget::class)
-            ->assertCanSeeTableRecords([$visit])
-            ->assertTableActionExists('view');
-    }
-
-    public function test_sales_rep_leaderboard_displays_scoped_data_with_customer()
-    {
-        $sr = User::factory()->create(['name' => 'John Doe']);
-        $customer = Customer::factory()->create(['facility_name' => 'Med Center']);
-        
-        Visit::factory()->count(3)->create([
-            'user_id' => $sr->id,
-            'customer_id' => $customer->id
-        ]);
-
-        Livewire::actingAs($this->user)
-            ->test(SalesRepLeaderboardWidget::class)
-            ->assertSee('John Doe')
-            ->assertSee('Med Center')
-            ->assertSee('3');
-    }
-}
+    livewire(RecentActivitiesWidget::class)
+        ->assertCanSeeTableRecords([$activity])
+        ->assertTableActionExists('view');
+});

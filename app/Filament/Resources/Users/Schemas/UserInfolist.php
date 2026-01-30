@@ -28,6 +28,25 @@ class UserInfolist
                         TextEntry::make('manager.name')
                             ->label('Reports To'),
                     ]),
+
+                Section::make('Latest Interactions')
+                    ->columnSpanFull()
+                    ->schema([
+                        RepeatableEntry::make('activities')
+                            ->label('')
+                            ->schema([
+                                TextEntry::make('performed_at')
+                                    ->label('Date')
+                                    ->dateTime('d M Y H:i'),
+                                TextEntry::make('customer.facility_name')
+                                    ->label('Customer'),
+                                TextEntry::make('type')
+                                    ->badge(),
+                                TextEntry::make('subject'),
+                            ])
+                            ->columns(4)
+                            ->limit(5),
+                    ]),
             ]);
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('lead_id')->constrained()->onDelete('cascade');
+            $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // The Sales Rep who performed it
 
             $table->string('type'); // call, email, meeting, presentation, demo, etc.
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Index for performance tracking
-            $table->index(['lead_id', 'performed_at']);
+            $table->index(['project_id', 'performed_at']);
             $table->index('type');
         });
     }

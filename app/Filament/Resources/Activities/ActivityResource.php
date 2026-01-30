@@ -19,13 +19,15 @@ class ActivityResource extends Resource
 {
     protected static ?string $model = Activity::class;
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
+
+    protected static ?string $navigationLabel = 'Sales Activities';
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';
 
-    protected static ?string $navigationParentItem = 'Leads';
+    protected static ?string $navigationParentItem = 'Projects';
 
     protected static ?int $navigationSort = 2;
 
@@ -44,6 +46,11 @@ class ActivityResource extends Resource
     public static function table(Table $table): Table
     {
         return ActivitiesTable::configure($table);
+    }
+
+    public static function getChecklistAction($actionClass = \Filament\Actions\Action::class): mixed
+    {
+        return \App\Filament\Resources\Projects\ProjectResource::getChecklistAction($actionClass);
     }
 
     public static function getRelations(): array

@@ -30,6 +30,10 @@ class ProductForm
                     ])
                     ->default('other')
                     ->required(),
+                Select::make('principal_id')
+                    ->relationship('principal', 'name')
+                    ->searchable()
+                    ->preload(),
                 Textarea::make('description')
                     ->default(null)
                     ->columnSpanFull(),

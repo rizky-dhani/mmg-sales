@@ -2,8 +2,7 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Visit;
-use App\Services\VisitScopeService;
+use App\Services\ActivityScopeService;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
@@ -28,7 +27,7 @@ class SalesRepLeaderboardWidget extends TableWidget
     {
         /** @var \App\Models\User $user */
         $user = Auth::user();
-        $service = app(VisitScopeService::class);
+        $service = app(ActivityScopeService::class);
 
         return $table
             ->query(fn (): Builder => $service->getRepCustomerLeaderboardQuery($user))
@@ -39,8 +38,8 @@ class SalesRepLeaderboardWidget extends TableWidget
                 Tables\Columns\TextColumn::make('customer.facility_name')
                     ->label('Customer')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('visit_count')
-                    ->label('Total Visits')
+                Tables\Columns\TextColumn::make('activity_count')
+                    ->label('Total Interactions')
                     ->badge()
                     ->color('success')
                     ->sortable(),

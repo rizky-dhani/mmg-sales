@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Principals\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -29,6 +30,21 @@ class PrincipalForm
                     ->label('Email address')
                     ->email()
                     ->default(null),
+                TextInput::make('website')
+                    ->url()
+                    ->default(null),
+                Select::make('supplier_type')
+                    ->options([
+                        'IVD' => 'IVD',
+                        'CL' => 'CL',
+                        'Non-CL' => 'Non-CL',
+                    ])
+                    ->default(null),
+                TextInput::make('annual_target')
+                    ->label('Annual Target')
+                    ->numeric()
+                    ->prefix('IDR')
+                    ->default(0),
                 Textarea::make('address')
                     ->default(null)
                     ->columnSpanFull(),

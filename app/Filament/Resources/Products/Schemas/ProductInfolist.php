@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class ProductInfolist
@@ -21,6 +21,8 @@ class ProductInfolist
                             ->columnSpan(2),
                         TextEntry::make('sku')
                             ->label('SKU'),
+                        TextEntry::make('principal.name')
+                            ->label('Principal'),
                         TextEntry::make('category')
                             ->badge()
                             ->formatStateUsing(fn (string $state): string => ucfirst(str_replace('_', ' ', $state))),

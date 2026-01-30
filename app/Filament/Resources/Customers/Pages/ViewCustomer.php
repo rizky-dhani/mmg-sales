@@ -20,8 +20,8 @@ class ViewCustomer extends ViewRecord
     protected function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Widgets\CustomerVisitStatsWidget::class,
-            \App\Filament\Widgets\CustomerRecentVisitsWidget::class,
+            \App\Filament\Widgets\CustomerActivityStatsWidget::class,
+            \App\Filament\Widgets\CustomerRecentActivitiesWidget::class,
         ];
     }
 }

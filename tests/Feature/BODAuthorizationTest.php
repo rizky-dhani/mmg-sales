@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\User;
-use App\Models\Lead;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\Project;
+use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -16,15 +16,15 @@ beforeEach(function () {
 });
 
 it('allows BOD to view resources but denies create/update/delete', function () {
-    $lead = Lead::factory()->create();
+    $project = Project::factory()->create();
     $customer = Customer::factory()->create();
-    
-    // Test Lead Authorization
-    expect($this->bodUser->can('viewAny', Lead::class))->toBeTrue();
-    expect($this->bodUser->can('view', $lead))->toBeTrue();
-    expect($this->bodUser->can('create', Lead::class))->toBeFalse();
-    expect($this->bodUser->can('update', $lead))->toBeFalse();
-    expect($this->bodUser->can('delete', $lead))->toBeFalse();
+
+    // Test Project Authorization
+    expect($this->bodUser->can('viewAny', Project::class))->toBeTrue();
+    expect($this->bodUser->can('view', $project))->toBeTrue();
+    expect($this->bodUser->can('create', Project::class))->toBeFalse();
+    expect($this->bodUser->can('update', $project))->toBeFalse();
+    expect($this->bodUser->can('delete', $project))->toBeFalse();
 
     // Test Customer Authorization
     expect($this->bodUser->can('viewAny', Customer::class))->toBeTrue();

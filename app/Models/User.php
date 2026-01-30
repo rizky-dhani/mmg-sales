@@ -29,6 +29,8 @@ class User extends Authenticatable implements FilamentUser
         'position_id',
         'territory_id',
         'manager_id',
+        'sales_target',
+        'target_metadata',
     ];
 
     /**
@@ -51,6 +53,8 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'sales_target' => 'decimal:2',
+            'target_metadata' => 'array',
         ];
     }
 
@@ -92,10 +96,5 @@ class User extends Authenticatable implements FilamentUser
     public function activities(): HasMany
     {
         return $this->hasMany(Activity::class);
-    }
-
-    public function visits(): HasMany
-    {
-        return $this->hasMany(Visit::class);
     }
 }

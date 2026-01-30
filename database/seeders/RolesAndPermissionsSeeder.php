@@ -25,11 +25,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'customer',
             'customer_group',
             'contact',
-            'lead',
+            'project',
             'product',
             'order',
             'activity',
-            'visit',
             'segment',
             'sub_segment',
             'distributor',
@@ -82,10 +81,9 @@ class RolesAndPermissionsSeeder extends Seeder
             $role->givePermissionTo([
                 'view_any_customer', 'view_customer', 'create_customer', 'update_customer',
                 'view_any_contact', 'view_contact', 'create_contact', 'update_contact',
-                'view_any_lead', 'view_lead', 'create_lead', 'update_lead',
+                'view_any_project', 'view_project', 'create_project', 'update_project',
                 'view_any_order', 'view_order', 'create_order', 'update_order',
                 'view_any_product', 'view_product',
-                'view_any_visit', 'view_visit', 'create_visit', 'update_visit',
                 'view_any_activity', 'view_activity', 'create_activity', 'update_activity',
             ]);
         }

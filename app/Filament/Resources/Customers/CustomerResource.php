@@ -49,9 +49,11 @@ class CustomerResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\VisitsRelationManager::class,
+            RelationManagers\ContactsRelationManager::class,
+            RelationManagers\ActivitiesRelationManager::class,
         ];
     }
+
 
     public static function getPages(): array
     {

@@ -3,22 +3,21 @@
 namespace Database\Seeders;
 
 use App\Models\Activity;
-use App\Models\Customer;
 use App\Models\Contact;
+use App\Models\Customer;
 use App\Models\CustomerGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
-use App\Models\Lead;
 use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
+use App\Models\Project;
 use App\Models\SalesType;
 use App\Models\Segment;
 use App\Models\SubSegment;
 use App\Models\Territory;
 use App\Models\User;
-use App\Models\Visit;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
@@ -134,8 +133,8 @@ class SampleDataSeeder extends Seeder
             Contact::factory(rand(1, 3))->create(['customer_id' => $customer->id]);
         }
 
-        // 6. Generate Realistic Leads with Aging
-        $leadTitles = [
+        // 6. Generate Realistic Projects with Aging
+        $projectTitles = [
             'Procurement of Radiology Equipment',
             'Surgical Department Equipment Upgrade',
             'Diagnostic Lab Reagent Supply Q1',
@@ -165,8 +164,8 @@ class SampleDataSeeder extends Seeder
                 $convertedAt = (clone $createdAt)->addDays(rand(5, $ageDays));
             }
 
-            $lead = Lead::create([
-                'title' => fake()->randomElement($leadTitles).' - '.$customer->facility_name,
+            $project = Project::create([
+                'title' => fake()->randomElement($projectTitles).' - '.$customer->facility_name,
                 'customer_name' => $customer->facility_name,
                 'contact_person' => $customer->contacts->first()->name ?? fake()->name(),
                 'email' => $customer->email,
@@ -184,28 +183,28 @@ class SampleDataSeeder extends Seeder
                 'position' => str()->random(10),
             ]);
 
-            // Generate Activities for each lead
+            // Generate Activities for each project
             $activityCount = rand(2, 6);
             for ($j = 0; $j < $activityCount; $j++) {
                 Activity::factory()->create([
-                    'lead_id' => $lead->id,
-                    'user_id' => $lead->assigned_to,
+                    'project_id' => $project->id,
+                    'user_id' => $project->assigned_to,
                     'performed_at' => (clone $createdAt)->addDays(rand(0, $ageDays)),
                 ]);
             }
         }
 
-        // 7. Generate Orders (Won Leads and historical data)
-        $wonLeads = Lead::where('status', 'won')->get();
-        foreach ($wonLeads as $lead) {
+        // 7. Generate Orders (Won Projects and historical data)
+        $wonProjects = Project::where('status', 'won')->get();
+        foreach ($wonProjects as $project) {
             $item = $items->random();
             $subSegment = $subSegments->random();
-            $srUser = $users->where('id', $lead->assigned_to)->first() ?? $users->random();
+            $srUser = $users->where('id', $project->assigned_to)->first() ?? $users->random();
 
             Order::factory()->create([
-                'lead_id' => $lead->id,
-                'end_customer_id' => $lead->customer_id,
-                'original_customer_id' => $lead->customer_id,
+                'project_id' => $project->id,
+                'end_customer_id' => $project->customer_id,
+                'original_customer_id' => $project->customer_id,
                 'customer_group_id' => $customerGroups->random()->id,
                 'item_id' => $item->id,
                 'principal_id' => $item->principal_id,
@@ -220,13 +219,13 @@ class SampleDataSeeder extends Seeder
                 'rsm_asm_position_id' => $positions->where('code', 'RSM')->first()->id,
                 'head_position_id' => $positions->where('code', 'HEAD')->first()->id,
                 'created_by' => $srUser->id,
-                'order_date' => $lead->converted_at ?? Carbon::now(),
-                'total_amount' => $lead->estimated_value,
+                'order_date' => $project->converted_at ?? Carbon::now(),
+                'total_amount' => $project->estimated_value,
             ]);
         }
 
-        // 8. Generate Visits (Relationship building)
-        $visitPurposes = [
+        // 8. Generate Activities (Visits & Interactions)
+        $activityPurposes = [
             'Initial Introduction',
             'Technical Presentation',
             'Relationship Maintenance',
@@ -241,18 +240,20 @@ class SampleDataSeeder extends Seeder
             $startedAt = Carbon::now()->subDays(rand(1, 60))->subHours(rand(1, 12));
             $endedAt = (clone $startedAt)->addMinutes(rand(30, 120));
 
-            Visit::create([
+            Activity::create([
                 'user_id' => $user->id,
                 'customer_id' => $customer->id,
                 'contact_id' => $customer->contacts->first()->id ?? null,
-                'visit_type' => fake()->randomElement(['In-person', 'Video Call', 'Phone Call', 'Messaging']),
+                'type' => fake()->randomElement(['In-person Meeting', 'Online Meeting', 'Phone Call', 'Messaging']),
                 'visit_started_at' => $startedAt,
                 'visit_ended_at' => $endedAt,
+                'performed_at' => $startedAt,
                 'location' => fake()->randomElement(['Hospital Office', 'Doctor\'s Lounge', 'Hospital Lobby', 'Cafe nearby']),
-                'purpose' => fake()->randomElement($visitPurposes),
+                'purpose' => fake()->randomElement($activityPurposes),
+                'subject' => fake()->randomElement($activityPurposes),
                 'expectations' => 'Establish relationship and understand their current equipment needs.',
                 'targets' => 'Identify at least 2 potential capital equipment requirements for this year.',
-                'summary_notes' => 'Productive meeting. The head of radiology seems interested in the new CT scanner.',
+                'description' => 'Productive meeting. The head of radiology seems interested in the new CT scanner.',
                 'stakeholder_feedback' => fake()->boolean(70) ? 'Good progress. Follow up with a formal proposal.' : null,
                 'is_worth_keeping' => fake()->boolean(80),
                 'confidence_level' => fake()->numberBetween(0, 100),

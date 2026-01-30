@@ -7,9 +7,9 @@ use App\Models\CustomerGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
-use App\Models\Lead;
 use App\Models\Position;
 use App\Models\Principal;
+use App\Models\Project;
 use App\Models\SalesType;
 use App\Models\Segment;
 use App\Models\SubSegment;
@@ -57,7 +57,7 @@ class OrderFactory extends Factory
             'distributor_id' => Distributor::factory(),
             'order_number' => 'MMG-ORD-'.now()->year.'-'.fake()->unique()->numerify('########'),
             'original_customer_id' => Customer::factory(),
-            'lead_id' => Lead::factory(),
+            'project_id' => Project::factory(),
             'status' => fake()->randomElement(['draft', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned']),
             'subtotal' => $subtotal,
             'tax_amount' => $tax,
