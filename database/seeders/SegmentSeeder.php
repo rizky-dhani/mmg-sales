@@ -66,7 +66,7 @@ class SegmentSeeder extends Seeder
                         'name' => $subSegmentName,
                         'segment_id' => $segment->id,
                     ],
-                    ['code' => Str::slug($segmentName . '-' . $subSegmentName)]
+                    ['code' => Str::slug($segmentName.'-'.$subSegmentName)]
                 );
             }
         }

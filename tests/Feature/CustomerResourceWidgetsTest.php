@@ -2,13 +2,14 @@
 
 namespace Tests\Feature;
 
-use App\Filament\Widgets\CustomerRecentActivitiesWidget;
 use App\Filament\Widgets\CustomerActivityStatsWidget;
+use App\Filament\Widgets\CustomerRecentActivitiesWidget;
 use App\Models\Activity;
 use App\Models\Customer;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\seed;
 use function Pest\Livewire\livewire;
@@ -36,13 +37,13 @@ it('customer activity stats widget displays correct data', function () {
 it('customer recent activities widget displays only this customer data', function () {
     $activityThisCustomer = Activity::factory()->create([
         'customer_id' => $this->customer->id,
-        'subject' => 'Correct Customer Activity'
+        'subject' => 'Correct Customer Activity',
     ]);
 
     $otherCustomer = Customer::factory()->create();
     $activityOtherCustomer = Activity::factory()->create([
         'customer_id' => $otherCustomer->id,
-        'subject' => 'Wrong Customer Activity'
+        'subject' => 'Wrong Customer Activity',
     ]);
 
     livewire(CustomerRecentActivitiesWidget::class, ['record' => $this->customer])

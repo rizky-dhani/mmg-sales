@@ -12,14 +12,14 @@ it('populates segments and sub segments correctly', function () {
 
     // 10 Segments defined in seeder
     expect(Segment::count())->toBe(10);
-    
+
     // 17 SubSegments defined in seeder
     expect(SubSegment::count())->toBe(17);
 
     // Verify some specific data
     $this->assertDatabaseHas('segments', ['name' => 'INDUSTRY', 'code' => 'industry']);
     $this->assertDatabaseHas('sub_segments', ['name' => 'PHARMA & VACCINES', 'code' => 'industry-pharma-vaccines']);
-    
+
     // Verify relationship
     $industry = Segment::where('name', 'INDUSTRY')->first();
     expect($industry->subSegments()->count())->toBe(4);

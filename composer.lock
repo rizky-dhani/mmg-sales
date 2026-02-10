@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "071763e79c46bf38c15ff9997c274e05",
+    "content-hash": "e3c5904e55d73edbc8194cd8513190f3",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -9385,16 +9385,16 @@
         },
         {
             "name": "laravel/boost",
-            "version": "v2.0.4",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/boost.git",
-                "reference": "6f7a9f70c1b2cc5fcef1585e8aa04b8546f150e9"
+                "reference": "1c7d6f44c96937a961056778b9143218b1183302"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/boost/zipball/6f7a9f70c1b2cc5fcef1585e8aa04b8546f150e9",
-                "reference": "6f7a9f70c1b2cc5fcef1585e8aa04b8546f150e9",
+                "url": "https://api.github.com/repos/laravel/boost/zipball/1c7d6f44c96937a961056778b9143218b1183302",
+                "reference": "1c7d6f44c96937a961056778b9143218b1183302",
                 "shasum": ""
             },
             "require": {
@@ -9447,7 +9447,7 @@
                 "issues": "https://github.com/laravel/boost/issues",
                 "source": "https://github.com/laravel/boost"
             },
-            "time": "2026-01-28T13:53:50+00:00"
+            "time": "2026-02-06T10:41:29+00:00"
         },
         {
             "name": "laravel/mcp",

@@ -10,12 +10,12 @@ it('populates MMG and MJG distributors correctly', function () {
     $this->seed(DistributorSeeder::class);
 
     expect(Distributor::count())->toBe(2);
-    
+
     $this->assertDatabaseHas('distributors', [
         'name' => 'MMG',
         'code' => 'MMG',
     ]);
-    
+
     $this->assertDatabaseHas('distributors', [
         'name' => 'MJG',
         'code' => 'MJG',

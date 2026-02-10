@@ -6,8 +6,8 @@ use Database\Seeders\DepartmentSeeder;
 use Database\Seeders\PositionSeeder;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 
