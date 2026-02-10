@@ -19,7 +19,7 @@ class ActivityScopeServiceTest extends TestCase
     {
         parent::setUp();
         $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
-        $this->service = new ActivityScopeService();
+        $this->service = new ActivityScopeService;
     }
 
     public function test_sales_representative_can_only_see_their_own_activities()
@@ -41,7 +41,7 @@ class ActivityScopeServiceTest extends TestCase
     {
         $manager = User::factory()->create();
         $manager->assignRole('AreaSalesManager');
-        
+
         $subordinate = User::factory()->create(['manager_id' => $manager->id]);
         $grandSubordinate = User::factory()->create(['manager_id' => $subordinate->id]);
         $otherUser = User::factory()->create();

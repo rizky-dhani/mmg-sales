@@ -26,7 +26,7 @@ class ActivitiesTable
                 TextColumn::make('type')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
-                    ->color(fn ($state) => match($state) {
+                    ->color(fn ($state) => match ($state) {
                         'Online Meeting', 'In-person Meeting' => 'success',
                         'Call', 'Messaging' => 'info',
                         'Demo', 'Presentation' => 'warning',

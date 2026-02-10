@@ -15,7 +15,7 @@ class RecentActivitiesWidget extends TableWidget
 {
     protected static ?int $sort = 2;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 1;
 
     public function table(Table $table): Table
     {
@@ -28,7 +28,6 @@ class RecentActivitiesWidget extends TableWidget
             ->columns([
                 Tables\Columns\TextColumn::make('customer.facility_name')
                     ->label('Customer')
-                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Sales Rep')

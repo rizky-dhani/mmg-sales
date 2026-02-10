@@ -20,11 +20,11 @@ class ActivityStatsWidget extends StatsOverviewWidget
 
         return [
             Stat::make('Monthly Interactions', $stats['monthly'])
-                ->description($stats['growth'] . '% ' . ($stats['growth'] >= 0 ? 'increase' : 'decrease'))
+                ->description($stats['growth'].'% '.($stats['growth'] >= 0 ? 'increase' : 'decrease'))
                 ->descriptionIcon($stats['growth'] >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($stats['growth'] >= 0 ? 'success' : 'danger'),
             Stat::make('Top Co. Engagement', $stats['top_rep_customer_count'])
-                ->description('Most activities with one customer by ' . $stats['top_rep_name'])
+                ->description('Most activities with one customer by '.$stats['top_rep_name'])
                 ->descriptionIcon('heroicon-m-building-office-2')
                 ->color('info'),
         ];

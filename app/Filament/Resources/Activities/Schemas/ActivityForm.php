@@ -21,9 +21,10 @@ class ActivityForm
         return $schema
             ->components([
                 Grid::make(2)
+                    ->columnSpanFull()
                     ->schema([
                         Section::make('Core Information')
-                            ->columns(2)
+                            ->columns(4)
                             ->schema([
                                 Select::make('type')
                                     ->options([
@@ -58,7 +59,7 @@ class ActivityForm
                             ]),
 
                         Section::make('Customer Context')
-                            ->columns(2)
+                            ->columns(3)
                             ->schema([
                                 Select::make('customer_id')
                                     ->relationship('customer', 'facility_name')
@@ -68,7 +69,7 @@ class ActivityForm
 
                                 Select::make('contact_id')
                                     ->label('Contact Person')
-                                    ->options(fn ($get) => Contact::where('customer_id', $get('customer_id'))->pluck('name', 'id'))
+                                    ->options(fn ($get) => Contact::where('customer_id', $get('customer_id'))->get()->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
                                     ->visible(fn ($get) => $get('customer_id')),
@@ -88,11 +89,11 @@ class ActivityForm
                                 TextInput::make('location')
                                     ->maxLength(255)
                                     ->visible(fn ($get) => $get('type') === 'In-person Meeting'),
-                                
+
                                 TextInput::make('meeting_link')
                                     ->url()
                                     ->visible(fn ($get) => $get('type') === 'Online Meeting'),
-                                
+
                                 Select::make('messaging_platform')
                                     ->options([
                                         'WhatsApp' => 'WhatsApp',
@@ -103,14 +104,14 @@ class ActivityForm
 
                                 DateTimePicker::make('visit_started_at')
                                     ->label('Started At'),
-                                
+
                                 DateTimePicker::make('visit_ended_at')
                                     ->label('Ended At'),
 
                                 TextInput::make('duration_minutes')
                                     ->numeric()
                                     ->suffix('minutes'),
-                                
+
                                 Select::make('outcome')
                                     ->options([
                                         'Interested' => 'Interested',
@@ -128,7 +129,7 @@ class ActivityForm
                                     ->label('Summary Notes')
                                     ->rows(3)
                                     ->columnSpanFull(),
-                                
+
                                 Grid::make(2)
                                     ->visible(fn ($get) => in_array($get('type'), ['Online Meeting', 'In-person Meeting', 'Demo', 'Presentation']))
                                     ->schema([
@@ -145,10 +146,10 @@ class ActivityForm
                                 Toggle::make('is_worth_keeping')
                                     ->label('Is this lead/project worth keeping?')
                                     ->default(true),
-                                
+
                                 DatePicker::make('next_contact_date')
                                     ->label('Next Contact Date'),
-                                
+
                                 Textarea::make('follow_up_notes')
                                     ->columnSpanFull()
                                     ->rows(2),

@@ -15,7 +15,7 @@ class CustomerActivityStatsWidget extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        if (!$this->record instanceof Customer) {
+        if (! $this->record instanceof Customer) {
             return [];
         }
 

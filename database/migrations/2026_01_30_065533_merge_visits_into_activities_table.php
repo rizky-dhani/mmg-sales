@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -16,49 +16,49 @@ return new class extends Migration
             // Make project_id nullable first
             $table->foreignId('project_id')->nullable()->change();
 
-            if (!Schema::hasColumn('activities', 'customer_id')) {
+            if (! Schema::hasColumn('activities', 'customer_id')) {
                 $table->foreignId('customer_id')->nullable()->after('user_id')->constrained()->nullOnDelete();
             }
-            if (!Schema::hasColumn('activities', 'contact_id')) {
+            if (! Schema::hasColumn('activities', 'contact_id')) {
                 $table->foreignId('contact_id')->nullable()->after('customer_id')->constrained()->nullOnDelete();
             }
-            if (!Schema::hasColumn('activities', 'visit_started_at')) {
+            if (! Schema::hasColumn('activities', 'visit_started_at')) {
                 $table->dateTime('visit_started_at')->nullable()->after('performed_at');
             }
-            if (!Schema::hasColumn('activities', 'visit_ended_at')) {
+            if (! Schema::hasColumn('activities', 'visit_ended_at')) {
                 $table->dateTime('visit_ended_at')->nullable()->after('visit_started_at');
             }
-            if (!Schema::hasColumn('activities', 'location')) {
+            if (! Schema::hasColumn('activities', 'location')) {
                 $table->string('location')->nullable()->after('visit_ended_at');
             }
-            if (!Schema::hasColumn('activities', 'purpose')) {
+            if (! Schema::hasColumn('activities', 'purpose')) {
                 $table->string('purpose')->nullable()->after('location');
             }
-            if (!Schema::hasColumn('activities', 'expectations')) {
+            if (! Schema::hasColumn('activities', 'expectations')) {
                 $table->text('expectations')->nullable()->after('purpose');
             }
-            if (!Schema::hasColumn('activities', 'targets')) {
+            if (! Schema::hasColumn('activities', 'targets')) {
                 $table->text('targets')->nullable()->after('expectations');
             }
-            if (!Schema::hasColumn('activities', 'stakeholder_feedback')) {
+            if (! Schema::hasColumn('activities', 'stakeholder_feedback')) {
                 $table->text('stakeholder_feedback')->nullable()->after('targets');
             }
-            if (!Schema::hasColumn('activities', 'is_worth_keeping')) {
+            if (! Schema::hasColumn('activities', 'is_worth_keeping')) {
                 $table->boolean('is_worth_keeping')->default(true)->after('stakeholder_feedback');
             }
-            if (!Schema::hasColumn('activities', 'confidence_level')) {
+            if (! Schema::hasColumn('activities', 'confidence_level')) {
                 $table->integer('confidence_level')->default(0)->after('is_worth_keeping');
             }
-            if (!Schema::hasColumn('activities', 'next_contact_date')) {
+            if (! Schema::hasColumn('activities', 'next_contact_date')) {
                 $table->date('next_contact_date')->nullable()->after('confidence_level');
             }
-            if (!Schema::hasColumn('activities', 'follow_up_notes')) {
+            if (! Schema::hasColumn('activities', 'follow_up_notes')) {
                 $table->text('follow_up_notes')->nullable()->after('next_contact_date');
             }
-            if (!Schema::hasColumn('activities', 'meeting_link')) {
+            if (! Schema::hasColumn('activities', 'meeting_link')) {
                 $table->string('meeting_link')->nullable()->after('follow_up_notes');
             }
-            if (!Schema::hasColumn('activities', 'messaging_platform')) {
+            if (! Schema::hasColumn('activities', 'messaging_platform')) {
                 $table->string('messaging_platform')->nullable()->after('meeting_link');
             }
         });

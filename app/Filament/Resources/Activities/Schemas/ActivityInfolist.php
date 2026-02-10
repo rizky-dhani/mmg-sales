@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\Activities\Schemas;
 
 use Filament\Infolists\Components\TextEntry;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Carbon;
 
@@ -88,7 +88,7 @@ class ActivityInfolist
                         TextEntry::make('description')
                             ->label('Summary')
                             ->markdown(),
-                        
+
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('purpose'),

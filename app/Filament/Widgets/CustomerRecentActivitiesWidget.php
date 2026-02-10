@@ -15,15 +15,14 @@ class CustomerRecentActivitiesWidget extends TableWidget
 
     protected static ?int $sort = 2;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 1;
 
     public function table(Table $table): Table
     {
         return $table
-            ->query(fn (): Builder => 
-                Activity::query()
-                    ->where('customer_id', $this->record?->getKey())
-                    ->latest('performed_at')
+            ->query(fn (): Builder => Activity::query()
+                ->where('customer_id', $this->record?->getKey())
+                ->latest('performed_at')
             )
             ->columns([
                 Tables\Columns\TextColumn::make('user.name')
@@ -39,9 +38,6 @@ class CustomerRecentActivitiesWidget extends TableWidget
                 Tables\Columns\TextColumn::make('subject')
                     ->label('Subject')
                     ->limit(30),
-                Tables\Columns\IconColumn::make('is_worth_keeping')
-                    ->label('Worth Keeping')
-                    ->boolean(),
             ])
             ->paginated([5, 10])
             ->defaultPaginationPageOption(5);
