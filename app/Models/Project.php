@@ -24,8 +24,6 @@ class Project extends Model
         'source',
         'priority',
         'confidence_level',
-        'expected_closing_date',
-        'financial_goal',
         'estimated_value',
         'estimated_revenue',
         'estimated_completion_date',
@@ -39,8 +37,6 @@ class Project extends Model
 
     protected $casts = [
         'confidence_level' => 'integer',
-        'expected_closing_date' => 'date',
-        'financial_goal' => 'decimal:2',
         'estimated_value' => 'decimal:2',
         'estimated_revenue' => 'decimal:2',
         'estimated_completion_date' => 'date',

@@ -41,16 +41,8 @@ class ProjectInfolist
                             ->copyable(),
                         TextEntry::make('estimated_value')
                             ->money('IDR'),
-                        TextEntry::make('assignedUser.name')
-                            ->label('Sales Rep'),
-                    ]),
-
-                Section::make('Strategic Management')
-                    ->columns(3)
-                    ->columnSpanFull()
-                    ->schema([
                         TextEntry::make('confidence_level')
-                            ->label('Confidence Level')
+                            ->label('Confidence')
                             ->numeric()
                             ->suffix('%')
                             ->weight('bold')
@@ -59,12 +51,8 @@ class ProjectInfolist
                                 $state >= 50 => 'warning',
                                 default => 'danger',
                             }),
-                        TextEntry::make('expected_closing_date')
-                            ->label('Expected Closing')
-                            ->date('d M Y'),
-                        TextEntry::make('financial_goal')
-                            ->label('Financial Goal')
-                            ->money('IDR'),
+                        TextEntry::make('assignedUser.name')
+                            ->label('Sales Rep'),
                     ]),
 
                 Section::make('Suppliers & Products')
