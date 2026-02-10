@@ -164,6 +164,9 @@ class SampleDataSeeder extends Seeder
                 $convertedAt = (clone $createdAt)->addDays(rand(5, $ageDays));
             }
 
+            $estimatedValue = $items->random()->unit_price * rand(1, 5);
+            $expectedClosingDate = (clone $createdAt)->addDays(rand(30, 90));
+
             $project = Project::create([
                 'title' => fake()->randomElement($projectTitles).' - '.$customer->facility_name,
                 'customer_name' => $customer->facility_name,
@@ -173,7 +176,10 @@ class SampleDataSeeder extends Seeder
                 'status' => $status,
                 'source' => fake()->randomElement(['website', 'referral', 'trade_show', 'partner']),
                 'priority' => fake()->randomElement(['low', 'medium', 'high', 'urgent']),
-                'estimated_value' => $items->random()->unit_price * rand(1, 5),
+                'estimated_value' => $estimatedValue,
+                'estimated_revenue' => $estimatedValue * rand(80, 100) / 100, // Revenue usually a bit less or equal to gross value
+                'expected_closing_date' => $expectedClosingDate,
+                'estimated_completion_date' => (clone $expectedClosingDate)->addDays(rand(14, 45)), // Completion is usually after closing
                 'notes' => fake()->paragraph(),
                 'customer_id' => $customer->id,
                 'assigned_to' => $user->id,
