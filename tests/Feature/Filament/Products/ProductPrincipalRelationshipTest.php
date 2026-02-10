@@ -61,7 +61,7 @@ it('can edit a product to associate with a principal', function () {
     $principal1 = Principal::factory()->create();
     $principal2 = Principal::factory()->create();
     $product = Product::factory()->create(['principal_id' => $principal1->id]);
-    
+
     livewire(\App\Filament\Resources\Products\Pages\EditProduct::class, ['record' => $product->getKey()])
         ->set('data.principal_id', $principal2->id)
         ->call('save')

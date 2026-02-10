@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
-use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;

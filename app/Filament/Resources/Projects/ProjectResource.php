@@ -45,15 +45,16 @@ class ProjectResource extends Resource
         return ProjectsTable::configure($table);
     }
 
-    public static function getChecklistAction(): mixed
+    public static function getChecklistAction(string $action = Action::class): mixed
     {
-        return Action::make('updateChecklist')
+        return $action::make('updateChecklist')
             ->label('Checklist')
             ->icon('heroicon-o-check-circle')
             ->color('success')
             ->modalHeading('Strategic Checklist')
             ->modalWidth('4xl')
-            ->mountUsing(function (\Filament\Forms\Form $form, Project $record) {
+            ->mountUsing(function (\Filament\Schemas\Schema $form, Project $record) {
+                // \Log::info('Mounting action for project: ' . $record->id);
                 $form->fill([
                     'milestones' => $record->milestones->map(fn ($m) => [
                         'milestone_id' => $m->id,
@@ -91,6 +92,7 @@ class ProjectResource extends Resource
                     ->reorderable(false),
             ])
             ->action(function (Project $record, array $data) {
+                dd($data);
                 $milestones = [];
                 foreach ($data['milestones'] as $item) {
                     if (! isset($item['milestone_id'])) {
