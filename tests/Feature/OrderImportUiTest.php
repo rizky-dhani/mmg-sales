@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use App\Filament\Resources\Orders\Pages\ListOrders;
+use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+
 use function Pest\Laravel\actingAs;
 
 uses(RefreshDatabase::class);

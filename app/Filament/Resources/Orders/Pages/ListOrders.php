@@ -34,8 +34,8 @@ class ListOrders extends ListRecords
                         ->required(),
                 ])
                 ->action(function (array $data) {
-                    $path = storage_path('app/public/' . $data['attachment']);
-                    
+                    $path = storage_path('app/public/'.$data['attachment']);
+
                     ImportOrdersJob::dispatch($path, auth()->id());
 
                     Notification::make()

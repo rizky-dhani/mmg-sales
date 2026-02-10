@@ -31,12 +31,12 @@ class ImportOrdersJob implements ShouldQueue
     {
         $user = User::find($this->userId);
 
-        if (!$user) {
+        if (! $user) {
             return;
         }
 
         try {
-            Excel::import(new OrdersImport(), $this->filePath);
+            Excel::import(new OrdersImport, $this->filePath);
 
             Notification::make()
                 ->title('Import successful')
@@ -47,7 +47,7 @@ class ImportOrdersJob implements ShouldQueue
         } catch (Throwable $e) {
             Notification::make()
                 ->title('Import failed')
-                ->body('There was an error importing the orders: ' . $e->getMessage())
+                ->body('There was an error importing the orders: '.$e->getMessage())
                 ->danger()
                 ->persistent()
                 ->sendToDatabase($user);
