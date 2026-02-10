@@ -8,5 +8,7 @@
     - Add "Estimation" section with new fields
 - [x] Update Filament `ProjectResource` table <!-- id: 3 -->
     - Add columns for `estimated_revenue` and `estimated_completion_date`
+- [x] Add `UpcomingProjectsWidget` to display projects nearing completion <!-- id: 5 -->
+    - Table widget with `ViewAction` and clickable rows
 - [x] Verify changes with a feature test <!-- id: 4 -->
     - Ensure fields are saved and displayed correctly
