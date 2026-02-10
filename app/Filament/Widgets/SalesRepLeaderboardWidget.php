@@ -20,7 +20,7 @@ class SalesRepLeaderboardWidget extends TableWidget
 
     public function getTableRecordKey(Model|array $record): string
     {
-        return $record->user_id . '-' . $record->customer_id;
+        return $record->user_id.'-'.$record->customer_id;
     }
 
     public function table(Table $table): Table
