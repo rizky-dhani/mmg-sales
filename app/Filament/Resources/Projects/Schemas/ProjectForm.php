@@ -7,7 +7,6 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -61,7 +60,7 @@ class ProjectForm
                                     ->label('Goal')
                                     ->numeric()
                                     ->prefix('IDR'),
-                        ]),
+                            ]),
                         Section::make('Contact Information')
                             ->columns(3)
                             ->schema([
@@ -104,55 +103,55 @@ class ProjectForm
                     ->columnSpanFull()
                     ->schema([
 
-                    Section::make('Principals & Products')
-                        ->columnSpanFull()
-                        ->schema([
-                            Repeater::make('supplier_products')
-                                ->label('Principals & Products')
-                                ->schema([
-                                    Select::make('principal_id')
-                                        ->label('Principal')
-                                        ->options(\App\Models\Principal::pluck('name', 'id'))
-                                        ->required()
-                                        ->live()
-                                        ->searchable(),
-                                    Select::make('product_ids')
-                                        ->label('Products')
-                                        ->multiple()
-                                        ->options(fn ($get) => \App\Models\Product::where('principal_id', $get('principal_id'))->pluck('name', 'id'))
-                                        ->required()
-                                        ->searchable(),
-                                ])
-                                ->columns(2)
-                                ->afterStateHydrated(function (Repeater $component, $record) {
-                                    if (! $record) {
-                                        return;
-                                    }
-
-                                    $products = $record->products()->with('principal')->get();
-                                    $grouped = $products->groupBy('principal_id');
-
-                                    $state = [];
-                                    foreach ($grouped as $principalId => $items) {
-                                        $state[] = [
-                                            'principal_id' => $principalId,
-                                            'product_ids' => $items->pluck('id')->toArray(),
-                                        ];
-                                    }
-
-                                    $component->state($state);
-                                })
-                                ->dehydrated(false) // Handle saving via form submit
-                                ->saveRelationshipsUsing(function ($record, $state) {
-                                    $productIds = [];
-                                    foreach ($state as $item) {
-                                        if (isset($item['product_ids'])) {
-                                            $productIds = array_merge($productIds, (array) $item['product_ids']);
+                        Section::make('Principals & Products')
+                            ->columnSpanFull()
+                            ->schema([
+                                Repeater::make('supplier_products')
+                                    ->label('Principals & Products')
+                                    ->schema([
+                                        Select::make('principal_id')
+                                            ->label('Principal')
+                                            ->options(\App\Models\Principal::pluck('name', 'id'))
+                                            ->required()
+                                            ->live()
+                                            ->searchable(),
+                                        Select::make('product_ids')
+                                            ->label('Products')
+                                            ->multiple()
+                                            ->options(fn ($get) => \App\Models\Product::where('principal_id', $get('principal_id'))->pluck('name', 'id'))
+                                            ->required()
+                                            ->searchable(),
+                                    ])
+                                    ->columns(2)
+                                    ->afterStateHydrated(function (Repeater $component, $record) {
+                                        if (! $record) {
+                                            return;
                                         }
-                                    }
-                                    $record->products()->sync($productIds);
-                                }),
-                        ]),
+
+                                        $products = $record->products()->with('principal')->get();
+                                        $grouped = $products->groupBy('principal_id');
+
+                                        $state = [];
+                                        foreach ($grouped as $principalId => $items) {
+                                            $state[] = [
+                                                'principal_id' => $principalId,
+                                                'product_ids' => $items->pluck('id')->toArray(),
+                                            ];
+                                        }
+
+                                        $component->state($state);
+                                    })
+                                    ->dehydrated(false) // Handle saving via form submit
+                                    ->saveRelationshipsUsing(function ($record, $state) {
+                                        $productIds = [];
+                                        foreach ($state as $item) {
+                                            if (isset($item['product_ids'])) {
+                                                $productIds = array_merge($productIds, (array) $item['product_ids']);
+                                            }
+                                        }
+                                        $record->products()->sync($productIds);
+                                    }),
+                            ]),
                         Section::make('Pipeline & Status')
                             ->columnSpanFull()
                             ->columns(4)
@@ -196,6 +195,19 @@ class ProjectForm
                                     ->label('Estimated Value')
                                     ->numeric()
                                     ->prefix('IDR'),
+                            ]),
+                        Section::make('Estimation')
+                            ->columnSpanFull()
+                            ->columns(2)
+                            ->schema([
+                                TextInput::make('estimated_revenue')
+                                    ->label('Expected Revenue')
+                                    ->numeric()
+                                    ->prefix('IDR')
+                                    ->helperText('The specific revenue expected from this project.'),
+                                DatePicker::make('estimated_completion_date')
+                                    ->label('Estimated Completion Date')
+                                    ->helperText('When the project is expected to be fully finished/delivered.'),
                             ]),
                     ]),
             ]);

@@ -27,6 +27,8 @@ class Project extends Model
         'expected_closing_date',
         'financial_goal',
         'estimated_value',
+        'estimated_revenue',
+        'estimated_completion_date',
         'notes',
         'customer_id',
         'converted_at',
@@ -40,6 +42,8 @@ class Project extends Model
         'expected_closing_date' => 'date',
         'financial_goal' => 'decimal:2',
         'estimated_value' => 'decimal:2',
+        'estimated_revenue' => 'decimal:2',
+        'estimated_completion_date' => 'date',
         'converted_at' => 'datetime',
         'last_contacted_at' => 'datetime',
     ];

@@ -59,6 +59,18 @@ class ProjectsTable
                 TextColumn::make('estimated_value')
                     ->label('Estimated Value')
                     ->money('IDR')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('estimated_revenue')
+                    ->label('Expected Revenue')
+                    ->money('IDR')
+                    ->sortable(),
+
+                TextColumn::make('estimated_completion_date')
+                    ->label('Est. Finish')
+                    ->date('d M Y')
+                    ->formatStateUsing(fn ($state) => $state ? strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')) : '-')
                     ->sortable(),
 
                 TextColumn::make('confidence_level')
@@ -123,7 +135,7 @@ class ProjectsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                \App\Filament\Resources\Projects\ProjectResource::getChecklistAction(\Filament\Tables\Actions\Action::class),
+                \App\Filament\Resources\Projects\ProjectResource::getChecklistAction(\Filament\Actions\Action::class),
                 ViewAction::make(),
                 EditAction::make(),
             ])
