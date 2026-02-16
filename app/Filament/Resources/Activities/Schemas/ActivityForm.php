@@ -33,6 +33,7 @@ class ActivityForm
                                         'Messaging' => 'Messaging (WA/etc)',
                                         'Online Meeting' => 'Online Meeting',
                                         'In-person Meeting' => 'In-person Meeting',
+                                        'Shared Meeting' => 'Shared Meeting',
                                         'Demo' => 'Product Demo',
                                         'Presentation' => 'Presentation',
                                         'Administrative' => 'Administrative',
@@ -47,10 +48,18 @@ class ActivityForm
                                 Select::make('user_id')
                                     ->label('Sales Rep')
                                     ->relationship('user', 'name')
-                                    ->default(auth()->id())
+                                    ->default(auth()->user()?->id)
                                     ->required()
                                     ->preload()
                                     ->searchable(),
+
+                                Select::make('attendees')
+                                    ->label('Other Sales Reps')
+                                    ->relationship('attendees', 'name')
+                                    ->multiple()
+                                    ->preload()
+                                    ->searchable()
+                                    ->visible(fn ($get) => $get('type') === 'Shared Meeting'),
 
                                 DateTimePicker::make('performed_at')
                                     ->label('Date & Time')
@@ -84,15 +93,15 @@ class ActivityForm
 
                         Section::make('Interaction Details')
                             ->columns(2)
-                            ->visible(fn ($get) => in_array($get('type'), ['Online Meeting', 'In-person Meeting', 'Demo', 'Presentation']))
+                            ->visible(fn ($get) => in_array($get('type'), ['Online Meeting', 'In-person Meeting', 'Shared Meeting', 'Demo', 'Presentation']))
                             ->schema([
                                 TextInput::make('location')
                                     ->maxLength(255)
-                                    ->visible(fn ($get) => $get('type') === 'In-person Meeting'),
+                                    ->visible(fn ($get) => in_array($get('type'), ['In-person Meeting', 'Shared Meeting'])),
 
                                 TextInput::make('meeting_link')
                                     ->url()
-                                    ->visible(fn ($get) => $get('type') === 'Online Meeting'),
+                                    ->visible(fn ($get) => in_array($get('type'), ['Online Meeting', 'Shared Meeting'])),
 
                                 Select::make('messaging_platform')
                                     ->options([
@@ -131,7 +140,7 @@ class ActivityForm
                                     ->columnSpanFull(),
 
                                 Grid::make(2)
-                                    ->visible(fn ($get) => in_array($get('type'), ['Online Meeting', 'In-person Meeting', 'Demo', 'Presentation']))
+                                    ->visible(fn ($get) => in_array($get('type'), ['Online Meeting', 'In-person Meeting', 'Shared Meeting', 'Demo', 'Presentation']))
                                     ->schema([
                                         Textarea::make('purpose')->rows(2),
                                         Textarea::make('expectations')->rows(2),
