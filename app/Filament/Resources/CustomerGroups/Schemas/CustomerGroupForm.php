@@ -5,6 +5,7 @@ namespace App\Filament\Resources\CustomerGroups\Schemas;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class CustomerGroupForm
@@ -13,15 +14,19 @@ class CustomerGroupForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required(),
-                TextInput::make('code')
-                    ->required(),
-                Textarea::make('description')
-                    ->default(null)
-                    ->columnSpanFull(),
-                Toggle::make('is_active')
-                    ->required(),
+                Section::make('Basic Information')
+                    ->schema([
+                        TextInput::make('name')
+                            ->required(),
+                        TextInput::make('code')
+                            ->required(),
+                        Textarea::make('description')
+                            ->default(null)
+                            ->columnSpanFull(),
+                        Toggle::make('is_active')
+                            ->required(),
+                    ])
+                    ->columns(2),
             ]);
     }
 }

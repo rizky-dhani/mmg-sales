@@ -16,6 +16,7 @@ class CustomerForm
         return $schema
             ->components([
                 Section::make('Customer Information')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
@@ -53,32 +54,33 @@ class CustomerForm
                                     ->default(null),
                             ]),
 
-                        Section::make('Settings')
+                        Section::make('Address')
+                            ->columns(2)
                             ->schema([
-                                TextInput::make('payment_terms_days')
-                                    ->label('Payment Terms (Days)')
-                                    ->numeric()
-                                    ->default(30),
-                                Toggle::make('is_active')
-                                    ->default(true),
+                                TextInput::make('address')
+                                    ->default(null)
+                                    ->columnSpanFull(),
+                                TextInput::make('city')
+                                    ->default(null),
+                                TextInput::make('state')
+                                    ->default(null),
+                                TextInput::make('postal_code')
+                                    ->default(null),
+                                TextInput::make('country')
+                                    ->required()
+                                    ->default('Indonesia'),
                             ]),
                     ]),
 
-                Section::make('Address')
-                    ->columns(2)
+                Section::make('Settings')
+                    ->columnSpanFull()
                     ->schema([
-                        TextInput::make('address')
-                            ->default(null)
-                            ->columnSpanFull(),
-                        TextInput::make('city')
-                            ->default(null),
-                        TextInput::make('state')
-                            ->default(null),
-                        TextInput::make('postal_code')
-                            ->default(null),
-                        TextInput::make('country')
-                            ->required()
-                            ->default('Indonesia'),
+                        TextInput::make('payment_terms_days')
+                            ->label('Payment Terms (Days)')
+                            ->numeric()
+                            ->default(30),
+                        Toggle::make('is_active')
+                            ->default(true),
                     ]),
             ]);
     }

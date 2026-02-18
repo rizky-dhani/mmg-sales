@@ -17,6 +17,7 @@ class Product extends Model
         'category',
         'description',
         'unit_price',
+        'currency',
         'unit_of_measure',
         'stock_quantity',
         'minimum_stock',
