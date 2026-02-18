@@ -19,13 +19,13 @@ class CustomersTable
     {
         return $table
             ->columns([
-                TextColumn::make('facility_name')
-                    ->label('Facility Name')
+                TextColumn::make('name')
+                    ->label('Customer Name')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
-                TextColumn::make('facility_type')
+                TextColumn::make('type')
                     ->label('Type')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))

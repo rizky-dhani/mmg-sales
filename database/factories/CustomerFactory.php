@@ -13,8 +13,8 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            'facility_name' => fake('id_ID')->company().' '.fake()->randomElement(['Hospital', 'Clinic', 'Pharmacy', 'Lab']),
-            'facility_type' => fake()->randomElement(['hospital', 'clinic', 'pharmacy', 'laboratory', 'distributor', 'other']),
+            'name' => fake('id_ID')->company().' '.fake()->randomElement(['Hospital', 'Clinic', 'Pharmacy', 'Lab']),
+            'type' => fake()->randomElement(['hospital', 'clinic', 'pharmacy', 'laboratory', 'distributor', 'other']),
             'classification' => fake()->randomElement(['tier_1', 'tier_2', 'tier_3']),
             'tax_number' => fake()->unique()->numerify('##.###.###.#-###.###'),
             'address' => fake('id_ID')->address(),

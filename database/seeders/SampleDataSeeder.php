@@ -167,8 +167,8 @@ class SampleDataSeeder extends Seeder
             $estimatedValue = $items->random()->unit_price * rand(1, 5);
 
             $project = Project::create([
-                'title' => fake()->randomElement($projectTitles).' - '.$customer->facility_name,
-                'customer_name' => $customer->facility_name,
+                'title' => fake()->randomElement($projectTitles).' - '.$customer->name,
+                'customer_name' => $customer->name,
                 'contact_person' => $customer->contacts->first()->name ?? fake()->name(),
                 'email' => $customer->email,
                 'phone' => $customer->phone,

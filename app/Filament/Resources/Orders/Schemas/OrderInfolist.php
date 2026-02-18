@@ -85,7 +85,7 @@ class OrderInfolist
                     ->columnSpanFull()
                     ->columns(5)
                     ->schema([
-                        TextEntry::make('customer.facility_name')
+                        TextEntry::make('customer.name')
                             ->label('End Customer')
                             ->weight('bold'),
                         TextEntry::make('territory.name')

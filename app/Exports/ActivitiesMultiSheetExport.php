@@ -36,7 +36,7 @@ class ActivitiesMultiSheetExport implements WithMultipleSheets
         } elseif ($this->groupBy === 'customer_id') {
             $grouped = $records->groupBy('customer_id');
             foreach ($grouped as $customerId => $items) {
-                $customerName = $items->first()->customer?->facility_name ?? "Customer {$customerId}";
+                $customerName = $items->first()->customer?->name ?? "Customer {$customerId}";
                 $sheets[] = new ActivitiesExport(
                     (clone $this->query)->where('customer_id', $customerId),
                     substr($customerName, 0, 31)

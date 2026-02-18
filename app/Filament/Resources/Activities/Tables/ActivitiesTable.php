@@ -34,7 +34,7 @@ class ActivitiesTable
                     })
                     ->sortable(),
 
-                TextColumn::make('customer.facility_name')
+                TextColumn::make('customer.name')
                     ->label('Customer')
                     ->searchable()
                     ->sortable(),
@@ -72,7 +72,7 @@ class ActivitiesTable
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('customer')
                     ->label('Customer')
-                    ->relationship('customer', 'facility_name')
+                    ->relationship('customer', 'name')
                     ->searchable()
                     ->preload(),
             ])

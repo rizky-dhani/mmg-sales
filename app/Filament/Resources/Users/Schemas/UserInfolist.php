@@ -38,7 +38,7 @@ class UserInfolist
                                 TextEntry::make('performed_at')
                                     ->label('Date')
                                     ->dateTime('d M Y H:i'),
-                                TextEntry::make('customer.facility_name')
+                                TextEntry::make('customer.name')
                                     ->label('Customer'),
                                 TextEntry::make('type')
                                     ->badge(),

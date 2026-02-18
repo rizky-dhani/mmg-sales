@@ -29,7 +29,7 @@ test('orders import parses valid data correctly', function () {
     $sr = Position::create(['name' => 'SUMBAGUT_ARI', 'code' => 'P05', 'level' => 5, 'department_id' => $dept->id]);
 
     $territory = Territory::create(['name' => 'BATAM', 'type' => 'city', 'level' => 3]);
-    $customer = Customer::create(['facility_name' => 'PT. Batam Karya Husada']);
+    $customer = Customer::create(['name' => 'PT. Batam Karya Husada']);
     $principal = Principal::create(['name' => 'Abbott', 'code' => 'ABBOTT']);
     $segment = Segment::create(['name' => 'UNIVERSITY', 'code' => 'UNIV']);
     $salesType = SalesType::create(['name' => 'E-Catalog', 'code' => 'ECAT']);
@@ -99,7 +99,7 @@ test('orders import skips duplicates correctly', function () {
     $sr = Position::create(['name' => 'SUMBAGUT_ARI', 'code' => 'P05', 'level' => 5, 'department_id' => $dept->id]);
 
     $territory = Territory::create(['name' => 'BATAM', 'type' => 'city', 'level' => 3]);
-    $customer = Customer::create(['facility_name' => 'PT. Batam Karya Husada']);
+    $customer = Customer::create(['name' => 'PT. Batam Karya Husada']);
     $principal = Principal::create(['name' => 'Abbott', 'code' => 'ABBOTT']);
     $segment = Segment::create(['name' => 'UNIVERSITY', 'code' => 'UNIV']);
     $salesType = SalesType::create(['name' => 'E-Catalog', 'code' => 'ECAT']);
@@ -139,7 +139,7 @@ test('ImportOrdersJob dispatches and sends notification', function () {
     Position::create(['name' => 'SPV_Barat by RSM Barat', 'code' => 'SPV', 'level' => 4, 'department_id' => $dept->id]);
     Position::create(['name' => 'SUMBAGUT_ARI', 'code' => 'SR', 'level' => 5, 'department_id' => $dept->id]);
     Territory::create(['name' => 'BATAM', 'type' => 'city', 'level' => 3]);
-    Customer::create(['facility_name' => 'PT. Batam Karya Husada']);
+    Customer::create(['name' => 'PT. Batam Karya Husada']);
     Principal::create(['name' => 'Abbott', 'code' => 'ABB']);
     Segment::create(['name' => 'UNIVERSITY', 'code' => 'UNIV']);
     SalesType::create(['name' => 'E-Catalog', 'code' => 'ECAT']);

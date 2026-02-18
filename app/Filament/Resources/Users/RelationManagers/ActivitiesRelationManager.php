@@ -38,7 +38,7 @@ class ActivitiesRelationManager extends RelationManager
                     ->label('Date')
                     ->date('d M Y')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('customer.facility_name')
+                Tables\Columns\TextColumn::make('customer.name')
                     ->label('Customer')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('type')

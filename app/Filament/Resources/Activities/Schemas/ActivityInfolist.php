@@ -33,7 +33,7 @@ class ActivityInfolist
                 Section::make('Context')
                     ->columns(3)
                     ->schema([
-                        TextEntry::make('customer.facility_name')
+                        TextEntry::make('customer.name')
                             ->label('Customer')
                             ->weight('bold'),
                         TextEntry::make('contact.name')

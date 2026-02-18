@@ -60,7 +60,7 @@ class ActivitiesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithM
             $activity->performed_at?->format('d M Y H:i') ?? '-',
             $activity->type,
             $activity->user?->name ?? '-',
-            $activity->customer?->facility_name ?? '-',
+            $activity->customer?->name ?? '-',
             $activity->contact?->name ?? '-',
             $activity->subject,
             $activity->outcome ?? '-',

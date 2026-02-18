@@ -116,7 +116,7 @@ class OrderForm
                             ->schema([
                                 Select::make('end_customer_id')
                                     ->label('End Customer')
-                                    ->relationship('customer', 'facility_name')
+                                    ->relationship('customer', 'name')
                                     ->searchable()
                                     ->required()
                                     ->preload(),

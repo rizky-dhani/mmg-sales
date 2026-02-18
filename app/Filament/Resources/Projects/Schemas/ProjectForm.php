@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
+use App\Models\Contact;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -17,31 +17,32 @@ class ProjectForm
     {
         return $schema
             ->components([
-                Section::make('Project Details')
-                    ->columnSpanFull()
-                    ->columns(3)
-                    ->schema([
-                        TextInput::make('title')
-                            ->label('Project Title')
-                            ->required()
-                            ->maxLength(255),
-                        TextInput::make('customer_name')
-                            ->label('Customer Name')
-                            ->required()
-                            ->maxLength(255),
-                        TextInput::make('contact_person')
-                            ->label('Contact Person')
-                            ->required(),
-                    ]),
                 Grid::make(2)
                     ->columnSpanFull()
                     ->schema([
-                        Section::make('Contact Information')
-                            ->columns(3)
+                        Section::make('Project Details')
                             ->schema([
-                                TextInput::make('contact_person')
+                                TextInput::make('title')
+                                    ->label('Project Title')
+                                    ->required()
+                                    ->maxLength(255),
+                                Select::make('customer_id')
+                                    ->label('Customer Name')
+                                    ->relationship('customer', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->live(),
+                                Select::make('contact_person')
                                     ->label('Contact Person')
-                                    ->required(),
+                                    ->options(fn ($get) => Contact::where('customer_id', $get('customer_id'))->get()->pluck('name', 'id'))
+                                    ->searchable()
+                                    ->preload()
+                                    ->visible(fn ($get) => $get('customer_id')),
+                            ]),
+
+                        Section::make('Contact Information')
+                            ->schema([
                                 TextInput::make('email')
                                     ->label('Email Address')
                                     ->email()
@@ -51,29 +52,8 @@ class ProjectForm
                                     ->tel()
                                     ->required(),
                             ]),
-                        // Section::make('Assignment Hierarchy')
-                        //     ->columnSpanFull()
-                        //     ->columns(3)
-                        //     ->schema([
-                        //         Select::make('assigned_to')
-                        //             ->label('Assigned Sales Rep')
-                        //             ->relationship('assignedUser', 'name')
-                        //             ->default(auth()->id())
-                        //             ->required()
-                        //             ->searchable()
-                        //             ->preload(),
-                        //         // Projects don't have explicit hierarchy fields in DB,
-                        //         // but we can show the context of the assigned rep
-                        //         TextInput::make('rep_department')
-                        //             ->label('Department')
-                        //             ->placeholder(auth()->user()?->department?->name ?? '-')
-                        //             ->readOnly(),
-                        //         TextInput::make('rep_position')
-                        //             ->label('Position')
-                        //             ->placeholder(auth()->user()?->position?->name ?? '-')
-                        //             ->readOnly(),
-                        //     ]),
                     ]),
+
                 Grid::make(2)
                     ->columnSpanFull()
                     ->schema([
@@ -129,7 +109,7 @@ class ProjectForm
                             ]),
                         Section::make('Pipeline & Status')
                             ->columnSpanFull()
-                            ->columns(4)
+                            ->columns(3)
                             ->schema([
                                 Select::make('status')
                                     ->options([
@@ -166,10 +146,6 @@ class ProjectForm
                                     ->default('medium')
                                     ->required()
                                     ->searchable(),
-                                TextInput::make('estimated_value')
-                                    ->label('Estimated Value')
-                                    ->numeric()
-                                    ->prefix('IDR'),
                             ]),
                         Section::make('Estimation')
                             ->columnSpanFull()

@@ -105,7 +105,7 @@ class ProjectsTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('customer.facility_name')
+                TextColumn::make('customer.name')
                     ->label('Linked Customer')
                     ->searchable()
                     ->sortable()

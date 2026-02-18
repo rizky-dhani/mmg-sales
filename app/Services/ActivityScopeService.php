@@ -126,7 +126,7 @@ class ActivityScopeService
 
         return $query->selectRaw('user_id, customer_id, count(*) as activity_count')
             ->groupBy('user_id', 'customer_id')
-            ->with(['user:id,name', 'customer:id,facility_name'])
+            ->with(['user:id,name', 'customer:id,name'])
             ->orderByDesc('activity_count');
     }
 

@@ -19,8 +19,8 @@ class ContactsTable
     {
         return $table
             ->columns([
-                TextColumn::make('customer.facility_name')
-                    ->label('Facility')
+                TextColumn::make('customer.name')
+                    ->label('Customer')
                     ->searchable()
                     ->sortable(),
 

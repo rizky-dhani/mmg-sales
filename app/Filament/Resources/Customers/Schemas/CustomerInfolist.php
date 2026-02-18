@@ -12,13 +12,13 @@ class CustomerInfolist
     {
         return $schema
             ->components([
-                Section::make('Facility Information')
+                Section::make('Customer Information')
                     ->columns(3)
                     ->schema([
-                        TextEntry::make('facility_name')
-                            ->label('Facility Name')
+                        TextEntry::make('name')
+                            ->label('Customer Name')
                             ->weight('bold'),
-                        TextEntry::make('facility_type')
+                        TextEntry::make('type')
                             ->label('Type')
                             ->badge()
                             ->formatStateUsing(fn (string $state): string => ucfirst($state)),

@@ -105,8 +105,8 @@ class SampleSalesDataSeeder extends Seeder
             Customer::updateOrCreate(
                 ['email' => $c['email']],
                 [
-                    'facility_name' => $c['name'],
-                    'facility_type' => $c['type'],
+                    'name' => $c['name'],
+                    'type' => $c['type'],
                     'classification' => $c['class'],
                     'address' => 'Jl. Sample No. '.rand(1, 100),
                     'city' => 'Jakarta',

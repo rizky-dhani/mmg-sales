@@ -60,7 +60,7 @@ class OrdersImport implements ToCollection
                 $sr = Position::where('name', $row[8])->first() ?? throw new Exception("SR Position not found: {$row[8]}");
 
                 $area = Territory::where('name', $row[9])->first() ?? throw new Exception("Area/City not found: {$row[9]}");
-                $endCustomer = Customer::where('facility_name', $row[11])->first() ?? throw new Exception("End Customer not found: {$row[11]}");
+                $endCustomer = Customer::where('name', $row[11])->first() ?? throw new Exception("End Customer not found: {$row[11]}");
 
                 $segment = Segment::where('name', $row[14])->first() ?? throw new Exception("Segment not found: {$row[14]}");
                 $principal = Principal::where('name', $row[15])->first() ?? throw new Exception("Principal not found: {$row[15]}");
@@ -69,7 +69,7 @@ class OrdersImport implements ToCollection
                 $distributor = Distributor::where('name', $row[28])->first() ?? throw new Exception("Distributor not found: {$row[28]}");
 
                 // Optional Lookups
-                $origCustomer = Customer::where('facility_name', $row[10])->first();
+                $origCustomer = Customer::where('name', $row[10])->first();
                 $custGroup = CustomerGroup::where('name', $row[12])->first();
                 $subSegment = SubSegment::where('name', $row[26])->first();
 

@@ -8,7 +8,7 @@
             @if ($activeVisit)
                 <div class="text-center">
                     <p class="text-lg text-gray-500 dark:text-gray-400 mb-1">Ongoing visit:</p>
-                    <p class="text-xl font-bold text-primary-600 mb-1">{{ $activeVisit->customer->facility_name }}</p>
+                    <p class="text-xl font-bold text-primary-600 mb-1">{{ $activeVisit->customer->name }}</p>
                     <p class="text-md text-gray-400 mt-1 mb-3">Started at: {{ $activeVisit->visit_started_at->timezone('Asia/Jakarta')->format('H:i') }}</p>
                 </div>
 

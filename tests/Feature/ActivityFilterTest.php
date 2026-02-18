@@ -23,8 +23,8 @@ beforeEach(function () {
 });
 
 it('can filter activities by customer', function () {
-    $customerA = Customer::factory()->create(['facility_name' => 'Hospital A']);
-    $customerB = Customer::factory()->create(['facility_name' => 'Hospital B']);
+    $customerA = Customer::factory()->create(['name' => 'Hospital A']);
+    $customerB = Customer::factory()->create(['name' => 'Hospital B']);
 
     $activityA = Activity::factory()->create(['customer_id' => $customerA->id, 'subject' => 'Activity A']);
     $activityB = Activity::factory()->create(['customer_id' => $customerB->id, 'subject' => 'Activity B']);

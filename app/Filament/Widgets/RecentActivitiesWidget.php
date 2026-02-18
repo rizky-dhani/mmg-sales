@@ -26,7 +26,7 @@ class RecentActivitiesWidget extends TableWidget
         return $table
             ->query(fn (): Builder => $service->getActivityQuery($user)->latest('performed_at'))
             ->columns([
-                Tables\Columns\TextColumn::make('customer.facility_name')
+                Tables\Columns\TextColumn::make('customer.name')
                     ->label('Customer')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('user.name')

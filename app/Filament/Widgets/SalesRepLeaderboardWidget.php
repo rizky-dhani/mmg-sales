@@ -35,7 +35,7 @@ class SalesRepLeaderboardWidget extends TableWidget
                 Tables\Columns\TextColumn::make('user.name')
                     ->label('Sales Rep')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('customer.facility_name')
+                Tables\Columns\TextColumn::make('customer.name')
                     ->label('Customer')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('activity_count')
