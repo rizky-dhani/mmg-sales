@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('facility_name');
-            $table->enum('facility_type', ['hospital', 'clinic', 'pharmacy', 'laboratory', 'distributor', 'other'])->default('other');
+            $table->string('name');
+            $table->enum('type', ['hospital', 'clinic', 'pharmacy', 'laboratory', 'distributor', 'other'])->default('other');
             $table->enum('classification', ['tier_1', 'tier_2', 'tier_3'])->default('tier_3');
             $table->string('tax_number')->nullable();
             $table->string('address')->nullable();
