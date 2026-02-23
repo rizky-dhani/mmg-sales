@@ -24,7 +24,7 @@ class MilestoneResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedCheckBadge;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Settings';
+    protected static string|\UnitEnum|null $navigationGroup = 'System Settings';
 
     protected static ?int $navigationSort = 10;
 
