@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             SegmentSeeder::class,
             DistributorSeeder::class,
+            PrincipalSeeder::class,
+            PrincipalProductSeeder::class,
             SampleDataSeeder::class,
         ]);
     }
