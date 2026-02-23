@@ -28,6 +28,7 @@ class SampleSalesDataSeeder extends Seeder
         $filePath = database_path('../principals_products.txt');
         $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
+        $usedCodes = [];
         $currentPrincipal = null;
         foreach ($lines as $line) {
             $line = trim($line);
@@ -43,21 +44,33 @@ class SampleSalesDataSeeder extends Seeder
             } else {
                 $currentPrincipal = $line;
                 $this->principalProducts[$currentPrincipal] = [
-                    'code' => $this->generateCode($line),
+                    'code' => $this->generateCode($line, $usedCodes),
                     'products' => [],
                 ];
             }
         }
     }
 
-    protected function generateCode(string $name): string
+    protected function generateCode(string $name, array &$usedCodes): string
     {
         $words = preg_split('/\s+/', $name);
         if (count($words) >= 2) {
-            return strtoupper(substr($words[0], 0, 2).substr($words[1], 0, 1));
+            $code = strtoupper(substr($words[0], 0, 2).substr($words[1], 0, 1));
+        } else {
+            $code = strtoupper(substr($name, 0, 3));
         }
 
-        return strtoupper(substr($name, 0, 3));
+        if (isset($usedCodes[$code])) {
+            $counter = 1;
+            while (isset($usedCodes[$code.$counter])) {
+                $counter++;
+            }
+            $code = $code.$counter;
+        }
+
+        $usedCodes[$code] = true;
+
+        return $code;
     }
 
     protected function inferProductType(string $name): string
