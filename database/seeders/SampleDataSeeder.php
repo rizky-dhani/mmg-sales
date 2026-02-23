@@ -20,96 +20,180 @@ use App\Models\Territory;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class SampleDataSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+    protected array $principalProducts = [];
+
+    protected function loadPrincipalProducts(): void
+    {
+        $filePath = database_path('../principals_products.txt');
+        $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+        $currentPrincipal = null;
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (empty($line)) {
+                continue;
+            }
+
+            if (str_starts_with($line, '- ')) {
+                if ($currentPrincipal) {
+                    $productName = trim(substr($line, 2));
+                    $this->principalProducts[$currentPrincipal]['products'][] = $productName;
+                }
+            } else {
+                $currentPrincipal = $line;
+                $this->principalProducts[$currentPrincipal] = [
+                    'code' => $this->generateCode($line),
+                    'products' => [],
+                ];
+            }
+        }
+    }
+
+    protected function generateCode(string $name): string
+    {
+        $words = preg_split('/\s+/', $name);
+        if (count($words) >= 2) {
+            return strtoupper(substr($words[0], 0, 2).substr($words[1], 0, 1));
+        }
+
+        return strtoupper(substr($name, 0, 3));
+    }
+
+    protected function inferProductType(string $name): string
+    {
+        $capitalKeywords = [
+            'chromatograph', 'hplc', 'spectrofotometer', 'uv vis', 'mass spectrometer',
+            'freezer', 'refrigerator', 'centrifuge', 'laminar', 'cabinet', 'safety cabinet',
+            'analyzer', 'vortex', 'stirrer', 'infinite', 'spark', 'clia',
+        ];
+
+        $nameLower = strtolower($name);
+
+        foreach ($capitalKeywords as $keyword) {
+            if (str_contains($nameLower, $keyword)) {
+                return 'Capital';
+            }
+        }
+
+        return 'Consumable';
+    }
+
+    protected function generatePrice(string $type, string $name): int
+    {
+        if ($type === 'Capital') {
+            $nameLower = strtolower($name);
+
+            if (str_contains($nameLower, 'chromatograph') || str_contains($nameLower, 'hplc')) {
+                return rand(8000000000, 15000000000);
+            }
+            if (str_contains($nameLower, 'spectrofotometer') || str_contains($nameLower, 'spectrophotometer')) {
+                return rand(500000000, 2000000000);
+            }
+            if (str_contains($nameLower, 'mass spectrometer')) {
+                return rand(10000000000, 20000000000);
+            }
+            if (str_contains($nameLower, 'ultra low') || str_contains($nameLower, 'uluf')) {
+                return rand(150000000, 400000000);
+            }
+            if (str_contains($nameLower, 'refrigerator') || str_contains($nameLower, 'blood bank')) {
+                return rand(80000000, 200000000);
+            }
+            if (str_contains($nameLower, 'centrifuge')) {
+                return rand(50000000, 250000000);
+            }
+            if (str_contains($nameLower, 'laminar') || str_contains($nameLower, 'cabinet') || str_contains($nameLower, 'downflow')) {
+                return rand(40000000, 150000000);
+            }
+            if (str_contains($nameLower, 'analyzer') || str_contains($nameLower, 'infinite') || str_contains($nameLower, 'spark')) {
+                return rand(300000000, 800000000);
+            }
+            if (str_contains($nameLower, 'stirrer') || str_contains($nameLower, 'vortex')) {
+                return rand(15000000, 50000000);
+            }
+            if (str_contains($nameLower, 'clia')) {
+                return rand(200000000, 500000000);
+            }
+
+            return rand(100000000, 500000000);
+        }
+
+        $nameLower = strtolower($name);
+
+        if (str_contains($nameLower, 'kit') || str_contains($nameLower, 'qpcr') || str_contains($nameLower, 'master mix')) {
+            return rand(5000000, 25000000);
+        }
+        if (str_contains($nameLower, 'agar') || str_contains($nameLower, 'broth')) {
+            return rand(1000000, 8000000);
+        }
+        if (str_contains($nameLower, 'swab') || str_contains($nameLower, 'sampling')) {
+            return rand(500000, 5000000);
+        }
+        if (str_contains($nameLower, 'tip') || str_contains($nameLower, 'pipette') || str_contains($nameLower, 'tube')) {
+            return rand(500000, 3000000);
+        }
+        if (str_contains($nameLower, 'cuvette')) {
+            return rand(2000000, 10000000);
+        }
+        if (str_contains($nameLower, 'petridish')) {
+            return rand(1000000, 5000000);
+        }
+        if (str_contains($nameLower, 'igg') || str_contains($nameLower, 'tsh') || str_contains($nameLower, 'd-dimer')) {
+            return rand(3000000, 15000000);
+        }
+
+        return rand(2000000, 15000000);
+    }
+
     public function run(): void
     {
-        // 1. Get existing base data
+        $this->loadPrincipalProducts();
+
         $users = User::all();
         $departments = Department::all();
         $positions = Position::all();
 
-        // 2. Generate Realistic Principals
-        $principalsData = [
-            ['name' => 'GE Healthcare', 'code' => 'GEH'],
-            ['name' => 'Philips Healthcare', 'code' => 'PHL'],
-            ['name' => 'Siemens Healthineers', 'code' => 'SIE'],
-            ['name' => 'Roche Diagnostics', 'code' => 'RCH'],
-            ['name' => 'Abbott Laboratories', 'code' => 'ABT'],
-            ['name' => 'Medtronic', 'code' => 'MDT'],
-            ['name' => 'Stryker', 'code' => 'STR'],
-        ];
-
         $principals = collect();
-        foreach ($principalsData as $p) {
-            $principals->push(Principal::create(array_merge($p, [
-                'description' => $p['name'].' Medical Equipment and Supplies',
+        foreach ($this->principalProducts as $name => $data) {
+            $principals->push(Principal::create([
+                'name' => $name,
+                'code' => $data['code'],
+                'description' => $name.' Medical Equipment and Supplies',
                 'contact_person' => fake('id_ID')->name(),
                 'phone' => fake('id_ID')->phoneNumber(),
-                'email' => strtolower($p['code']).'@'.strtolower(str_replace(' ', '', $p['name'])).'.com',
+                'email' => strtolower($data['code']).'@'.strtolower(str_replace(' ', '', $name)).'.com',
                 'address' => fake('id_ID')->address(),
                 'is_active' => true,
-            ])));
+            ]));
         }
 
-        // 3. Generate Realistic Items with balanced pricing
-        $itemsData = [
-            'GEH' => [
-                ['name' => 'Revolution CT Scanner', 'price' => 12000000000, 'type' => 'Capital'],
-                ['name' => 'Voluson S10 Ultrasound', 'price' => 1500000000, 'type' => 'Capital'],
-                ['name' => 'Logiq E9 Probe', 'price' => 120000000, 'type' => 'Consumable'],
-                ['name' => 'CT Contrast Media (Bulk)', 'price' => 15000000, 'type' => 'Consumable'],
-            ],
-            'PHL' => [
-                ['name' => 'Azurion 7 Angiography', 'price' => 15000000000, 'type' => 'Capital'],
-                ['name' => 'Affiniti 70 Ultrasound', 'price' => 1800000000, 'type' => 'Capital'],
-                ['name' => 'ECG Electrodes (Case)', 'price' => 2500000, 'type' => 'Consumable'],
-                ['name' => 'Patient Monitor Cables', 'price' => 4500000, 'type' => 'Consumable'],
-            ],
-            'RCH' => [
-                ['name' => 'Cobas 6000 Analyzer', 'price' => 3500000000, 'type' => 'Capital'],
-                ['name' => 'Cobas Reagent Pack (Chemistry)', 'price' => 25000000, 'type' => 'Consumable'],
-                ['name' => 'Accu-Chek Test Strips (5000)', 'price' => 12000000, 'type' => 'Consumable'],
-                ['name' => 'Elecsys Immunoassay Kit', 'price' => 18000000, 'type' => 'Consumable'],
-            ],
-            'ABT' => [
-                ['name' => 'Alinity ci-series', 'price' => 4500000000, 'type' => 'Capital'],
-                ['name' => 'i-STAT Handheld System', 'price' => 250000000, 'type' => 'Capital'],
-                ['name' => 'Alinity Reagent Cartridge', 'price' => 15000000, 'type' => 'Consumable'],
-                ['name' => 'Hepatitis B Assay Kit', 'price' => 8500000, 'type' => 'Consumable'],
-            ],
-            'MDT' => [
-                ['name' => 'StealthStation S8 Navigation', 'price' => 6000000000, 'type' => 'Capital'],
-                ['name' => 'Puritan Bennett 980 Ventilator', 'price' => 850000000, 'type' => 'Capital'],
-                ['name' => 'Endotracheal Tubes (Bulk)', 'price' => 12000000, 'type' => 'Consumable'],
-                ['name' => 'OxiMax Pulse Oximeter Sensor', 'price' => 1500000, 'type' => 'Consumable'],
-            ],
-        ];
-
         $items = collect();
-        foreach ($itemsData as $code => $pItems) {
-            $principal = $principals->where('code', $code)->first();
-            if ($principal) {
-                foreach ($pItems as $item) {
-                    $items->push(Item::create([
-                        'name' => $item['name'],
-                        'principal_id' => $principal->id,
-                        'internal_code' => $code.'-'.fake()->unique()->numerify('####'),
-                        'principle_code' => $code.'-'.strtoupper(str()->random(5)),
-                        'unit_price' => $item['price'],
-                        'unit' => $item['type'] === 'Capital' ? 'Unit' : 'Pack',
-                        'description' => $item['name'].' medical '.strtolower($item['type']),
-                        'is_active' => true,
-                    ]));
-                }
+        foreach ($this->principalProducts as $principalName => $data) {
+            $principal = $principals->where('code', $data['code'])->first();
+            if (! $principal) {
+                continue;
+            }
+
+            foreach ($data['products'] as $productName) {
+                $type = $this->inferProductType($productName);
+                $price = $this->generatePrice($type, $productName);
+
+                $items->push(Item::create([
+                    'name' => $productName,
+                    'principal_id' => $principal->id,
+                    'internal_code' => $data['code'].'-'.fake()->unique()->numerify('####'),
+                    'principle_code' => $data['code'].'-'.strtoupper(Str::random(5)),
+                    'unit_price' => $price,
+                    'unit' => $type === 'Capital' ? 'Unit' : 'Pack',
+                    'description' => $productName.' medical '.strtolower($type),
+                    'is_active' => true,
+                ]));
             }
         }
 
-        // 4. Master Data Pool
         $territories = Territory::factory(15)->create();
         $segments = Segment::factory(4)->create();
         $subSegments = collect();
@@ -121,7 +205,6 @@ class SampleDataSeeder extends Seeder
         $salesTypes = SalesType::factory(3)->create();
         $distributors = Distributor::factory(3)->create();
 
-        // 5. Customers
         $customers = collect();
         foreach ($users->where('email', '!=', 'superadmin@medquest.co.id') as $user) {
             $customers = $customers->merge(Customer::factory(5)->create([
@@ -133,16 +216,15 @@ class SampleDataSeeder extends Seeder
             Contact::factory(rand(1, 3))->create(['customer_id' => $customer->id]);
         }
 
-        // 6. Generate Realistic Projects with Aging
         $projectTitles = [
-            'Procurement of Radiology Equipment',
-            'Surgical Department Equipment Upgrade',
-            'Diagnostic Lab Reagent Supply Q1',
-            'Cardiology Unit Expansion Project',
-            'Tender for Emergency Care Monitors',
-            'ICU Ventilator Installation Phase 2',
+            'Procurement of Laboratory Equipment',
+            'Research Lab Equipment Upgrade',
+            'Diagnostic Reagent Supply Q1',
+            'Microbiology Lab Expansion Project',
+            'Tender for Cold Storage Equipment',
             'Pathology Lab Automation',
-            'Oncology Center Supply Contract',
+            'Molecular Diagnostics Setup',
+            'Quality Control Testing Equipment',
         ];
 
         for ($i = 0; $i < 40; $i++) {
@@ -150,7 +232,6 @@ class SampleDataSeeder extends Seeder
             $customer = $customers->random();
             $status = fake()->randomElement(['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']);
 
-            // Generate realistic aging: some fresh (1-7 days), some aging (15-30), some old (45+)
             $ageDays = match (true) {
                 $i < 10 => rand(1, 7),
                 $i < 25 => rand(15, 35),
@@ -176,7 +257,7 @@ class SampleDataSeeder extends Seeder
                 'source' => fake()->randomElement(['website', 'referral', 'trade_show', 'partner']),
                 'priority' => fake()->randomElement(['low', 'medium', 'high', 'urgent']),
                 'estimated_value' => $estimatedValue,
-                'estimated_revenue' => $estimatedValue * rand(80, 100) / 100, // Revenue usually a bit less or equal to gross value
+                'estimated_revenue' => $estimatedValue * rand(80, 100) / 100,
                 'estimated_completion_date' => (clone $createdAt)->addDays(rand(45, 120)),
                 'notes' => fake()->paragraph(),
                 'customer_id' => $customer->id,
@@ -184,10 +265,9 @@ class SampleDataSeeder extends Seeder
                 'created_at' => $createdAt,
                 'updated_at' => $convertedAt ?? $createdAt->addDays(rand(1, 5)),
                 'converted_at' => $convertedAt,
-                'position' => str()->random(10),
+                'position' => Str::random(10),
             ]);
 
-            // Generate Activities for each project
             $activityCount = rand(2, 6);
             for ($j = 0; $j < $activityCount; $j++) {
                 Activity::factory()->create([
@@ -198,7 +278,6 @@ class SampleDataSeeder extends Seeder
             }
         }
 
-        // 7. Generate Orders (Won Projects and historical data)
         $wonProjects = Project::where('status', 'won')->get();
         foreach ($wonProjects as $project) {
             $item = $items->random();
@@ -228,7 +307,6 @@ class SampleDataSeeder extends Seeder
             ]);
         }
 
-        // 8. Generate Activities (Visits & Interactions)
         $activityPurposes = [
             'Initial Introduction',
             'Technical Presentation',
@@ -257,7 +335,7 @@ class SampleDataSeeder extends Seeder
                 'subject' => fake()->randomElement($activityPurposes),
                 'expectations' => 'Establish relationship and understand their current equipment needs.',
                 'targets' => 'Identify at least 2 potential capital equipment requirements for this year.',
-                'description' => 'Productive meeting. The head of radiology seems interested in the new CT scanner.',
+                'description' => 'Productive meeting. The lab manager seems interested in the new equipment.',
                 'stakeholder_feedback' => fake()->boolean(70) ? 'Good progress. Follow up with a formal proposal.' : null,
                 'is_worth_keeping' => fake()->boolean(80),
                 'confidence_level' => fake()->numberBetween(0, 100),
