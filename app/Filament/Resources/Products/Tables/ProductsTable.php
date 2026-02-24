@@ -84,7 +84,7 @@ class ProductsTable
                         ->form([
                             Select::make('principal_id')
                                 ->label('Principal')
-                                ->options(fn () => Principal::all()->pluck('name', 'id'))
+                                ->options(fn () => Principal::orderBy('name')->pluck('name', 'id'))
                                 ->searchable()
                                 ->required(),
                         ])
