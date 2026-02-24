@@ -29,6 +29,7 @@ class SampleDataSeeder extends Seeder
         $this->call([
             PrincipalSeeder::class,
             PrincipalProductSeeder::class,
+            ProductSeeder::class,
         ]);
 
         $users = User::all();

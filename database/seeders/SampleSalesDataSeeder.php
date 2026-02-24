@@ -26,6 +26,7 @@ class SampleSalesDataSeeder extends Seeder
         $this->call([
             PrincipalSeeder::class,
             PrincipalProductSeeder::class,
+            ProductSeeder::class,
         ]);
 
         $dept = Department::where('code', 'SALES')->first() ?? Department::first();
