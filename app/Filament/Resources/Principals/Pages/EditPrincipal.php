@@ -10,6 +10,11 @@ class EditPrincipal extends EditRecord
 {
     protected static string $resource = PrincipalResource::class;
 
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

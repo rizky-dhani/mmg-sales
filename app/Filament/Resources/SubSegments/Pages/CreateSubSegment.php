@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSubSegment extends CreateRecord
 {
     protected static string $resource = SubSegmentResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

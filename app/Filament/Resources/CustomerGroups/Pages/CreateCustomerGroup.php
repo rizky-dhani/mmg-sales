@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateCustomerGroup extends CreateRecord
 {
     protected static string $resource = CustomerGroupResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }

@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateSalesType extends CreateRecord
 {
     protected static string $resource = SalesTypeResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return static::getResource()::getUrl('index');
+    }
 }
