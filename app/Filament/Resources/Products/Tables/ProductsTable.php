@@ -36,7 +36,7 @@ class ProductsTable
                 TextColumn::make('category')
                     ->label('Category')
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn (string $state): string => ucwords(str_replace('_', ' ', $state)))
                     ->color('info'),
 
                 TextColumn::make('unit_price')
