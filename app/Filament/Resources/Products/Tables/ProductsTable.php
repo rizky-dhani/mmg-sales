@@ -60,18 +60,6 @@ class ProductsTable
                     ->boolean()
                     ->sortable(),
 
-                TextColumn::make('manufacturer')
-                    ->label('Manufacturer')
-                    ->searchable()
-                    ->toggleable(),
-
-                TextColumn::make('expiry_date')
-                    ->label('Expiry')
-                    ->date('d M Y')
-                    ->formatStateUsing(fn ($state) => $state ? strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')) : '-')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->date('d M Y')
