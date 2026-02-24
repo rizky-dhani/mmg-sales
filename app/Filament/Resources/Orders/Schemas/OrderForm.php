@@ -6,6 +6,7 @@ use App\Models\Item;
 use App\Models\SubSegment;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -24,49 +25,120 @@ class OrderForm
 
         return $schema
             ->components([
-                Grid::make()
+                Section::make('Order Details')
                     ->columnSpanFull()
-                    ->columns(6)
                     ->schema([
-                        Section::make('Order Details')
-                            ->columnSpan(2)
-                            ->columns(3)
+                        Grid::make(6)
                             ->schema([
                                 TextInput::make('order_number')
                                     ->label('Order Number')
                                     ->default(fn () => 'MMG-ORD-'.now()->year.'-'.strtoupper(Str::random(8)))
                                     ->required()
                                     ->unique(ignoreRecord: true)
-                                    ->readOnly(),
+                                    ->readOnly()
+                                    ->columnSpan(2),
                                 DatePicker::make('order_date')
                                     ->label('Order Date')
                                     ->default(now())
                                     ->required()
-                                    ->readOnly(),
+                                    ->readOnly()
+                                    ->columnSpan(2),
                                 TextInput::make('payment_method')
                                     ->label('Payment Method')
-                                    ->placeholder('e.g. Bank Transfer, Credit Card'),
-
-                                // Automatic/Hidden fields
-                                TextInput::make('tahun')
-                                    ->default(now()->year)
-                                    ->hidden(),
-                                TextInput::make('bulan')
-                                    ->default(now()->month)
-                                    ->hidden(),
-                                TextInput::make('status')
-                                    ->default('pending')
-                                    ->hidden(),
-                                TextInput::make('payment_status')
-                                    ->default('pending')
-                                    ->hidden(),
+                                    ->placeholder('e.g. Bank Transfer, Credit Card')
+                                    ->columnSpan(2),
                             ]),
 
-                        Section::make('Organizational Hierarchy')
-                            ->columnSpan(4)
-                            ->columns(6)
+                        Grid::make(4)
+                            ->schema([
+                                Select::make('cd_ncd_type')
+                                    ->label('CD / NCD Type')
+                                    ->options([
+                                        'CD' => 'CD',
+                                        'N-CD' => 'N-CD',
+                                    ])
+                                    ->required()
+                                    ->live()
+                                    ->columnSpan(2),
+                                TextInput::make('ncd_subtype')
+                                    ->label('NCD Subtype')
+                                    ->disabled(fn ($get) => $get('cd_ncd_type') !== 'N-CD')
+                                    ->dehydrated()
+                                    ->columnSpan(2),
+                            ]),
+
+                        Grid::make(4)
+                            ->schema([
+                                Select::make('segment_id')
+                                    ->label('Segment')
+                                    ->relationship('segment', 'name')
+                                    ->required()
+                                    ->live()
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('sub_segment_id')
+                                    ->label('Sub Segment')
+                                    ->options(fn ($get) => SubSegment::query()
+                                        ->where('segment_id', $get('segment_id'))
+                                        ->pluck('name', 'id'))
+                                    ->required()
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('reg_inst')
+                                    ->label('Reg / Inst')
+                                    ->options([
+                                        'REG' => 'REG',
+                                        'INST' => 'INST',
+                                    ])
+                                    ->required()
+                                    ->searchable(),
+                                Select::make('sales_type_id')
+                                    ->label('Sales Type')
+                                    ->relationship('salesType', 'name')
+                                    ->required()
+                                    ->preload()
+                                    ->searchable(),
+                            ]),
+
+                        Grid::make(3)
+                            ->schema([
+                                Select::make('jual_kso')
+                                    ->label('Jual / KSO')
+                                    ->options([
+                                        'Jual' => 'Jual',
+                                        'KSO' => 'KSO',
+                                    ])
+                                    ->required()
+                                    ->searchable(),
+                                Select::make('distributor_id')
+                                    ->label('Distributor')
+                                    ->relationship('distributor', 'name')
+                                    ->required()
+                                    ->preload()
+                                    ->searchable(),
+                            ]),
+
+                        TextInput::make('status')
+                            ->default('pending')
+                            ->hidden(),
+                        TextInput::make('payment_status')
+                            ->default('pending')
+                            ->hidden(),
+                        TextInput::make('tahun')
+                            ->default(now()->year)
+                            ->hidden(),
+                        TextInput::make('bulan')
+                            ->default(now()->month)
+                            ->hidden(),
+                    ]),
+
+                Section::make('Sales Details')
+                    ->columnSpanFull()
+                    ->schema([
+                        Grid::make(6)
                             ->schema([
                                 Select::make('department_id')
+                                    ->label('Department')
                                     ->relationship('department', 'name')
                                     ->default($user?->department_id)
                                     ->required()
@@ -109,7 +181,7 @@ class OrderForm
                             ]),
                     ]),
 
-                Section::make('Customer, Logistics & Notes')
+                Section::make('Customer Details')
                     ->columnSpanFull()
                     ->schema([
                         Grid::make(4)
@@ -132,11 +204,6 @@ class OrderForm
                                     ->default(null)
                                     ->preload()
                                     ->searchable(),
-                                Select::make('distributor_id')
-                                    ->relationship('distributor', 'name')
-                                    ->required()
-                                    ->preload()
-                                    ->searchable(),
                             ]),
 
                         Grid::make(2)
@@ -144,6 +211,7 @@ class OrderForm
                                 Grid::make(1)
                                     ->schema([
                                         Textarea::make('billing_address')
+                                            ->label('Billing Address')
                                             ->rows(3)
                                             ->live()
                                             ->afterStateUpdated(function ($get, $set, $state) {
@@ -163,6 +231,7 @@ class OrderForm
                                     ])->columnSpan(1),
 
                                 Textarea::make('shipping_address')
+                                    ->label('Shipping Address')
                                     ->rows(3)
                                     ->disabled(fn ($get) => $get('shipping_same_as_billing'))
                                     ->dehydrated()
@@ -170,89 +239,63 @@ class OrderForm
                             ]),
 
                         Textarea::make('notes')
+                            ->label('Notes')
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('Product & Financials')
+                Section::make('Product Details')
+                    ->columnSpanFull()
+                    ->schema([
+                        Repeater::make('orderItems')
+                            ->relationship()
+                            ->schema([
+                                Grid::make(4)
+                                    ->schema([
+                                        Select::make('item_id')
+                                            ->label('Item')
+                                            ->options(fn () => Item::all()->pluck('name', 'id'))
+                                            ->searchable()
+                                            ->required()
+                                            ->live()
+                                            ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
+                                            ->columnSpan(2),
+                                        TextInput::make('quantity')
+                                            ->label('Quantity')
+                                            ->numeric()
+                                            ->default(1)
+                                            ->required()
+                                            ->live()
+                                            ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
+                                            ->columnSpan(1),
+                                        TextInput::make('unit_price')
+                                            ->label('Unit Price')
+                                            ->numeric()
+                                            ->prefix('IDR')
+                                            ->live()
+                                            ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
+                                            ->columnSpan(1),
+                                    ]),
+                                Grid::make(1)
+                                    ->schema([
+                                        TextInput::make('subtotal')
+                                            ->label('Line Total')
+                                            ->numeric()
+                                            ->prefix('IDR')
+                                            ->readOnly()
+                                            ->columnSpanFull(),
+                                    ]),
+                            ])
+                            ->columns(1)
+                            ->live()
+                            ->afterStateUpdated(fn ($set, $get) => self::calculateOrderTotals($set, $get)),
+                    ]),
+
+                Section::make('Total')
                     ->columnSpanFull()
                     ->schema([
                         Grid::make(3)
                             ->schema([
-                                Select::make('principal_id')
-                                    ->relationship('principal', 'name')
-                                    ->required()
-                                    ->live()
-                                    ->preload()
-                                    ->searchable(),
-                                Select::make('item_id')
-                                    ->label('Product Item')
-                                    ->options(fn ($get) => Item::query()
-                                        ->where('principal_id', $get('principal_id'))
-                                        ->pluck('name', 'id'))
-                                    ->searchable()
-                                    ->required()
-                                    ->live()
-                                    ->afterStateUpdated(fn ($set, $get) => self::calculateTotals($set, $get)),
-                                Select::make('sales_type_id')
-                                    ->relationship('salesType', 'name')
-                                    ->required()
-                                    ->preload()
-                                    ->searchable(),
-                                Select::make('segment_id')
-                                    ->relationship('segment', 'name')
-                                    ->required()
-                                    ->live()
-                                    ->preload()
-                                    ->searchable(),
-                                Select::make('sub_segment_id')
-                                    ->label('Sub Segment')
-                                    ->options(fn ($get) => SubSegment::query()
-                                        ->where('segment_id', $get('segment_id'))
-                                        ->pluck('name', 'id'))
-                                    ->required()
-                                    ->preload()
-                                    ->searchable(),
-                                Select::make('reg_inst')
-                                    ->label('Reg / Inst')
-                                    ->options([
-                                        'REG' => 'REG',
-                                        'INST' => 'INST',
-                                    ])
-                                    ->required()
-                                    ->searchable(),
-                                Select::make('cd_ncd_type')
-                                    ->label('CD / NCD Type')
-                                    ->options([
-                                        'CD' => 'CD',
-                                        'N-CD' => 'N-CD',
-                                    ])
-                                    ->required()
-                                    ->live()
-                                    ->searchable(),
-                                TextInput::make('ncd_subtype')
-                                    ->label('NCD Subtype')
-                                    ->disabled(fn ($get) => $get('cd_ncd_type') !== 'N-CD')
-                                    ->dehydrated(),
-                                Select::make('jual_kso')
-                                    ->label('Jual / KSO')
-                                    ->options([
-                                        'Jual' => 'Jual',
-                                        'KSO' => 'KSO',
-                                    ])
-                                    ->required()
-                                    ->searchable(),
-                            ]),
-
-                        Grid::make(4)
-                            ->schema([
-                                TextInput::make('qty_hna')
-                                    ->label('Quantity')
-                                    ->numeric()
-                                    ->default(1)
-                                    ->required()
-                                    ->live()
-                                    ->afterStateUpdated(fn ($set, $get) => self::calculateTotals($set, $get)),
-                                TextInput::make('total_hna_gross_sales')
+                                TextInput::make('subtotal')
                                     ->label('Gross Sales')
                                     ->numeric()
                                     ->prefix('IDR')
@@ -263,8 +306,8 @@ class OrderForm
                                     ->default(0)
                                     ->suffix('%')
                                     ->live()
-                                    ->afterStateUpdated(fn ($set, $get) => self::calculateTotals($set, $get)),
-                                TextInput::make('net_sales_total')
+                                    ->afterStateUpdated(fn ($set, $get) => self::calculateNetSales($set, $get)),
+                                TextInput::make('total_amount')
                                     ->label('Net Sales')
                                     ->numeric()
                                     ->prefix('IDR')
@@ -280,34 +323,48 @@ class OrderForm
             ]);
     }
 
-    protected static function calculateTotals($set, $get): void
+    protected static function updateLineTotal($set, $get): void
     {
-        if (! $get) {
-            return;
-        }
-
         $itemId = $get('item_id');
-        $qty = (int) $get('qty_hna');
-        $discountPercent = (float) $get('discount_on');
+        $quantity = (int) $get('quantity');
+        $unitPrice = (float) $get('unit_price');
 
-        if (! $itemId) {
-            $set('total_hna_gross_sales', 0);
-            $set('net_sales_total', 0);
-
-            return;
+        if ($itemId && ! $unitPrice) {
+            $item = Item::find($itemId);
+            $unitPrice = $item?->unit_price ?? 0;
+            $set('unit_price', $unitPrice);
+            $set('current_price', $unitPrice);
         }
 
-        $item = Item::find($itemId);
-        $unitPrice = $item?->unit_price ?? 0;
+        $lineTotal = $quantity * $unitPrice;
+        $set('subtotal', $lineTotal);
+    }
 
-        $gross = $unitPrice * $qty;
-        $net = $gross * (1 - ($discountPercent / 100));
+    protected static function calculateOrderTotals($set, $get): void
+    {
+        $orderItems = $get('orderItems');
+        $grossSales = 0;
 
-        $set('total_hna_gross_sales', $gross);
-        $set('net_sales_total', $net);
+        if ($orderItems && is_array($orderItems)) {
+            foreach ($orderItems as $item) {
+                $quantity = (int) ($item['quantity'] ?? 0);
+                $unitPrice = (float) ($item['unit_price'] ?? 0);
+                $grossSales += $quantity * $unitPrice;
+            }
+        }
 
-        // Map to standard financial fields as well
-        $set('subtotal', $gross);
-        $set('total_amount', $net);
+        $set('subtotal', $grossSales);
+
+        $discountPercent = (float) $get('discount_on');
+        $netSales = $grossSales * (1 - ($discountPercent / 100));
+        $set('total_amount', $netSales);
+    }
+
+    protected static function calculateNetSales($set, $get): void
+    {
+        $grossSales = (float) $get('subtotal');
+        $discountPercent = (float) $get('discount_on');
+        $netSales = $grossSales * (1 - ($discountPercent / 100));
+        $set('total_amount', $netSales);
     }
 }

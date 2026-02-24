@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use Filament\Infolists\Components\EntryContainer;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -13,10 +14,10 @@ class OrderInfolist
     {
         return $schema
             ->components([
-                Grid::make(1)
+                Section::make('Order Details')
+                    ->columnSpanFull()
                     ->schema([
-                        Section::make('General Information')
-                            ->columns(5)
+                        Grid::make(5)
                             ->schema([
                                 TextEntry::make('order_number')
                                     ->label('Order #')
@@ -59,71 +60,115 @@ class OrderInfolist
                                         default => 'info',
                                     }),
                                 TextEntry::make('payment_method')
-                                    ->label('Payment Method')
-                                    ->columnSpanFull(),
+                                    ->label('Payment Method'),
                             ]),
 
-                        Section::make('Organizational Details')
-                            ->columns(3)
+                        Grid::make(4)
                             ->schema([
-                                TextEntry::make('department.name')
-                                    ->label('Department'),
-                                TextEntry::make('creator.name')
-                                    ->label('Created By'),
-                                TextEntry::make('headPosition.name')
-                                    ->label('Head'),
-                                TextEntry::make('rsmAsmPosition.name')
-                                    ->label('RSM/ASM'),
-                                TextEntry::make('spvPosition.name')
-                                    ->label('Supervisor'),
-                                TextEntry::make('srPosition.name')
-                                    ->label('Sales Rep'),
+                                TextEntry::make('cd_ncd_type')
+                                    ->label('CD/NCD'),
+                                TextEntry::make('segment.name')
+                                    ->label('Segment'),
+                                TextEntry::make('subSegment.name')
+                                    ->label('Sub-Segment'),
+                                TextEntry::make('reg_inst')
+                                    ->label('Reg/Inst'),
+                            ]),
+
+                        Grid::make(3)
+                            ->schema([
+                                TextEntry::make('salesType.name')
+                                    ->label('Sales Type'),
+                                TextEntry::make('jual_kso')
+                                    ->label('Jual/KSO'),
+                                TextEntry::make('distributor.name')
+                                    ->label('Distributor'),
                             ]),
                     ]),
 
-                Section::make('Customer & Logistics')
+                Section::make('Sales Details')
                     ->columnSpanFull()
-                    ->columns(5)
                     ->schema([
-                        TextEntry::make('customer.name')
-                            ->label('End Customer')
-                            ->weight('bold'),
-                        TextEntry::make('territory.name')
-                            ->label('Area/City'),
-                        TextEntry::make('customerGroup.name')
-                            ->label('Customer Group'),                        TextEntry::make('distributor.name')
-                            ->label('Distributor'),
+                        Grid::make(6)
+                            ->schema([
+                                TextEntry::make('department.name')
+                                    ->label('Department'),
+                                TextEntry::make('srPosition.name')
+                                    ->label('Sales Rep'),
+                                TextEntry::make('spvPosition.name')
+                                    ->label('Supervisor'),
+                                TextEntry::make('rsmAsmPosition.name')
+                                    ->label('RSM/ASM'),
+                                TextEntry::make('headPosition.name')
+                                    ->label('Head'),
+                                TextEntry::make('pmJpmPePosition.name')
+                                    ->label('PM/JPM/PE'),
+                            ]),
+                    ]),
+
+                Section::make('Customer Details')
+                    ->columnSpanFull()
+                    ->schema([
+                        Grid::make(4)
+                            ->schema([
+                                TextEntry::make('customer.name')
+                                    ->label('End Customer')
+                                    ->weight('bold'),
+                                TextEntry::make('territory.name')
+                                    ->label('Area/City'),
+                                TextEntry::make('customerGroup.name')
+                                    ->label('Customer Group'),
+                            ]),
+
+                        TextEntry::make('billing_address')
+                            ->label('Billing Address')
+                            ->columnSpan(1),
+
                         TextEntry::make('shipping_address')
                             ->label('Shipping Address')
-                            ->columnSpanFull(),
+                            ->columnSpan(1),
                     ]),
 
                 Section::make('Product Details')
                     ->columnSpanFull()
-                    ->columns(3)
                     ->schema([
-                        TextEntry::make('item.name')
-                            ->label('Product Item')
-                            ->weight('bold'),
-                        TextEntry::make('qty_hna')
-                            ->label('Quantity'),
-                        TextEntry::make('principal.name')
-                            ->label('Principal'),
-                        TextEntry::make('segment.name')
-                            ->label('Segment'),
-                        TextEntry::make('subSegment.name')
-                            ->label('Sub-Segment'),
-                        TextEntry::make('subtotal')
-                            ->label('Gross Sales')
-                            ->money('IDR'),
-                        TextEntry::make('discount_on')
-                            ->label('Discount (%)')
-                            ->suffix('%'),
-                        TextEntry::make('net_sales_total')
-                            ->label('Net Sales')
-                            ->money('IDR')
-                            ->weight('bold')
-                            ->color('success'),
+                        EntryContainer::make('orderItems')
+                            ->schema([
+                                Grid::make()
+                                    ->columns(4)
+                                    ->schema([
+                                        TextEntry::make('item.name')
+                                            ->label('Item')
+                                            ->weight('bold'),
+                                        TextEntry::make('quantity')
+                                            ->label('Qty'),
+                                        TextEntry::make('unit_price')
+                                            ->label('Unit Price')
+                                            ->money('IDR'),
+                                        TextEntry::make('subtotal')
+                                            ->label('Line Total')
+                                            ->money('IDR'),
+                                    ]),
+                            ]),
+                    ]),
+
+                Section::make('Total')
+                    ->columnSpanFull()
+                    ->schema([
+                        Grid::make(3)
+                            ->schema([
+                                TextEntry::make('subtotal')
+                                    ->label('Gross Sales')
+                                    ->money('IDR'),
+                                TextEntry::make('discount_on')
+                                    ->label('Discount')
+                                    ->formatStateUsing(fn ($state) => $state ? $state.'%' : '0%'),
+                                TextEntry::make('total_amount')
+                                    ->label('Net Sales')
+                                    ->money('IDR')
+                                    ->weight('bold')
+                                    ->color('success'),
+                            ]),
                     ]),
 
                 Section::make('Additional Notes')
