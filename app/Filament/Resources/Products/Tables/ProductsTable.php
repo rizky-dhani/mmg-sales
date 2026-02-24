@@ -49,6 +49,12 @@ class ProductsTable
                     ->numeric()
                     ->sortable(),
 
+                TextColumn::make('principal.name')
+                    ->label('Principal')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
                 IconColumn::make('is_active')
                     ->label('Active')
                     ->boolean()
@@ -64,7 +70,7 @@ class ProductsTable
                     ->date('d M Y')
                     ->formatStateUsing(fn ($state) => $state ? strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')) : '-')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->label('Created')
