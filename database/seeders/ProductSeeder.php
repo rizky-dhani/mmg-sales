@@ -89,13 +89,13 @@ class ProductSeeder extends Seeder
             $nameLower = strtolower($name);
 
             if (str_contains($nameLower, 'chromatograph') || str_contains($nameLower, 'hplc')) {
-                return rand(8000000000, 15000000000);
+                return rand(800000000, 1500000000);
             }
             if (str_contains($nameLower, 'spectrofotometer') || str_contains($nameLower, 'spectrophotometer')) {
-                return rand(500000000, 2000000000);
+                return rand(500000000, 900000000);
             }
             if (str_contains($nameLower, 'mass spectrometer')) {
-                return rand(10000000000, 20000000000);
+                return rand(1000000000, 2000000000);
             }
             if (str_contains($nameLower, 'ultra low') || str_contains($nameLower, 'uluf')) {
                 return rand(150000000, 400000000);
