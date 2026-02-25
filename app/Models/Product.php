@@ -18,6 +18,7 @@ class Product extends Model
         'category',
         'description',
         'unit_price',
+        'ecatalog_price',
         'currency',
         'unit_of_measure',
         'stock_quantity',
@@ -35,6 +36,14 @@ class Product extends Model
     protected $codeColumn = 'product_code';
 
     protected $codePrefix = 'PRO';
+
+    protected function casts(): array
+    {
+        return [
+            'unit_price' => 'decimal:2',
+            'ecatalog_price' => 'decimal:2',
+        ];
+    }
 
     public function principal(): BelongsTo
     {

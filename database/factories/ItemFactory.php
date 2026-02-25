@@ -19,6 +19,7 @@ class ItemFactory extends Factory
             'principal_id' => Principal::factory(),
             'description' => fake()->sentence(),
             'unit_price' => fake()->numberBetween(10000, 10000000),
+            'ecatalog_price' => fake()->randomElement([fake()->numberBetween(10000, 10000000), null]),
             'unit' => fake()->randomElement(['Box', 'Pcs', 'Vial', 'Ampoule', 'Bottle']),
             'is_active' => true,
         ];

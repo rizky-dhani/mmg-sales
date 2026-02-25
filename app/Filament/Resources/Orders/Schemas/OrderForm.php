@@ -258,7 +258,7 @@ class OrderForm
                                             ->required()
                                             ->live()
                                             ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
-                                            ->columnSpan(2),
+                                            ->columnSpan(1),
                                         TextInput::make('quantity')
                                             ->label('Quantity')
                                             ->numeric()
@@ -267,12 +267,21 @@ class OrderForm
                                             ->live()
                                             ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
                                             ->columnSpan(1),
+                                        Select::make('price_type')
+                                            ->label('Price Type')
+                                            ->options([
+                                                'unit_price' => 'Unit Price',
+                                                'ecatalog_price' => 'E-Catalog Price',
+                                            ])
+                                            ->default('unit_price')
+                                            ->live()
+                                            ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
+                                            ->columnSpan(1),
                                         TextInput::make('unit_price')
                                             ->label('Unit Price')
                                             ->numeric()
                                             ->prefix('IDR')
-                                            ->live()
-                                            ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
+                                            ->readOnly()
                                             ->columnSpan(1),
                                     ]),
                                 Grid::make(1)
@@ -327,15 +336,20 @@ class OrderForm
     {
         $itemId = $get('item_id');
         $quantity = (int) $get('quantity');
-        $unitPrice = (float) $get('unit_price');
+        $priceType = $get('price_type') ?? 'unit_price';
 
-        if ($itemId && ! $unitPrice) {
+        if ($itemId) {
             $item = Item::find($itemId);
-            $unitPrice = $item?->unit_price ?? 0;
-            $set('unit_price', $unitPrice);
-            $set('current_price', $unitPrice);
+            if ($item) {
+                $unitPrice = $priceType === 'ecatalog_price'
+                    ? ($item->ecatalog_price ?? $item->unit_price ?? 0)
+                    : ($item->unit_price ?? 0);
+                $set('unit_price', $unitPrice);
+                $set('current_price', $unitPrice);
+            }
         }
 
+        $unitPrice = (float) $get('unit_price');
         $lineTotal = $quantity * $unitPrice;
         $set('subtotal', $lineTotal);
     }

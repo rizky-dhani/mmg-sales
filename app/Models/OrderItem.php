@@ -16,10 +16,21 @@ class OrderItem extends Model
         'quantity',
         'unit_price',
         'current_price',
+        'price_type',
         'discount_amount',
         'subtotal',
         'notes',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'unit_price' => 'decimal:2',
+            'current_price' => 'decimal:2',
+            'discount_amount' => 'decimal:2',
+            'subtotal' => 'decimal:2',
+        ];
+    }
 
     public function order(): BelongsTo
     {

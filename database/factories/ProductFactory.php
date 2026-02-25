@@ -18,6 +18,7 @@ class ProductFactory extends Factory
             'category' => fake()->randomElement(['medical_equipment', 'pharmaceutical', 'consumables', 'diagnostics', 'other']),
             'description' => fake()->paragraph(),
             'unit_price' => fake()->numberBetween(5000, 5000000),
+            'ecatalog_price' => fake()->randomElement([fake()->numberBetween(5000, 5000000), null]),
             'unit_of_measure' => fake()->randomElement(['Box', 'Pcs', 'Vial', 'Bottle']),
             'stock_quantity' => fake()->numberBetween(0, 1000),
             'minimum_stock' => fake()->numberBetween(10, 50),

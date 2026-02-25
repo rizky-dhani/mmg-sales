@@ -18,9 +18,18 @@ class Item extends Model
         'principal_id',
         'description',
         'unit_price',
+        'ecatalog_price',
         'unit',
         'is_active',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'unit_price' => 'decimal:2',
+            'ecatalog_price' => 'decimal:2',
+        ];
+    }
 
     public function principal(): BelongsTo
     {
