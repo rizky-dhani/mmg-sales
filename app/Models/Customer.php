@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasCode, HasFactory, SoftDeletes;
 
     protected $table = 'customers';
 
@@ -32,7 +33,12 @@ class Customer extends Model
         'is_active',
         'assigned_to',
         'customer_group_id',
+        'customer_code',
     ];
+
+    protected $codeColumn = 'customer_code';
+
+    protected $codePrefix = 'CST';
 
     public function customerGroup(): BelongsTo
     {

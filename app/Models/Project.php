@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasCode, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -33,6 +34,7 @@ class Project extends Model
         'last_contacted_at',
         'assigned_to',
         'position',
+        'project_code',
     ];
 
     protected $casts = [
@@ -43,6 +45,10 @@ class Project extends Model
         'converted_at' => 'datetime',
         'last_contacted_at' => 'datetime',
     ];
+
+    protected $codeColumn = 'project_code';
+
+    protected $codePrefix = 'PRJ';
 
     public function milestones(): BelongsToMany
     {

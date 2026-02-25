@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Contact extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasCode, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'customer_id',
@@ -24,7 +25,12 @@ class Contact extends Model
         'is_primary',
         'is_billing_contact',
         'notes',
+        'contact_code',
     ];
+
+    protected $codeColumn = 'contact_code';
+
+    protected $codePrefix = 'CON';
 
     public function getNameAttribute(): string
     {

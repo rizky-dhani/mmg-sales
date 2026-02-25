@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ResourceCodeGenerator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -54,6 +55,19 @@ class Order extends Model
         'payment_status',
         'created_by',
     ];
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->order_number)) {
+                $generator = app(ResourceCodeGenerator::class);
+                $year = $model->tahun ?? now()->year;
+                $model->order_number = $generator->generateForOrder($year);
+            }
+        });
+    }
 
     public function department(): BelongsTo
     {

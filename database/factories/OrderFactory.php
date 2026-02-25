@@ -55,7 +55,6 @@ class OrderFactory extends Factory
             'sub_segment_id' => SubSegment::factory(),
             'jual_kso' => fake()->randomElement(['Jual', 'KSO']),
             'distributor_id' => Distributor::factory(),
-            'order_number' => 'MMG-ORD-'.now()->year.'-'.fake()->unique()->numerify('########'),
             'original_customer_id' => Customer::factory(),
             'project_id' => Project::factory(),
             'status' => fake()->randomElement(['draft', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned']),

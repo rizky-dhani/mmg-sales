@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Activity extends Model
 {
-    use HasFactory;
+    use HasCode, HasFactory;
 
     protected $fillable = [
         'project_id',
@@ -35,6 +36,7 @@ class Activity extends Model
         'messaging_platform',
         'duration_minutes',
         'outcome',
+        'activity_code',
     ];
 
     protected $casts = [
@@ -45,6 +47,10 @@ class Activity extends Model
         'confidence_level' => 'integer',
         'next_contact_date' => 'date',
     ];
+
+    protected $codeColumn = 'activity_code';
+
+    protected $codePrefix = 'ACT';
 
     public function project(): BelongsTo
     {
