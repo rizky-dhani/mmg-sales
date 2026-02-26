@@ -11,7 +11,7 @@ class PrincipalSeeder extends Seeder
 
     protected function loadPrincipals(): void
     {
-        $filePath = database_path('../principals_products.txt');
+        $filePath = base_path('principals.txt');
         $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         $usedCodes = [];

@@ -53,6 +53,8 @@ class ProjectInfolist
                             }),
                         TextEntry::make('assignedUser.name')
                             ->label('Sales Rep'),
+                        TextEntry::make('creator.name')
+                            ->label('Created By'),
                     ]),
 
                 Section::make('Suppliers & Products')

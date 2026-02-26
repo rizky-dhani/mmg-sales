@@ -48,6 +48,19 @@ class Activity extends Model
         'next_contact_date' => 'date',
     ];
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function ($activity) {
+            $minDate = now()->subDays(3)->startOfDay();
+
+            if ($activity->performed_at && $activity->performed_at->lt($minDate)) {
+                throw new \InvalidArgumentException('Activity date cannot be more than 3 days in the past.');
+            }
+        });
+    }
+
     protected $codeColumn = 'activity_code';
 
     protected $codePrefix = 'ACT';

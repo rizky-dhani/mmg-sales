@@ -35,6 +35,7 @@ class Project extends Model
         'assigned_to',
         'position',
         'project_code',
+        'created_by',
     ];
 
     protected $casts = [
@@ -49,6 +50,17 @@ class Project extends Model
     protected $codeColumn = 'project_code';
 
     protected $codePrefix = 'PRJ';
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Project $project) {
+            if (is_null($project->created_by) && auth()->check()) {
+                $project->created_by = auth()->id();
+            }
+        });
+    }
 
     public function milestones(): BelongsToMany
     {
@@ -88,6 +100,18 @@ class Project extends Model
     public function assignedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function collaborators(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_collaborators')
+            ->withPivot('added_by')
+            ->withTimestamps();
     }
 
     public function orders(): HasMany

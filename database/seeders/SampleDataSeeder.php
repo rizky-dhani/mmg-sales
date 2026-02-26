@@ -78,16 +78,16 @@ class SampleDataSeeder extends Seeder
             $status = fake()->randomElement(['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']);
 
             $ageDays = match (true) {
-                $i < 10 => rand(1, 7),
-                $i < 25 => rand(15, 35),
-                default => rand(45, 90),
+                $i < 10 => rand(1, 2),
+                $i < 25 => rand(1, 2),
+                default => rand(1, 2),
             };
 
             $createdAt = Carbon::now()->subDays($ageDays)->subHours(rand(1, 23));
             $convertedAt = null;
 
             if (in_array($status, ['won', 'lost'])) {
-                $convertedAt = (clone $createdAt)->addDays(rand(5, $ageDays));
+                $convertedAt = (clone $createdAt)->addDays(rand(1, $ageDays));
             }
 
             $estimatedValue = $items->random()->unit_price * rand(1, 5);
@@ -164,7 +164,7 @@ class SampleDataSeeder extends Seeder
 
         foreach ($customers->random(min(30, $customers->count())) as $customer) {
             $user = $users->random();
-            $startedAt = Carbon::now()->subDays(rand(1, 60))->subHours(rand(1, 12));
+            $startedAt = Carbon::now()->subDays(rand(0, 2))->subHours(rand(1, 12));
             $endedAt = (clone $startedAt)->addMinutes(rand(30, 120));
 
             Activity::create([

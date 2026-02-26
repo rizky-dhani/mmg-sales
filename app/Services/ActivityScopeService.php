@@ -26,7 +26,23 @@ class ActivityScopeService
         // Include the user's own ID
         $allowedUserIds = $subordinateIds->push($user->id);
 
-        return $query->whereIn('user_id', $allowedUserIds);
+        // Include activities from projects where user is a collaborator
+        $collaboratorProjectIds = $this->getCollaboratorProjectIds($user);
+
+        return $query->where(function ($q) use ($allowedUserIds, $collaboratorProjectIds) {
+            $q->whereIn('user_id', $allowedUserIds)
+                ->orWhereIn('project_id', $collaboratorProjectIds);
+        });
+    }
+
+    /**
+     * Get project IDs where the user is a collaborator.
+     */
+    public function getCollaboratorProjectIds(User $user): Collection
+    {
+        return \DB::table('project_collaborators')
+            ->where('user_id', $user->id)
+            ->pluck('project_id');
     }
 
     /**

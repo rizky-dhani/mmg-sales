@@ -61,3 +61,83 @@ it('can create an activity with a contact', function () {
         'contact_id' => $contact->id,
     ]);
 });
+
+it('can create activity with date within 3 days backdate', function () {
+    $user = User::factory()->create();
+    $user->assignRole('Super Admin');
+    actingAs($user);
+
+    $dateWithin3Days = now()->subDays(2)->format('Y-m-d H:i:s');
+
+    livewire(CreateActivity::class)
+        ->set('data.type', 'Call')
+        ->set('data.subject', 'Backdate Test')
+        ->set('data.performed_at', $dateWithin3Days)
+        ->set('data.user_id', $user->id)
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    assertDatabaseHas('activities', [
+        'type' => 'Call',
+        'subject' => 'Backdate Test',
+    ]);
+});
+
+it('cannot create activity with date older than 3 days', function () {
+    $user = User::factory()->create();
+    $user->assignRole('Super Admin');
+    actingAs($user);
+
+    $dateOlderThan3Days = now()->subDays(4)->format('Y-m-d H:i:s');
+
+    expect(function () use ($user, $dateOlderThan3Days) {
+        livewire(CreateActivity::class)
+            ->set('data.type', 'Call')
+            ->set('data.subject', 'Old Activity')
+            ->set('data.performed_at', $dateOlderThan3Days)
+            ->set('data.user_id', $user->id)
+            ->call('create');
+    })->toThrow(\InvalidArgumentException::class, 'Activity date cannot be more than 3 days in the past.');
+});
+
+it('can create activity for today', function () {
+    $user = User::factory()->create();
+    $user->assignRole('Super Admin');
+    actingAs($user);
+
+    $today = now()->format('Y-m-d H:i:s');
+
+    livewire(CreateActivity::class)
+        ->set('data.type', 'Call')
+        ->set('data.subject', 'Today Activity')
+        ->set('data.performed_at', $today)
+        ->set('data.user_id', $user->id)
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    assertDatabaseHas('activities', [
+        'type' => 'Call',
+        'subject' => 'Today Activity',
+    ]);
+});
+
+it('can create activity for future date', function () {
+    $user = User::factory()->create();
+    $user->assignRole('Super Admin');
+    actingAs($user);
+
+    $futureDate = now()->addDays(2)->format('Y-m-d H:i:s');
+
+    livewire(CreateActivity::class)
+        ->set('data.type', 'Call')
+        ->set('data.subject', 'Future Activity')
+        ->set('data.performed_at', $futureDate)
+        ->set('data.user_id', $user->id)
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    assertDatabaseHas('activities', [
+        'type' => 'Call',
+        'subject' => 'Future Activity',
+    ]);
+});

@@ -17,6 +17,7 @@ class Customer extends Model
 
     protected $fillable = [
         'name',
+        'customer_name',
         'type',
         'classification',
         'tax_number',
@@ -39,6 +40,11 @@ class Customer extends Model
     protected $codeColumn = 'customer_code';
 
     protected $codePrefix = 'CST';
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->customer_name ?? $this->name;
+    }
 
     public function customerGroup(): BelongsTo
     {

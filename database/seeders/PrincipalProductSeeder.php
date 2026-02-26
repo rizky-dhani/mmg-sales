@@ -9,56 +9,33 @@ use Illuminate\Support\Str;
 
 class PrincipalProductSeeder extends Seeder
 {
-    protected array $principalProducts = [];
+    protected array $products = [];
 
-    protected function loadPrincipalProducts(): void
+    protected function loadProducts(): void
     {
-        $filePath = database_path('../principals_products.txt');
+        $filePath = base_path('products.txt');
         $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-        $usedCodes = [];
-        $currentPrincipal = null;
         foreach ($lines as $line) {
             $line = trim($line);
             if (empty($line)) {
                 continue;
             }
-
-            if (str_starts_with($line, '- ')) {
-                if ($currentPrincipal) {
-                    $productName = trim(substr($line, 2));
-                    $this->principalProducts[$currentPrincipal]['products'][] = $productName;
-                }
-            } else {
-                $currentPrincipal = $line;
-                $this->principalProducts[$currentPrincipal] = [
-                    'code' => $this->generateCode($line, $usedCodes),
-                    'products' => [],
-                ];
-            }
+            $this->products[] = $line;
         }
     }
 
-    protected function generateCode(string $name, array &$usedCodes): string
+    protected function findPrincipalForProduct(string $productName): ?Principal
     {
-        $words = preg_split('/\s+/', $name);
-        if (count($words) >= 2) {
-            $code = strtoupper(substr($words[0], 0, 2).substr($words[1], 0, 1));
-        } else {
-            $code = strtoupper(substr($name, 0, 3));
-        }
+        $principals = Principal::all();
 
-        if (isset($usedCodes[$code])) {
-            $counter = 1;
-            while (isset($usedCodes[$code.$counter])) {
-                $counter++;
+        foreach ($principals as $principal) {
+            if (str_contains($productName, $principal->name)) {
+                return $principal;
             }
-            $code = $code.$counter;
         }
 
-        $usedCodes[$code] = true;
-
-        return $code;
+        return null;
     }
 
     protected function inferProductType(string $name): string
@@ -148,32 +125,30 @@ class PrincipalProductSeeder extends Seeder
 
     public function run(): void
     {
-        $this->loadPrincipalProducts();
+        $this->loadProducts();
 
-        foreach ($this->principalProducts as $principalName => $data) {
-            $principal = Principal::where('code', $data['code'])->first();
+        foreach ($this->products as $productName) {
+            $principal = $this->findPrincipalForProduct($productName);
             if (! $principal) {
                 continue;
             }
 
-            foreach ($data['products'] as $productName) {
-                $type = $this->inferProductType($productName);
-                $price = $this->generatePrice($type, $productName);
+            $type = $this->inferProductType($productName);
+            $price = $this->generatePrice($type, $productName);
 
-                Item::updateOrCreate(
-                    ['internal_code' => $data['code'].'-'.preg_replace('/[^A-Za-z0-9]/', '', strtoupper(substr($productName, 0, 8)))],
-                    [
-                        'name' => $productName,
-                        'principal_id' => $principal->id,
-                        'internal_code' => $data['code'].'-'.fake()->unique()->numerify('####'),
-                        'principle_code' => $data['code'].'-'.strtoupper(Str::random(5)),
-                        'unit_price' => $price,
-                        'unit' => $type === 'Capital' ? 'Unit' : 'Pack',
-                        'description' => $productName.' medical '.strtolower($type),
-                        'is_active' => true,
-                    ]
-                );
-            }
+            Item::updateOrCreate(
+                ['name' => $productName],
+                [
+                    'name' => $productName,
+                    'principal_id' => $principal->id,
+                    'internal_code' => $principal->code.'-'.fake()->unique()->numerify('####'),
+                    'principle_code' => $principal->code.'-'.strtoupper(Str::random(5)),
+                    'unit_price' => $price,
+                    'unit' => $type === 'Capital' ? 'Unit' : 'Pack',
+                    'description' => $productName.' medical '.strtolower($type),
+                    'is_active' => true,
+                ]
+            );
         }
     }
 }

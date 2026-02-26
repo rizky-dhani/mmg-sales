@@ -13,7 +13,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Illuminate\Support\Str;
 
 class OrderForm
 {
@@ -32,7 +31,6 @@ class OrderForm
                             ->schema([
                                 TextInput::make('order_number')
                                     ->label('Order Number')
-                                    ->default(fn () => 'MMG-ORD-'.now()->year.'-'.strtoupper(Str::random(8)))
                                     ->required()
                                     ->unique(ignoreRecord: true)
                                     ->readOnly()
