@@ -19,6 +19,11 @@ class ProjectsTable
     {
         return $table
             ->columns([
+                TextColumn::make('project_code')
+                    ->label('Project Code')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('customer_name')
                     ->label('Customer')
                     ->searchable()
@@ -28,6 +33,16 @@ class ProjectsTable
                 TextColumn::make('contact_person')
                     ->label('Contact Person')
                     ->searchable(),
+
+                TextColumn::make('creator.name')
+                    ->label('Creator')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('collaborators.name')
+                    ->label('Assigned To')
+                    ->searchable()
+                    ->formatStateUsing(fn ($state, $record) => $record->collaborators->pluck('name')->join("\n")),
 
                 TextColumn::make('status')
                     ->badge()

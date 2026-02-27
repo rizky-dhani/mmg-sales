@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Item name
             $table->string('internal_code')->unique(); // Internal code
             $table->string('principle_code')->nullable(); // Principle code
+            $table->string('name'); // Item name
             $table->unsignedBigInteger('principal_id'); // Link to principal
             $table->text('description')->nullable(); // Description
             $table->decimal('unit_price', 15, 2)->default(0); // Unit price

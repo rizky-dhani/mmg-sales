@@ -39,6 +39,17 @@ class ProjectForm
                                     ->searchable()
                                     ->preload()
                                     ->visible(fn ($get) => $get('customer_id')),
+                                Select::make('assigned_users')
+                                    ->label('Assign Users')
+                                    ->multiple()
+                                    ->options(\App\Models\User::pluck('name', 'id'))
+                                    ->searchable()
+                                    ->preload()
+                                    ->afterStateHydrated(function ($component, $state, $record) {
+                                        if ($record) {
+                                            $component->state($record->collaborators->pluck('id')->toArray());
+                                        }
+                                    }),
                             ]),
 
                         Section::make('Contact Information')

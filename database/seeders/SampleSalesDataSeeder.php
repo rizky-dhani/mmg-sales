@@ -90,7 +90,7 @@ class SampleSalesDataSeeder extends Seeder
         $projectPriorities = ['low', 'medium', 'high', 'urgent'];
 
         for ($i = 1; $i <= 15; $i++) {
-            Project::create([
+            $project = Project::create([
                 'customer_name' => 'Prospect '.Str::random(5),
                 'contact_person' => 'Contact '.$i,
                 'email' => 'contact'.$i.'@prospect.com',
@@ -101,7 +101,10 @@ class SampleSalesDataSeeder extends Seeder
                 'estimated_value' => rand(5000000, 100000000),
                 'customer_id' => $i % 2 == 0 ? $customerIds[array_rand($customerIds)] : null,
                 'assigned_to' => $user?->id,
+                'created_by' => $user?->id,
             ]);
+
+            $project->collaborators()->attach($user?->id, ['added_by' => $user?->id]);
         }
 
         $orderStatuses = ['draft', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'];

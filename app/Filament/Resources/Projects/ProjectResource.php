@@ -137,4 +137,39 @@ class ProjectResource extends Resource
             'edit' => EditProject::route('/{record}/edit'),
         ];
     }
+
+    public static function mutateFormDataBeforeCreate(array $data): array
+    {
+        if (isset($data['assigned_users'])) {
+            $assignedUsers = $data['assigned_users'];
+            unset($data['assigned_users']);
+            session(['pending_collaborators' => $assignedUsers]);
+        }
+
+        return $data;
+    }
+
+    public static function mutateFormDataBeforeUpdate(array $data): array
+    {
+        if (isset($data['assigned_users'])) {
+            $assignedUsers = $data['assigned_users'];
+            unset($data['assigned_users']);
+
+            $record = static::getModel()::find(request()->route('record'));
+            if ($record) {
+                $record->collaborators()->sync($assignedUsers);
+            }
+        }
+
+        return $data;
+    }
+
+    public static function afterCreate(Project $record): void
+    {
+        $assignedUsers = session('pending_collaborators', []);
+        if (! empty($assignedUsers)) {
+            $record->collaborators()->sync($assignedUsers);
+            session()->forget('pending_collaborators');
+        }
+    }
 }

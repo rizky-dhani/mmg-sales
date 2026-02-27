@@ -17,6 +17,11 @@ class ActivitiesTable
     {
         return $table
             ->columns([
+                TextColumn::make('activity_code')
+                    ->label('Activity Code')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('performed_at')
                     ->label('Date')
                     ->date('d M Y')

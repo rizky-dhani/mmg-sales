@@ -111,7 +111,10 @@ class SampleDataSeeder extends Seeder
                 'updated_at' => $convertedAt ?? $createdAt->addDays(rand(1, 5)),
                 'converted_at' => $convertedAt,
                 'position' => Str::random(10),
+                'created_by' => $user->id,
             ]);
+
+            $project->collaborators()->attach($user->id, ['added_by' => $user->id]);
 
             $activityCount = rand(2, 6);
             for ($j = 0; $j < $activityCount; $j++) {
