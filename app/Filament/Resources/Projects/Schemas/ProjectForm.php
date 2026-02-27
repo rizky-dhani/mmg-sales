@@ -120,21 +120,8 @@ class ProjectForm
                             ]),
                         Section::make('Pipeline & Status')
                             ->columnSpanFull()
-                            ->columns(3)
+                            ->columns(2)
                             ->schema([
-                                Select::make('status')
-                                    ->options([
-                                        'new' => 'New',
-                                        'contacted' => 'Contacted',
-                                        'qualified' => 'Qualified',
-                                        'proposal' => 'Proposal',
-                                        'negotiation' => 'Negotiation',
-                                        'won' => 'Won',
-                                        'lost' => 'Lost',
-                                    ])
-                                    ->default('new')
-                                    ->required()
-                                    ->searchable(),
                                 Select::make('source')
                                     ->options([
                                         'website' => 'Website',

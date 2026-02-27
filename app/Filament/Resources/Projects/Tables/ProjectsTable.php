@@ -44,21 +44,6 @@ class ProjectsTable
                     ->searchable()
                     ->formatStateUsing(fn ($state, $record) => $record->collaborators->pluck('name')->join("\n")),
 
-                TextColumn::make('status')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
-                    ->color(fn (string $state): string => match ($state) {
-                        'new' => 'gray',
-                        'contacted' => 'info',
-                        'qualified' => 'primary',
-                        'proposal' => 'warning',
-                        'negotiation' => 'warning',
-                        'won' => 'success',
-                        'lost' => 'danger',
-                        default => 'gray',
-                    })
-                    ->sortable(),
-
                 TextColumn::make('priority')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))
@@ -114,11 +99,6 @@ class ProjectsTable
                     ->label('Phone')
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('assignedUser.name')
-                    ->label('Assigned To')
-                    ->searchable()
-                    ->sortable(),
 
                 TextColumn::make('customer.name')
                     ->label('Linked Customer')

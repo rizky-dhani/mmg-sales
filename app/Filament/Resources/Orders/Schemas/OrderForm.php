@@ -2,7 +2,8 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
-use App\Models\Item;
+use App\Models\Principal;
+use App\Models\Product;
 use App\Models\SubSegment;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -27,14 +28,8 @@ class OrderForm
                 Section::make('Order Details')
                     ->columnSpanFull()
                     ->schema([
-                        Grid::make(6)
+                        Grid::make(4)
                             ->schema([
-                                TextInput::make('order_number')
-                                    ->label('Order Number')
-                                    ->required()
-                                    ->unique(ignoreRecord: true)
-                                    ->readOnly()
-                                    ->columnSpan(2),
                                 DatePicker::make('order_date')
                                     ->label('Order Date')
                                     ->default(now())
@@ -98,13 +93,14 @@ class OrderForm
                                     ->searchable(),
                             ]),
 
-                        Grid::make(3)
+                        Grid::make(2)
                             ->schema([
                                 Select::make('jual_kso')
                                     ->label('Jual / KSO')
                                     ->options([
                                         'Jual' => 'Jual',
                                         'KSO' => 'KSO',
+                                        'Sample' => 'Sample',
                                     ])
                                     ->required()
                                     ->searchable(),
@@ -182,7 +178,7 @@ class OrderForm
                 Section::make('Customer Details')
                     ->columnSpanFull()
                     ->schema([
-                        Grid::make(4)
+                        Grid::make(3)
                             ->schema([
                                 Select::make('end_customer_id')
                                     ->label('End Customer')
@@ -247,16 +243,24 @@ class OrderForm
                         Repeater::make('orderItems')
                             ->relationship()
                             ->schema([
-                                Grid::make(4)
+                                Grid::make(5)
                                     ->schema([
-                                        Select::make('item_id')
-                                            ->label('Item')
-                                            ->options(fn () => Item::all()->pluck('name', 'id'))
+                                        Select::make('principal_id')
+                                            ->label('Principal')
+                                            ->options(fn () => Principal::all()->pluck('name', 'id'))
                                             ->searchable()
                                             ->required()
                                             ->live()
-                                            ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
-                                            ->columnSpan(1),
+                                            ->afterStateUpdated(fn ($set) => $set('product_id', null)),
+                                        Select::make('product_id')
+                                            ->label('Product')
+                                            ->options(fn ($get) => $get('principal_id')
+                                                ? Product::where('principal_id', $get('principal_id'))->pluck('name', 'id')
+                                                : [])
+                                            ->searchable()
+                                            ->required()
+                                            ->live()
+                                            ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get)),
                                         TextInput::make('quantity')
                                             ->label('Quantity')
                                             ->numeric()
@@ -332,16 +336,16 @@ class OrderForm
 
     protected static function updateLineTotal($set, $get): void
     {
-        $itemId = $get('item_id');
+        $productId = $get('product_id');
         $quantity = (int) $get('quantity');
         $priceType = $get('price_type') ?? 'unit_price';
 
-        if ($itemId) {
-            $item = Item::find($itemId);
-            if ($item) {
+        if ($productId) {
+            $product = Product::find($productId);
+            if ($product) {
                 $unitPrice = $priceType === 'ecatalog_price'
-                    ? ($item->ecatalog_price ?? $item->unit_price ?? 0)
-                    : ($item->unit_price ?? 0);
+                    ? ($product->ecatalog_price ?? $product->unit_price ?? 0)
+                    : ($product->unit_price ?? 0);
                 $set('unit_price', $unitPrice);
                 $set('current_price', $unitPrice);
             }
