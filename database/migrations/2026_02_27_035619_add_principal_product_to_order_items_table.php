@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::table('order_items', function (Blueprint $table) {
             $table->foreignId('principal_id')->nullable()->constrained('principals')->nullOnDelete();
-            $table->foreignId('product_id')->nullable()->constrained()->nullOnDelete();
+
+            if (Schema::hasColumn('order_items', 'product_id')) {
+                return;
+            }
+
+            $table->unsignedBigInteger('product_id')->nullable()->after('principal_id');
+            $table->foreign('product_id', 'order_items_product_id_foreign_new')
+                ->references('id')
+                ->on('products')
+                ->onDelete('set null');
         });
     }
 
@@ -23,7 +32,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('order_items', function (Blueprint $table) {
-            //
+            $table->dropForeign(['principal_id']);
+            $table->dropForeign(['product_id']);
+            $table->dropColumn(['principal_id', 'product_id']);
         });
     }
 };
