@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SubSegment extends Model
 {
-    use HasFactory;
+    use HasCode, HasFactory;
 
     protected $fillable = [
         'name',
@@ -17,6 +18,10 @@ class SubSegment extends Model
         'segment_id',
         'description',
     ];
+
+    protected $codeColumn = 'code';
+
+    protected $codePrefix = 'SSG';
 
     public function segment(): BelongsTo
     {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasCode;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,7 +15,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, HasRoles, Notifiable;
+    use HasCode, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -31,7 +32,12 @@ class User extends Authenticatable implements FilamentUser
         'manager_id',
         'sales_target',
         'target_metadata',
+        'code',
     ];
+
+    protected $codeColumn = 'code';
+
+    protected $codePrefix = 'USR';
 
     /**
      * The attributes that should be hidden for serialization.

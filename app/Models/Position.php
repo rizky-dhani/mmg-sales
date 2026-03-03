@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Position extends Model
 {
-    use HasFactory;
+    use HasCode, HasFactory;
 
     protected $fillable = [
         'name',
@@ -19,6 +20,10 @@ class Position extends Model
         'department_id',
         'description',
     ];
+
+    protected $codeColumn = 'code';
+
+    protected $codePrefix = 'POS';
 
     public function department(): BelongsTo
     {

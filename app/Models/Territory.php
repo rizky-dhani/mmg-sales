@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Territory extends Model
 {
-    use HasFactory;
+    use HasCode, HasFactory;
 
     protected $fillable = [
         'name',
@@ -19,6 +20,10 @@ class Territory extends Model
         'parent_id',
         'manager_id',
     ];
+
+    protected $codeColumn = 'wilayah_code';
+
+    protected $codePrefix = 'WLY';
 
     public function parent(): BelongsTo
     {

@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CustomerGroup extends Model
 {
-    use HasFactory;
+    use HasCode, HasFactory;
 
     protected $table = 'customer_groups';
 
@@ -18,6 +19,10 @@ class CustomerGroup extends Model
         'description',
         'is_active',
     ];
+
+    protected $codeColumn = 'code';
+
+    protected $codePrefix = 'CUG';
 
     public function customers(): HasMany
     {

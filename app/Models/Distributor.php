@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Distributor extends Model
 {
-    use HasFactory;
+    use HasCode, HasFactory;
 
     protected $fillable = [
         'name',
@@ -20,6 +21,10 @@ class Distributor extends Model
         'description',
         'is_active',
     ];
+
+    protected $codeColumn = 'code';
+
+    protected $codePrefix = 'DST';
 
     public function orders(): HasMany
     {
