@@ -16,6 +16,11 @@ class UsersTable
         return $table
             ->modifyQueryUsing(fn ($query) => $query->where('id', '!=', auth()->user()->id)->orWhere('id', '!=', 1))
             ->columns([
+                TextColumn::make('user_code')
+                    ->label('User Code')
+                    ->searchable()
+                    ->sortable(),
+                
                 TextColumn::make('name')
                     ->label('User Name')
                     ->searchable()

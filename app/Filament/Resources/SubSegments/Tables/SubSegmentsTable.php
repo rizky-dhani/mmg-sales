@@ -14,6 +14,11 @@ class SubSegmentsTable
     {
         return $table
             ->columns([
+                TextColumn::make('sub_segment_code')
+                    ->label('Sub-Segment Code')
+                    ->searchable()
+                    ->sortable(),
+                    
                 TextColumn::make('name')
                     ->label('Sub-Segment Name')
                     ->searchable()
@@ -21,11 +26,6 @@ class SubSegmentsTable
 
                 TextColumn::make('code')
                     ->label('Code')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('sub_segment_code')
-                    ->label('Sub-Segment Code')
                     ->searchable()
                     ->sortable(),
 

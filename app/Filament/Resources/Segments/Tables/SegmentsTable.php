@@ -14,6 +14,11 @@ class SegmentsTable
     {
         return $table
             ->columns([
+                TextColumn::make('segment_code')
+                    ->label('Segment Code')
+                    ->searchable()
+                    ->sortable(),
+                
                 TextColumn::make('name')
                     ->label('Segment Name')
                     ->searchable()
@@ -21,11 +26,6 @@ class SegmentsTable
 
                 TextColumn::make('code')
                     ->label('Code')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('segment_code')
-                    ->label('Segment Code')
                     ->searchable()
                     ->sortable(),
 

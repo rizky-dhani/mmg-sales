@@ -15,6 +15,11 @@ class CustomerGroupsTable
     {
         return $table
             ->columns([
+                TextColumn::make('customer_group_code')
+                    ->label('Group Code')
+                    ->searchable()
+                    ->sortable(),
+                    
                 TextColumn::make('name')
                     ->label('Group Name')
                     ->searchable()
@@ -22,11 +27,6 @@ class CustomerGroupsTable
 
                 TextColumn::make('code')
                     ->label('Code')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('customer_group_code')
-                    ->label('Group Code')
                     ->searchable()
                     ->sortable(),
 

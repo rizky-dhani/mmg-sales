@@ -22,6 +22,11 @@ class ProductsTable
     {
         return $table
             ->columns([
+                TextColumn::make('product_code')
+                    ->label('Product Code')
+                    ->searchable()
+                    ->sortable(),
+                
                 TextColumn::make('name')
                     ->label('Product Name')
                     ->searchable()

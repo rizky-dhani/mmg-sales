@@ -15,6 +15,11 @@ class PrincipalsTable
     {
         return $table
             ->columns([
+                TextColumn::make('principal_code')
+                    ->label('Principal Code')
+                    ->searchable()
+                    ->sortable(),
+                
                 TextColumn::make('name')
                     ->label('Principal Name')
                     ->searchable()
