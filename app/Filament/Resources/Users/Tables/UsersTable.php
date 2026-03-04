@@ -22,6 +22,11 @@ class UsersTable
                     ->sortable()
                     ->weight('bold'),
 
+                TextColumn::make('code')
+                    ->label('Code')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('email')
                     ->label('Email')
                     ->searchable(),

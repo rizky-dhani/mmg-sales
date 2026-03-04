@@ -54,6 +54,11 @@ class MilestoneResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('code')
+                    ->label('Code')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
