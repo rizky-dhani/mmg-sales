@@ -14,10 +14,11 @@ class Segment extends Model
     protected $fillable = [
         'name',
         'code',
+        'segment_code',
         'description',
     ];
 
-    protected $codeColumn = 'code';
+    protected $codeColumn = 'segment_code';
 
     protected $codePrefix = 'SEG';
 

@@ -25,6 +25,11 @@ class CustomerGroupsTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('customer_group_code')
+                    ->label('Group Code')
+                    ->searchable()
+                    ->sortable(),
+
                 IconColumn::make('is_active')
                     ->label('Active')
                     ->boolean()

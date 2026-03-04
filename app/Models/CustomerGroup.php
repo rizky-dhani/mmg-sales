@@ -16,11 +16,12 @@ class CustomerGroup extends Model
     protected $fillable = [
         'name',
         'code',
+        'customer_group_code',
         'description',
         'is_active',
     ];
 
-    protected $codeColumn = 'code';
+    protected $codeColumn = 'customer_group_code';
 
     protected $codePrefix = 'CUG';
 

@@ -15,11 +15,12 @@ class SubSegment extends Model
     protected $fillable = [
         'name',
         'code',
+        'sub_segment_code',
         'segment_id',
         'description',
     ];
 
-    protected $codeColumn = 'code';
+    protected $codeColumn = 'sub_segment_code';
 
     protected $codePrefix = 'SSG';
 

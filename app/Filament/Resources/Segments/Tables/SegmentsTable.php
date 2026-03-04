@@ -24,6 +24,11 @@ class SegmentsTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('segment_code')
+                    ->label('Segment Code')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->date('d M Y')
