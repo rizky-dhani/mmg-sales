@@ -173,6 +173,20 @@ class OrderForm
                                     ->preload()
                                     ->searchable(),
                             ]),
+
+                        Select::make('project_id')
+                            ->label('Project')
+                            ->relationship('project', 'title')
+                            ->options(fn () => Project::query()
+                                ->where(function ($query) {
+                                    $userId = auth()->id();
+                                    $query->where('assigned_to', $userId)
+                                        ->orWhere('created_by', $userId);
+                                })
+                                ->pluck('title', 'id'))
+                            ->searchable()
+                            ->preload()
+                            ->placeholder('Select a project'),
                     ]),
 
                 Section::make('Customer Details')
