@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
-use Filament\Infolists\Components\EntryContainer;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -132,7 +132,7 @@ class OrderInfolist
                 Section::make('Product Details')
                     ->columnSpanFull()
                     ->schema([
-                        EntryContainer::make('orderItems')
+                        RepeatableEntry::make('orderItems')
                             ->schema([
                                 Grid::make()
                                     ->columns(4)
