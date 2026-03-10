@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Filament\Widgets\Reports;
+
+use App\DTOs\ReportFilterData;
+use App\Services\Reports\PipelineReportService;
+use Filament\Tables\Table;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Filament\Widgets\TableWidget;
+
+class PipelineBySalesRepresentativeWidget extends TableWidget
+{
+    use InteractsWithPageFilters;
+
+    protected int|string|array $columnSpan = 'full';
+
+    public function table(Table $table): Table
+    {
+        return $table
+            ->records(fn () => $this->getRecords())
+            ->columns([
+                \Filament\Tables\Columns\TextColumn::make('name')
+                    ->label('Sales Rep'),
+                \Filament\Tables\Columns\TextColumn::make('count')
+                    ->label('Projects')
+                    ->alignRight(),
+                \Filament\Tables\Columns\TextColumn::make('value')
+                    ->label('Pipeline Value')
+                    ->money('IDR')
+                    ->alignRight(),
+            ])
+            ->paginated([10, 25, 50]);
+    }
+
+    protected function getRecords()
+    {
+        $filters = $this->pageFilters ?? [];
+        $filterData = ReportFilterData::fromArray($filters);
+        $service = app(PipelineReportService::class);
+        $data = $service->generate($filterData);
+
+        return $data->pipelineBySalesRep;
+    }
+}
