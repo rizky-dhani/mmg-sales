@@ -16,7 +16,9 @@ class Product extends Model
         'name',
         'category',
         'description',
+        'product_acc_code',
         'unit_price',
+        'ecatalog_price',
         'unit_of_measure',
         'is_active',
         'principal_id',
@@ -29,7 +31,8 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'unit_price' => 'decimal:2',
+            'unit_price' => 'integer',
+            'ecatalog_price' => 'integer',
         ];
     }
 
