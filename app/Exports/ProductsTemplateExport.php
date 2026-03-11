@@ -16,11 +16,9 @@ class ProductsTemplateExport implements FromCollection, WithHeadings
                 'category' => 'medical_equipment',
                 'description' => 'Product description',
                 'unit_price' => 100000,
-                'ecatalog_price' => 95000,
                 'unit_of_measure' => 'pcs',
                 'is_active' => 1,
                 'principal_id' => 1,
-                'product_acc_code' => '',
             ],
         ]);
     }
@@ -32,11 +30,9 @@ class ProductsTemplateExport implements FromCollection, WithHeadings
             'category',
             'description',
             'unit_price',
-            'ecatalog_price',
             'unit_of_measure',
             'is_active',
             'principal_id',
-            'product_acc_code',
         ];
     }
 }

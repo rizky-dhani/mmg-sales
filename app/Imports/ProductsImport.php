@@ -22,12 +22,9 @@ class ProductsImport implements ToCollection, WithHeadingRow
                 'category' => $row['category'] ?? null,
                 'description' => $row['description'] ?? null,
                 'unit_price' => $row['unit_price'] ?? 0,
-                'ecatalog_price' => $row['ecatalog_price'] ?? null,
                 'unit_of_measure' => $row['unit_of_measure'] ?? 'pcs',
                 'is_active' => $row['is_active'] ?? 1,
                 'principal_id' => $this->resolvePrincipalId($row['principal_id'] ?? null),
-                'product_code' => $row['product_code'] ?? null,
-                'product_acc_code' => $row['product_acc_code'] ?? null,
             ]);
         }
     }

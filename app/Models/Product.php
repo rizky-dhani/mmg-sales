@@ -14,24 +14,12 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'sku',
         'category',
         'description',
         'unit_price',
-        'ecatalog_price',
-        'currency',
         'unit_of_measure',
-        'stock_quantity',
-        'minimum_stock',
-        'reorder_quantity',
         'is_active',
-        'requires_prescription',
-        'manufacturer',
-        'expiry_date',
-        'storage_requirements',
         'principal_id',
-        'product_code',
-        'product_acc_code',
     ];
 
     protected $codeColumn = 'product_code';
@@ -42,7 +30,6 @@ class Product extends Model
     {
         return [
             'unit_price' => 'decimal:2',
-            'ecatalog_price' => 'decimal:2',
         ];
     }
 
