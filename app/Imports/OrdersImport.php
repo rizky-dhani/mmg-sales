@@ -72,6 +72,7 @@ class OrdersImport implements ToCollection
                 $origCustomer = Customer::where('name', $row[10])->first();
                 $custGroup = CustomerGroup::where('name', $row[12])->first();
                 $subSegment = SubSegment::where('name', $row[26])->first();
+                $project = Project::where('name', $row[16])->first();
 
                 Order::create([
                     'tahun' => (int) $row[1],
@@ -83,10 +84,10 @@ class OrdersImport implements ToCollection
                     'spv_position_id' => $spv->id,
                     'sr_position_id' => $sr->id,
                     'area_city_id' => $area->id,
-                    'original_customer_id' => $origCustomer?->id ?? $endCustomer->id,
                     'end_customer_id' => $endCustomer->id,
                     'customer_group_id' => $custGroup?->id,
                     'cd_ncd_type' => $row[13],
+                    'ncd_subtype' => $row[14] ?? null,
                     'segment_id' => $segment->id,
                     'principal_id' => $principal->id,
                     'reg_inst' => $row[16],
@@ -96,12 +97,12 @@ class OrdersImport implements ToCollection
                     'total_hna_gross_sales' => (float) $row[23],
                     'discount_on' => (float) $row[24],
                     'net_sales_total' => (float) $row[25],
-                    'subtotal' => (float) $row[23],
-                    'total_amount' => (float) $row[25],
                     'sub_segment_id' => $subSegment?->id,
                     'jual_kso' => $row[27],
                     'distributor_id' => $distributor->id,
                     'order_number' => $orderNumber,
+                    'original_customer_id' => $origCustomer?->id ?? $endCustomer->id,
+                    'project_id' => $project?->id,
                     'order_date' => now(),
                     'status' => 'pending',
                 ]);

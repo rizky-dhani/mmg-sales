@@ -2,11 +2,9 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Section as ComponentsSection;
 use Filament\Schemas\Schema;
 
 class UserForm
@@ -15,7 +13,8 @@ class UserForm
     {
         return $schema
             ->components([
-                Section::make('Basic Information')
+                ComponentsSection::make('Basic Information')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
@@ -24,14 +23,10 @@ class UserForm
                             ->label('Email address')
                             ->email()
                             ->required(),
-                        DateTimePicker::make('email_verified_at'),
-                        TextInput::make('password')
-                            ->password()
-                            ->required()
-                            ->hiddenOn('edit'),
                     ]),
 
-                Section::make('Organization & Hierarchy')
+                ComponentsSection::make('Organization & Hierarchy')
+                    ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         Select::make('department_id')
@@ -54,21 +49,6 @@ class UserForm
                             ->relationship('roles', 'name')
                             ->multiple()
                             ->preload()
-                            ->columnSpanFull(),
-                    ]),
-
-                Section::make('Sales Targets')
-                    ->columns(2)
-                    ->schema([
-                        TextInput::make('sales_target')
-                            ->label('Annual Sales Target')
-                            ->numeric()
-                            ->prefix('IDR')
-                            ->default(0),
-                        KeyValue::make('target_metadata')
-                            ->label('Monthly Splits / Metadata')
-                            ->keyLabel('Month/Category')
-                            ->valueLabel('Target Value')
                             ->columnSpanFull(),
                     ]),
             ]);

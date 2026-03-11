@@ -27,7 +27,7 @@ class ActivitiesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithM
 
     public function query()
     {
-        return $this->query->with(['user', 'customer', 'contact']);
+        return $this->query->with(['user', 'customer', 'contact', 'project']);
     }
 
     public function title(): string
@@ -43,10 +43,20 @@ class ActivitiesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithM
             'Sales Rep',
             'Customer',
             'Contact Person',
+            'Project',
             'Subject',
+            'Purpose',
+            'Expectations',
+            'Targets',
             'Outcome',
+            'Stakeholder Feedback',
             'Confidence',
             'Worth Keeping',
+            'Next Contact Date',
+            'Follow Up Notes',
+            'Meeting Link',
+            'Messaging Platform',
+            'Duration (Minutes)',
             'Started At',
             'Ended At',
             'Location',
@@ -62,10 +72,20 @@ class ActivitiesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithM
             $activity->user?->name ?? '-',
             $activity->customer?->name ?? '-',
             $activity->contact?->name ?? '-',
+            $activity->project?->name ?? '-',
             $activity->subject,
+            $activity->purpose ?? '-',
+            $activity->expectations ?? '-',
+            $activity->targets ?? '-',
             $activity->outcome ?? '-',
+            $activity->stakeholder_feedback ?? '-',
             $activity->confidence_level.'%',
             $activity->is_worth_keeping ? 'Yes' : 'No',
+            $activity->next_contact_date?->format('d M Y') ?? '-',
+            $activity->follow_up_notes ?? '-',
+            $activity->meeting_link ?? '-',
+            $activity->messaging_platform ?? '-',
+            $activity->duration_minutes ?? '-',
             $activity->visit_started_at?->format('H:i') ?? '-',
             $activity->visit_ended_at?->format('H:i') ?? '-',
             $activity->location ?? '-',

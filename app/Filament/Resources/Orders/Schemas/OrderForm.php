@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Orders\Schemas;
 
 use App\Models\Principal;
 use App\Models\Product;
+use App\Models\Project;
 use App\Models\SubSegment;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -42,7 +43,7 @@ class OrderForm
                                     ->columnSpan(2),
                             ]),
 
-                        Grid::make(4)
+                        Grid::make(5)
                             ->schema([
                                 Select::make('cd_ncd_type')
                                     ->label('CD / NCD Type')
@@ -51,17 +52,7 @@ class OrderForm
                                         'N-CD' => 'N-CD',
                                     ])
                                     ->required()
-                                    ->live()
-                                    ->columnSpan(2),
-                                TextInput::make('ncd_subtype')
-                                    ->label('NCD Subtype')
-                                    ->disabled(fn ($get) => $get('cd_ncd_type') !== 'N-CD')
-                                    ->dehydrated()
-                                    ->columnSpan(2),
-                            ]),
-
-                        Grid::make(4)
-                            ->schema([
+                                    ->live(),
                                 Select::make('segment_id')
                                     ->label('Segment')
                                     ->relationship('segment', 'name')
