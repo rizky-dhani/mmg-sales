@@ -58,19 +58,9 @@ class CustomersTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('credit_limit')
-                    ->label('Credit Limit')
-                    ->money('IDR')
-                    ->sortable(),
-
                 IconColumn::make('is_active')
                     ->label('Active')
                     ->boolean()
-                    ->sortable(),
-
-                TextColumn::make('assignedUser.name')
-                    ->label('Assigned To')
-                    ->searchable()
                     ->sortable(),
 
                 // Toggleable

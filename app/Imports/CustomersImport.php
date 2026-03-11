@@ -33,7 +33,6 @@ class CustomersImport implements ToCollection, WithHeadingRow
                 'is_active' => $row['is_active'] ?? 1,
                 'cd_ncd_type' => $row['cd_ncd_type'] ?? null,
                 'customer_group_id' => $row['customer_group_id'] ?? null,
-                'customer_code' => $row['customer_code'] ?? null,
                 'customer_acc_code' => $row['customer_acc_code'] ?? null,
             ]);
         }
