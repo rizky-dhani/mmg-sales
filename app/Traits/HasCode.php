@@ -12,7 +12,9 @@ trait HasCode
             if (empty($model->{$model->getCodeColumnName()})) {
                 $generator = app(ResourceCodeGenerator::class);
                 $model->{$model->getCodeColumnName()} = $generator->generate(
-                    $model->getCodePrefix()
+                    $model->getCodePrefix(),
+                    $model->getTable(),
+                    $model->getCodeColumnName()
                 );
             }
         });

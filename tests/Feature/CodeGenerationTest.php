@@ -49,6 +49,30 @@ describe('Model Code Generation', function () {
         expect($principal->principal_code)->toMatch('/^MMG-PRN-\d{6}$/');
     });
 
+    it('reuses latest existing principal_code after deletion', function () {
+        $principal1 = Principal::factory()->create();
+        $principal2 = Principal::factory()->create();
+        $principal3 = Principal::factory()->create();
+
+        expect($principal1->principal_code)->toBe('MMG-PRN-000001');
+        expect($principal2->principal_code)->toBe('MMG-PRN-000002');
+        expect($principal3->principal_code)->toBe('MMG-PRN-000003');
+
+        // Delete the last principal
+        $principal3->delete();
+
+        // Create a new principal - should get code 3 (latest existing + 1)
+        $principal4 = Principal::factory()->create();
+        expect($principal4->principal_code)->toBe('MMG-PRN-000003');
+
+        // Delete principal 2
+        $principal2->delete();
+
+        // Create another principal - should get code 4 (latest existing 003 + 1)
+        $principal5 = Principal::factory()->create();
+        expect($principal5->principal_code)->toBe('MMG-PRN-000004');
+    });
+
     it('generates product_code when creating product', function () {
         $product = Product::factory()->create();
 

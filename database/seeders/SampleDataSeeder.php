@@ -50,12 +50,7 @@ class SampleDataSeeder extends Seeder
         $salesTypes = SalesType::factory(3)->create();
         $distributors = Distributor::factory(3)->create();
 
-        $customers = collect();
-        foreach ($users->where('email', '!=', 'superadmin@medquest.co.id') as $user) {
-            $customers = $customers->merge(Customer::factory(5)->create([
-                'assigned_to' => $user->id,
-            ]));
-        }
+        $customers = Customer::factory(20)->create();
 
         foreach ($customers as $customer) {
             Contact::factory(rand(1, 3))->create(['customer_id' => $customer->id]);
@@ -106,12 +101,12 @@ class SampleDataSeeder extends Seeder
                 'estimated_completion_date' => (clone $createdAt)->addDays(rand(45, 120)),
                 'notes' => fake()->paragraph(),
                 'customer_id' => $customer->id,
-                'assigned_to' => $user->id,
                 'created_at' => $createdAt,
                 'updated_at' => $convertedAt ?? $createdAt->addDays(rand(1, 5)),
                 'converted_at' => $convertedAt,
                 'position' => Str::random(10),
                 'created_by' => $user->id,
+                'assigned_to' => $user->id,
             ]);
 
             $project->collaborators()->attach($user->id, ['added_by' => $user->id]);
