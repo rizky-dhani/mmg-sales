@@ -23,7 +23,7 @@ class CustomersTable
                     ->label('Customer Code')
                     ->searchable()
                     ->sortable(),
-                
+
                 TextColumn::make('name')
                     ->label('Customer Name')
                     ->searchable()

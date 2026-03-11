@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Exports;
+
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+
+class CustomersTemplateExport implements FromCollection, WithHeadings
+{
+    public function collection(): Collection
+    {
+        return collect([
+            [
+                'name' => 'PT Example Customer',
+                'customer_name' => 'PT Example Customer',
+                'type' => 'hospital',
+                'other_type' => null,
+                'tax_number' => '01.234.567.8-901.000',
+                'address' => 'Jl. Example No. 123',
+                'city' => 'Jakarta',
+                'state' => 'DKI Jakarta',
+                'postal_code' => '12345',
+                'country' => 'Indonesia',
+                'email' => 'info@example.com',
+                'phone' => '021-1234567',
+                'website' => 'https://example.com',
+                'is_active' => 1,
+                'cd_ncd_type' => 'CD',
+                'customer_group_id' => 1,
+                'customer_acc_code' => '',
+            ],
+        ]);
+    }
+
+    public function headings(): array
+    {
+        return [
+            'name',
+            'customer_name',
+            'type',
+            'other_type',
+            'tax_number',
+            'address',
+            'city',
+            'state',
+            'postal_code',
+            'country',
+            'email',
+            'phone',
+            'website',
+            'is_active',
+            'cd_ncd_type',
+            'customer_group_id',
+            'customer_acc_code',
+        ];
+    }
+}

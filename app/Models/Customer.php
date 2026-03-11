@@ -35,6 +35,7 @@ class Customer extends Model
         'assigned_to',
         'customer_group_id',
         'customer_code',
+        'customer_acc_code',
     ];
 
     protected $codeColumn = 'customer_code';
