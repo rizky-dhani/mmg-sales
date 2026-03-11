@@ -28,7 +28,7 @@ class PrincipalSeeder extends Seeder
 
             $currentPrincipal = $line;
             $this->principals[$currentPrincipal] = [
-                'code' => $this->generateCode($line, $usedCodes),
+                'initial' => $this->generateCode($line, $usedCodes),
             ];
         }
     }
@@ -61,15 +61,11 @@ class PrincipalSeeder extends Seeder
 
         foreach ($this->principals as $name => $data) {
             Principal::updateOrCreate(
-                ['code' => $data['code']],
+                ['initial' => $data['initial']],
                 [
                     'name' => $name,
-                    'code' => $data['code'],
+                    'initial' => $data['initial'],
                     'description' => $name.' Medical Equipment and Supplies',
-                    'contact_person' => fake('id_ID')->name(),
-                    'phone' => fake('id_ID')->phoneNumber(),
-                    'email' => strtolower($data['code']).'@'.strtolower(str_replace(' ', '', $name)).'.com',
-                    'address' => fake('id_ID')->address(),
                     'is_active' => true,
                 ]
             );

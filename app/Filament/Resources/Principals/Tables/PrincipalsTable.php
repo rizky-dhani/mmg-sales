@@ -19,25 +19,17 @@ class PrincipalsTable
                     ->label('Principal Code')
                     ->searchable()
                     ->sortable(),
-                
+
                 TextColumn::make('name')
                     ->label('Principal Name')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
 
-                TextColumn::make('code')
-                    ->label('Code')
+                TextColumn::make('initial')
+                    ->label('Initial')
                     ->searchable()
                     ->sortable(),
-
-                TextColumn::make('contact_person')
-                    ->label('Contact')
-                    ->searchable(),
-
-                TextColumn::make('email')
-                    ->label('Email')
-                    ->searchable(),
 
                 IconColumn::make('is_active')
                     ->label('Active')

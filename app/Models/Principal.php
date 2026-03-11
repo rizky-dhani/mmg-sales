@@ -13,22 +13,18 @@ class Principal extends Model
 
     protected $fillable = [
         'name',
-        'code',
+        'initial',
         'description',
-        'contact_person',
-        'phone',
-        'email',
         'address',
         'is_active',
-        'annual_target',
         'supplier_type',
         'website',
         'principal_code',
+        'principal_acc_code',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'annual_target' => 'decimal:2',
     ];
 
     protected $codeColumn = 'principal_code';

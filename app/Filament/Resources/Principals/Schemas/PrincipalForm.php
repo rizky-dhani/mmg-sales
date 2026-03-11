@@ -19,7 +19,8 @@ class PrincipalForm
                     ->schema([
                         TextInput::make('name')
                             ->required(),
-                        TextInput::make('code')
+                        TextInput::make('initial')
+                            ->label('Initial')
                             ->required(),
                         Toggle::make('is_active')
                             ->required(),
@@ -35,28 +36,12 @@ class PrincipalForm
                                 'Non-CL' => 'Non-CL',
                             ])
                             ->default(null),
-                        TextInput::make('annual_target')
-                            ->label('Annual Target')
-                            ->numeric()
-                            ->prefix('IDR')
-                            ->default(0),
                     ])
                     ->columns(2),
 
                 Section::make('Contact Information')
                     ->columnSpanFull()
                     ->schema([
-                        TextInput::make('contact_person')
-                            ->label('Contact Name')
-                            ->default(null),
-                        TextInput::make('phone')
-                            ->label('Phone Number')
-                            ->tel()
-                            ->default(null),
-                        TextInput::make('email')
-                            ->label('Email address')
-                            ->email()
-                            ->default(null),
                         TextInput::make('website')
                             ->label('Website')
                             ->url()

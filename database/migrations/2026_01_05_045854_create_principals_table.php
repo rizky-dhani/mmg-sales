@@ -14,12 +14,8 @@ return new class extends Migration
         Schema::create('principals', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // Principal name
-            $table->string('code')->unique(); // Principal code
+            $table->string('initial')->unique(); // Principal code
             $table->text('description')->nullable(); // Description
-            $table->string('contact_person')->nullable(); // Contact person
-            $table->string('phone')->nullable(); // Phone number
-            $table->string('email')->nullable(); // Email
-            $table->text('address')->nullable(); // Address
             $table->boolean('is_active')->default(true); // Active status
             $table->timestamps();
         });

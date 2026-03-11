@@ -13,12 +13,8 @@ class PrincipalFactory extends Factory
     {
         return [
             'name' => fake()->company().' '.fake()->randomElement(['Ltd', 'Inc', 'GmbH', 'S.A.']),
-            'code' => fake()->unique()->lexify('PRIN-????'),
+            'initial' => str(fake()->unique()->lexify('????'))->upper()->limit(10, ''),
             'description' => fake()->paragraph(),
-            'contact_person' => fake()->name(),
-            'phone' => fake()->phoneNumber(),
-            'email' => fake()->unique()->safeEmail(),
-            'address' => fake()->address(),
             'is_active' => true,
         ];
     }
