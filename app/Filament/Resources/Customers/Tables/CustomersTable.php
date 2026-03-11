@@ -30,6 +30,11 @@ class CustomersTable
                     ->sortable()
                     ->weight('bold'),
 
+                TextColumn::make('customer_name')
+                    ->label('End Customer Name')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('type')
                     ->label('Type')
                     ->badge()
@@ -39,17 +44,6 @@ class CustomersTable
                         'clinic' => 'info',
                         'pharmacy' => 'success',
                         'laboratory' => 'warning',
-                        default => 'gray',
-                    }),
-
-                TextColumn::make('classification')
-                    ->label('Tier')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => str_replace('_', ' ', ucfirst($state)))
-                    ->color(fn (string $state): string => match ($state) {
-                        'tier_1' => 'success',
-                        'tier_2' => 'info',
-                        'tier_3' => 'gray',
                         default => 'gray',
                     }),
 
