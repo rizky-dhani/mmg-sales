@@ -31,6 +31,7 @@ class Product extends Model
         'storage_requirements',
         'principal_id',
         'product_code',
+        'product_acc_code',
     ];
 
     protected $codeColumn = 'product_code';

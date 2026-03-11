@@ -26,17 +26,12 @@ class ProductsTable
                     ->label('Product Code')
                     ->searchable()
                     ->sortable(),
-                
+
                 TextColumn::make('name')
                     ->label('Product Name')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-
-                TextColumn::make('sku')
-                    ->label('SKU')
-                    ->searchable()
-                    ->sortable(),
 
                 TextColumn::make('category')
                     ->label('Category')
@@ -47,11 +42,6 @@ class ProductsTable
                 TextColumn::make('unit_price')
                     ->label('Price')
                     ->money('IDR')
-                    ->sortable(),
-
-                TextColumn::make('stock_quantity')
-                    ->label('Stock')
-                    ->numeric()
                     ->sortable(),
 
                 TextColumn::make('principal.name')

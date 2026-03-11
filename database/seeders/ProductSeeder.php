@@ -134,20 +134,11 @@ class ProductSeeder extends Seeder
             Product::updateOrCreate(
                 ['name' => $productName],
                 [
-                    'sku' => str()->slug($productName).'-'.str()->random(4),
                     'category' => $type === 'Capital' ? 'medical_equipment' : 'consumables',
                     'description' => null,
                     'unit_price' => $unitPrice,
-                    'currency' => 'PHP',
                     'unit_of_measure' => $type === 'Capital' ? 'Unit' : 'Pack',
-                    'stock_quantity' => 0,
-                    'minimum_stock' => 0,
-                    'reorder_quantity' => 0,
                     'is_active' => true,
-                    'requires_prescription' => false,
-                    'manufacturer' => null,
-                    'expiry_date' => null,
-                    'storage_requirements' => null,
                     'principal_id' => $principalId,
                 ]
             );
