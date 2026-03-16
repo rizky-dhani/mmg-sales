@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Activities\Pages;
 
 use App\Filament\Resources\Activities\ActivityResource;
 use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditActivity extends EditRecord
@@ -13,6 +14,12 @@ class EditActivity extends EditRecord
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');
+    }
+
+    protected function getSavedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->successNotificationTitle('Activity updated successfully');
     }
 
     protected function getHeaderActions(): array

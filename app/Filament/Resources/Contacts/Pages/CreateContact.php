@@ -3,11 +3,18 @@
 namespace App\Filament\Resources\Contacts\Pages;
 
 use App\Filament\Resources\Contacts\ContactResource;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateContact extends CreateRecord
 {
     protected static string $resource = ContactResource::class;
+
+    protected function getCreatedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->successNotificationTitle('Contact created successfully');
+    }
 
     protected function getRedirectUrl(): string
     {

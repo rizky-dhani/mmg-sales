@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Departments\Pages;
 
 use App\Filament\Resources\Departments\DepartmentResource;
 use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditDepartment extends EditRecord
@@ -13,6 +14,12 @@ class EditDepartment extends EditRecord
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');
+    }
+
+    protected function getSavedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->successNotificationTitle('Department updated successfully');
     }
 
     protected function getHeaderActions(): array

@@ -14,14 +14,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionsSeeder::class,
-            DepartmentSeeder::class,
-            PositionSeeder::class,
             UserSeeder::class,
             SegmentSeeder::class,
             DistributorSeeder::class,
             PrincipalSeeder::class,
             PrincipalProductSeeder::class,
-            SampleDataSeeder::class,
         ]);
     }
 }

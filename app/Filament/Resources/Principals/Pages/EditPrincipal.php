@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Principals\Pages;
 
 use App\Filament\Resources\Principals\PrincipalResource;
 use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditPrincipal extends EditRecord
@@ -13,6 +14,12 @@ class EditPrincipal extends EditRecord
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');
+    }
+
+    protected function getSavedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->successNotificationTitle('Principal updated successfully');
     }
 
     protected function getHeaderActions(): array

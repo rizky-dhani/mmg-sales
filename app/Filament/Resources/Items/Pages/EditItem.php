@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Items\Pages;
 
 use App\Filament\Resources\Items\ItemResource;
 use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditItem extends EditRecord
@@ -13,6 +14,12 @@ class EditItem extends EditRecord
     protected function getRedirectUrl(): string
     {
         return static::getResource()::getUrl('index');
+    }
+
+    protected function getSavedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->successNotificationTitle('Item updated successfully');
     }
 
     protected function getHeaderActions(): array

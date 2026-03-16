@@ -18,7 +18,7 @@ class SubSegmentsTable
                     ->label('Sub-Segment Code')
                     ->searchable()
                     ->sortable(),
-                    
+
                 TextColumn::make('name')
                     ->label('Sub-Segment Name')
                     ->searchable()

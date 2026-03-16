@@ -3,11 +3,18 @@
 namespace App\Filament\Resources\Items\Pages;
 
 use App\Filament\Resources\Items\ItemResource;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateItem extends CreateRecord
 {
     protected static string $resource = ItemResource::class;
+
+    protected function getCreatedNotification(): ?Notification
+    {
+        return Notification::make()
+            ->successNotificationTitle('Item created successfully');
+    }
 
     protected function getRedirectUrl(): string
     {

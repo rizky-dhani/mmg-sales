@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name'); // HEAD, PM/JPM/PE, RSM/ASM, SPV, SR
             $table->string('code')->unique(); // Unique code for the position
-            $table->integer('level'); // Hierarchy level (1 for HEAD, 2 for RSM/ASM, etc.)
+            $table->integer('level')->nullable(); // Hierarchy level (1 for HEAD, 2 for RSM/ASM, etc.)
             $table->unsignedBigInteger('parent_id')->nullable(); // For hierarchical relationship
-            $table->unsignedBigInteger('department_id'); // Link to department
+            $table->unsignedBigInteger('department_id')->nullable(); // Link to department
             $table->text('description')->nullable();
             $table->timestamps();
 

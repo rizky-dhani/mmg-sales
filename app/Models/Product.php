@@ -31,8 +31,8 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'unit_price' => 'decimal:2',
-            'ecatalog_price' => 'decimal:2',
+            'unit_price' => 'integer',
+            'ecatalog_price' => 'integer',
         ];
     }
 

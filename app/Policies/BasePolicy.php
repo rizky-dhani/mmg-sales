@@ -11,9 +11,18 @@ abstract class BasePolicy
 
     protected string $model;
 
+    /**
+     * Roles that have full access to this resource
+     */
+    protected array $authorizedRoles = [];
+
     public function before(User $user, string $ability): ?bool
     {
         if ($user->hasRole('Super Admin')) {
+            return true;
+        }
+
+        if (! empty($this->authorizedRoles) && $user->hasAnyRole($this->authorizedRoles)) {
             return true;
         }
 

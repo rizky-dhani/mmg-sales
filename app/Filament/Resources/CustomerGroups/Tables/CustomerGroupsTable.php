@@ -19,7 +19,7 @@ class CustomerGroupsTable
                     ->label('Group Code')
                     ->searchable()
                     ->sortable(),
-                    
+
                 TextColumn::make('name')
                     ->label('Group Name')
                     ->searchable()
