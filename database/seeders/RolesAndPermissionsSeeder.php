@@ -59,6 +59,64 @@ class RolesAndPermissionsSeeder extends Seeder
         $head = Role::findOrCreate('Head');
         $head->givePermissionTo(Permission::all());
 
+        // Director - Management level with broad access but not full admin
+        $director = Role::findOrCreate('Director');
+        $director->givePermissionTo([
+            // View permissions for all models
+            'view_any_user', 'view_user',
+            'view_any_department', 'view_department',
+            'view_any_position', 'view_position',
+            'view_any_territory', 'view_territory',
+            'view_any_customer', 'view_customer',
+            'view_any_customer_group', 'view_customer_group',
+            'view_any_contact', 'view_contact',
+            'view_any_project', 'view_project',
+            'view_any_product', 'view_product',
+            'view_any_order', 'view_order',
+            'view_any_activity', 'view_activity',
+            'view_any_segment', 'view_segment',
+            'view_any_sub_segment', 'view_sub_segment',
+            'view_any_distributor', 'view_distributor',
+            'view_any_principal', 'view_principal',
+            'view_any_sales_type', 'view_sales_type',
+            'view_any_item', 'view_item',
+            // Management permissions for key operational models
+            'create_customer', 'update_customer', 'delete_customer',
+            'create_contact', 'update_contact', 'delete_contact',
+            'create_project', 'update_project', 'delete_project',
+            'create_order', 'update_order', 'delete_order',
+            'create_activity', 'update_activity', 'delete_activity',
+        ]);
+
+        // Staff - Operational level with day-to-day work permissions
+        $staff = Role::findOrCreate('Staff');
+        $staff->givePermissionTo([
+            // View permissions for operational data
+            'view_any_customer', 'view_customer',
+            'view_any_contact', 'view_contact',
+            'view_any_project', 'view_project',
+            'view_any_product', 'view_product',
+            'view_any_order', 'view_order',
+            'view_any_activity', 'view_activity',
+            'view_any_territory', 'view_territory',
+            'view_any_distributor', 'view_distributor',
+            'view_any_principal', 'view_principal',
+            'view_any_sales_type', 'view_sales_type',
+            'view_any_item', 'view_item',
+            // Reference data view-only
+            'view_any_department', 'view_department',
+            'view_any_position', 'view_position',
+            'view_any_segment', 'view_segment',
+            'view_any_sub_segment', 'view_sub_segment',
+            'view_any_customer_group', 'view_customer_group',
+            // Operational create/update permissions
+            'create_customer', 'update_customer',
+            'create_contact', 'update_contact',
+            'create_project', 'update_project',
+            'create_order', 'update_order',
+            'create_activity', 'update_activity',
+        ]);
+
         $pm = Role::findOrCreate('ProductManager');
         $jpm = Role::findOrCreate('JrProductManager');
         $pe = Role::findOrCreate('ProductExecutive');
