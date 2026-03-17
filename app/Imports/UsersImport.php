@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Spatie\Permission\Models\Role;
 
 class UsersImport implements ToCollection, WithHeadingRow
 {
@@ -22,13 +23,16 @@ class UsersImport implements ToCollection, WithHeadingRow
             // Resolve department first so position can be linked to it
             $departmentId = $this->resolveDepartmentId($row['department'] ?? null);
 
-            User::create([
+            $user = User::create([
                 'name' => $row['nama'],
                 'email' => $row['email'] ?? null,
                 'position_id' => $this->resolvePositionId($row['jabatan'] ?? null, $departmentId),
                 'territory_id' => $this->resolveTerritoryId($row['area'] ?? null),
                 'department_id' => $departmentId,
             ]);
+
+            // Sync roles from the Roles column
+            $this->syncRoles($user, $row['roles'] ?? null);
         }
     }
 
@@ -133,5 +137,31 @@ class UsersImport implements ToCollection, WithHeadingRow
         ]);
 
         return $department->id;
+    }
+
+    private function syncRoles(User $user, mixed $rolesValue): void
+    {
+        if (empty($rolesValue)) {
+            return;
+        }
+
+        // Handle comma-separated roles
+        $roleNames = explode(',', (string) $rolesValue);
+        $roleIds = [];
+
+        foreach ($roleNames as $roleName) {
+            $roleName = trim($roleName);
+            if (empty($roleName)) {
+                continue;
+            }
+
+            // Find or create the role
+            $role = Role::firstOrCreate(['name' => $roleName]);
+            $roleIds[] = $role->id;
+        }
+
+        if (! empty($roleIds)) {
+            $user->syncRoles($roleIds);
+        }
     }
 }
