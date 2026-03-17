@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->enum('category', ['medical_equipment', 'pharmaceutical', 'consumables', 'diagnostics', 'other'])->default('other');
+            $table->string('category')->nullable();
             $table->text('description')->nullable();
             $table->decimal('unit_price', 12, 2);
             $table->string('unit_of_measure')->default('pcs');
