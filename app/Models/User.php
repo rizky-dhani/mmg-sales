@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements FilamentUser
@@ -21,7 +22,7 @@ class User extends Authenticatable implements FilamentUser
     {
         static::creating(function (self $user): void {
             if (empty($user->password)) {
-                $user->password = 'Mmg2026!';
+                $user->password = Hash::make('Mmg2026!');
             }
         });
     }
