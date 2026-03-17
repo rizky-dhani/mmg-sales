@@ -34,6 +34,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'distributor',
             'principal',
             'sales_type',
+            'item',
         ];
 
         $actions = ['view', 'view_any', 'create', 'update', 'delete', 'restore', 'force_delete'];
