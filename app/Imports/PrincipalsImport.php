@@ -12,18 +12,22 @@ class PrincipalsImport implements ToCollection, WithHeadingRow
     public function collection(Collection $collection)
     {
         foreach ($collection as $row) {
-            if (empty($row['name'])) {
+            if (empty($row['Name'])) {
                 continue;
             }
 
-            Principal::create([
-                'name' => $row['name'],
-                'initial' => $row['initial'] ?? null,
-                'description' => $row['description'] ?? null,
-                'is_active' => $row['is_active'] ?? 1,
-                'principal_code' => $row['principal_code'] ?? null,
-                'principal_acc_code' => $row['principal_acc_code'] ?? null,
-            ]);
+            $initial = $row['Initial'] ?? null;
+
+            Principal::updateOrCreate(
+                ['initial' => $initial],
+                [
+                    'name' => $row['Name'],
+                    'principal_acc_code' => $row['Code'] ?? null,
+                    'initial' => $initial,
+                    'description' => $row['Description'] ?? null,
+                    'is_active' => $row['Is_active'] ?? 1,
+                ]
+            );
         }
     }
 }
