@@ -4,54 +4,59 @@ namespace App\Policies;
 
 use App\Models\User;
 
-class DepartmentPolicy extends BasePolicy
+class TargetPolicy extends BasePolicy
 {
-    protected string $model = 'department';
+    protected string $model = 'target';
 
     /**
-     * Only Super Admin can access Department
+     * Check if user is Director or Super Admin
      */
+    protected function isDirectorOrSuperAdmin(User $user): bool
+    {
+        return $user->hasRole(['Director', 'Super Admin']);
+    }
+
     public function before(User $user, string $ability): ?bool
     {
         if ($user->hasRole('Super Admin')) {
             return true;
         }
 
-        return false; // Deny all other users
+        return null;
     }
 
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasRole('Director');
     }
 
     public function view(User $user, $model): bool
     {
-        return false;
+        return $user->hasRole('Director');
     }
 
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasRole('Director');
     }
 
     public function update(User $user, $model): bool
     {
-        return false;
+        return $user->hasRole('Director');
     }
 
     public function delete(User $user, $model): bool
     {
-        return false;
+        return $user->hasRole('Director');
     }
 
     public function restore(User $user, $model): bool
     {
-        return false;
+        return $user->hasRole('Director');
     }
 
     public function forceDelete(User $user, $model): bool
     {
-        return false;
+        return $user->hasRole('Director');
     }
 }

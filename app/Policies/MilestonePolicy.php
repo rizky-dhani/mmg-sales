@@ -4,12 +4,12 @@ namespace App\Policies;
 
 use App\Models\User;
 
-class DepartmentPolicy extends BasePolicy
+class MilestonePolicy extends BasePolicy
 {
-    protected string $model = 'department';
+    protected string $model = 'milestone';
 
     /**
-     * Only Super Admin can access Department
+     * Only Super Admin can access Milestone
      */
     public function before(User $user, string $ability): ?bool
     {

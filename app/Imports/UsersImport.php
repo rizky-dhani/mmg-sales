@@ -147,7 +147,7 @@ class UsersImport implements ToCollection, WithHeadingRow
 
         // Handle comma-separated roles
         $roleNames = explode(',', (string) $rolesValue);
-        $roleIds = [];
+        $validRoles = [];
 
         foreach ($roleNames as $roleName) {
             $roleName = trim($roleName);
@@ -155,13 +155,17 @@ class UsersImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            // Find or create the role
-            $role = Role::firstOrCreate(['name' => $roleName]);
-            $roleIds[] = $role->id;
+            // Find existing role by name (case-insensitive)
+            $role = Role::whereRaw('LOWER(name) = ?', [strtolower($roleName)])->first();
+
+            if ($role) {
+                $validRoles[] = $role->name;
+            }
+            // Skip unknown roles - don't create new ones
         }
 
-        if (! empty($roleIds)) {
-            $user->syncRoles($roleIds);
+        if (! empty($validRoles)) {
+            $user->syncRoles($validRoles);
         }
     }
 }

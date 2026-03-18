@@ -17,11 +17,11 @@ class PositionResource extends Resource
 {
     protected static ?string $model = Position::class;
 
-    protected static bool $shouldRegisterNavigation = false;
+    protected static bool $shouldRegisterNavigation = true;
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedBriefcase;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Organization';
+    protected static string|\UnitEnum|null $navigationGroup = 'System Settings';
 
     protected static ?string $navigationParentItem = 'Departments';
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects\Tables;
 
+use App\Filament\Traits\HasVisibilityScope;
 use App\Models\Project;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -12,12 +13,18 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProjectsTable
 {
+    use HasVisibilityScope;
+
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                return self::applyVisibilityScope($query, 'created_by');
+            })
             ->columns([
                 TextColumn::make('project_code')
                     ->label('Project Code')
@@ -132,13 +139,17 @@ class ProjectsTable
             ->recordActions([
                 \App\Filament\Resources\Projects\ProjectResource::getChecklistAction(\Filament\Actions\Action::class),
                 ViewAction::make(),
-                EditAction::make(),
+                EditAction::make()
+                    ->visible(fn (Project $record) => self::canModifyRecord($record, 'created_by')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                    ForceDeleteBulkAction::make(),
-                    RestoreBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()?->hasRole(['Super Admin', 'Staff', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'])),
+                    ForceDeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
+                    RestoreBulkAction::make()
+                        ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
                 ]),
             ]);
     }

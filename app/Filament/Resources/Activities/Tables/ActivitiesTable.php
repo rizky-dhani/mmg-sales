@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Activities\Tables;
 
 use App\Filament\Resources\Projects\ProjectResource;
+use App\Filament\Traits\HasVisibilityScope;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -10,12 +11,18 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ActivitiesTable
 {
+    use HasVisibilityScope;
+
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(function (Builder $query) {
+                return self::applyVisibilityScope($query, 'user_id');
+            })
             ->columns([
                 TextColumn::make('activity_code')
                     ->label('Activity Code')
@@ -97,11 +104,13 @@ class ActivitiesTable
                 ProjectResource::getChecklistAction(Action::class)
                     ->visible(fn ($record) => $record->project_id),
                 ViewAction::make(),
-                EditAction::make(),
+                EditAction::make()
+                    ->visible(fn (Activity $record) => self::canModifyRecord($record, 'user_id')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
                 ]),
             ]);
     }
