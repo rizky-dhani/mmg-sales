@@ -7,12 +7,12 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "filament/filament": "^4.0",
+        "filament/filament": "^5.0",
         "guzzlehttp/guzzle": "^7.10",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "maatwebsite/excel": "^3.1",
-        "relaticle/flowforge": "^2.2",
+        "relaticle/flowforge": "^4.0",
         "spatie/laravel-permission": "^6.24"
     },
     "require-dev": {
