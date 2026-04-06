@@ -10,6 +10,18 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class CustomersImport implements ToCollection, WithHeadingRow
 {
+    /**
+     * Allowed values for the customer type ENUM column.
+     */
+    protected const ALLOWED_TYPES = [
+        'hospital',
+        'clinic',
+        'pharmacy',
+        'laboratory',
+        'distributor',
+        'other',
+    ];
+
     public function collection(Collection $collection)
     {
         foreach ($collection as $row) {
@@ -18,14 +30,15 @@ class CustomersImport implements ToCollection, WithHeadingRow
             }
 
             $customerGroupId = $this->resolveCustomerGroupId($row['customer_group'] ?? $row['customer_group_id'] ?? null);
+            $typeData = $this->normalizeType($row['type'] ?? null);
 
             Customer::updateOrCreate(
                 ['name' => $row['name']],
                 [
                     'name' => $row['name'],
                     'customer_name' => $row['customer_name'] ?? $row['name'],
-                    'type' => $row['type'] ?? 'hospital',
-                    'other_type' => $row['other_type'] ?? null,
+                    'type' => $typeData['type'],
+                    'other_type' => $typeData['other_type'] ?? $row['other_type'] ?? null,
                     'tax_number' => $row['tax_number'] ?? null,
                     'address' => $row['address'] ?? null,
                     'city' => $row['city'] ?? null,
@@ -42,6 +55,29 @@ class CustomersImport implements ToCollection, WithHeadingRow
                 ]
             );
         }
+    }
+
+    /**
+     * Normalize the type value to match the ENUM column.
+     * If the type doesn't match allowed values, sets type to 'other'
+     * and stores the original value in other_type.
+     */
+    protected function normalizeType(?string $type): array
+    {
+        if (empty($type)) {
+            return ['type' => 'other', 'other_type' => null];
+        }
+
+        // Trim whitespace and convert to lowercase for comparison
+        $normalizedType = strtolower(trim($type));
+
+        // Check if it matches an allowed type
+        if (in_array($normalizedType, self::ALLOWED_TYPES, true)) {
+            return ['type' => $normalizedType, 'other_type' => null];
+        }
+
+        // Store custom type in other_type and default to 'other'
+        return ['type' => 'other', 'other_type' => $type];
     }
 
     /**
