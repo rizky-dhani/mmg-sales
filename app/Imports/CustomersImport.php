@@ -32,6 +32,7 @@ class CustomersImport implements ToCollection, WithHeadingRow
             $customerGroupId = $this->resolveCustomerGroupId($row['customer_group'] ?? $row['customer_group_id'] ?? null);
             $typeData = $this->normalizeType($row['type'] ?? null);
             $isActive = $this->normalizeIsActive($row['is_active'] ?? null);
+            $cdNcdType = $this->normalizeCdNcdType($row['cd_ncd_type'] ?? null);
 
             Customer::updateOrCreate(
                 ['name' => $row['name']],
@@ -50,7 +51,7 @@ class CustomersImport implements ToCollection, WithHeadingRow
                     'phone' => $row['phone'] ?? null,
                     'website' => $row['website'] ?? null,
                     'is_active' => $isActive,
-                    'cd_ncd_type' => $row['cd_ncd_type'] ?? null,
+                    'cd_ncd_type' => $cdNcdType,
                     'customer_group_id' => $customerGroupId,
                     'customer_acc_code' => $row['customer_acc_code'] ?? null,
                 ]
@@ -120,6 +121,44 @@ class CustomersImport implements ToCollection, WithHeadingRow
 
         // Default to active if unrecognized
         return 1;
+    }
+
+    /**
+     * Normalize the cd_ncd_type value to match the ENUM column ('CD', 'NCD').
+     * Extracts the type from descriptive values like 'LS_LIFE SCIENCE (N-CD)'.
+     */
+    protected function normalizeCdNcdType(?string $value): ?string
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+        $upper = strtoupper($trimmed);
+
+        // Direct match
+        if (in_array($upper, ['CD', 'NCD'], true)) {
+            return $upper;
+        }
+
+        // Extract from parentheses, e.g. 'LS_LIFE SCIENCE (N-CD)' -> 'NCD'
+        if (preg_match('/\(([^)]+)\)/', $trimmed, $matches)) {
+            $extracted = strtoupper(str_replace('-', '', trim($matches[1])));
+            if (in_array($extracted, ['CD', 'NCD'], true)) {
+                return $extracted;
+            }
+        }
+
+        // Check if the string contains CD or NCD
+        if (str_contains($upper, 'NCD')) {
+            return 'NCD';
+        }
+
+        if (str_contains($upper, 'CD')) {
+            return 'CD';
+        }
+
+        return null;
     }
 
     /**

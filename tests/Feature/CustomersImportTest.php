@@ -1,11 +1,9 @@
 <?php
 
 use App\Imports\CustomersImport;
-use App\Models\Customer;
-use Maatwebsite\Excel\Facades\Excel;
 
 beforeEach(function () {
-    $this->import = new CustomersImport();
+    $this->import = new CustomersImport;
 });
 
 test('normalizeIsActive returns 1 for null value', function () {
@@ -80,4 +78,46 @@ test('normalizeIsActive returns integer for integer input', function () {
     expect($method->invoke($this->import, 1))->toBe(1);
     expect($method->invoke($this->import, 0))->toBe(0);
     expect($method->invoke($this->import, 5))->toBe(1);
+});
+
+test('normalizeCdNcdType returns null for null value', function () {
+    $method = new ReflectionMethod($this->import, 'normalizeCdNcdType');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->import, null))->toBeNull();
+});
+
+test('normalizeCdNcdType handles direct CD and NCD values', function () {
+    $method = new ReflectionMethod($this->import, 'normalizeCdNcdType');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->import, 'CD'))->toBe('CD');
+    expect($method->invoke($this->import, 'cd'))->toBe('CD');
+    expect($method->invoke($this->import, 'NCD'))->toBe('NCD');
+    expect($method->invoke($this->import, 'ncd'))->toBe('NCD');
+});
+
+test('normalizeCdNcdType extracts type from parentheses', function () {
+    $method = new ReflectionMethod($this->import, 'normalizeCdNcdType');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->import, 'LS_LIFE SCIENCE (N-CD)'))->toBe('NCD');
+    expect($method->invoke($this->import, 'Some Label (CD)'))->toBe('CD');
+    expect($method->invoke($this->import, 'Example (NCD)'))->toBe('NCD');
+});
+
+test('normalizeCdNcdType handles contains check', function () {
+    $method = new ReflectionMethod($this->import, 'normalizeCdNcdType');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->import, 'NCD Customer'))->toBe('NCD');
+    expect($method->invoke($this->import, 'CD Distributor'))->toBe('CD');
+});
+
+test('normalizeCdNcdType returns null for unrecognized values', function () {
+    $method = new ReflectionMethod($this->import, 'normalizeCdNcdType');
+    $method->setAccessible(true);
+
+    expect($method->invoke($this->import, 'Unknown'))->toBeNull();
+    expect($method->invoke($this->import, 'Some Random Value'))->toBeNull();
 });
