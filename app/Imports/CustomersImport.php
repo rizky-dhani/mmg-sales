@@ -31,6 +31,7 @@ class CustomersImport implements ToCollection, WithHeadingRow
 
             $customerGroupId = $this->resolveCustomerGroupId($row['customer_group'] ?? $row['customer_group_id'] ?? null);
             $typeData = $this->normalizeType($row['type'] ?? null);
+            $isActive = $this->normalizeIsActive($row['is_active'] ?? null);
 
             Customer::updateOrCreate(
                 ['name' => $row['name']],
@@ -48,7 +49,7 @@ class CustomersImport implements ToCollection, WithHeadingRow
                     'email' => $row['email'] ?? null,
                     'phone' => $row['phone'] ?? null,
                     'website' => $row['website'] ?? null,
-                    'is_active' => $row['is_active'] ?? 1,
+                    'is_active' => $isActive,
                     'cd_ncd_type' => $row['cd_ncd_type'] ?? null,
                     'customer_group_id' => $customerGroupId,
                     'customer_acc_code' => $row['customer_acc_code'] ?? null,
@@ -78,6 +79,47 @@ class CustomersImport implements ToCollection, WithHeadingRow
 
         // Store custom type in other_type and default to 'other'
         return ['type' => 'other', 'other_type' => $type];
+    }
+
+    /**
+     * Normalize the is_active value to integer (0 or 1).
+     * Handles string values like 'Active', 'Inactive', 'Yes', 'No', etc.
+     */
+    protected function normalizeIsActive(mixed $value): int
+    {
+        if ($value === null) {
+            return 1; // Default to active
+        }
+
+        // If already an integer, return it
+        if (is_int($value)) {
+            return $value ? 1 : 0;
+        }
+
+        // Convert to string and normalize
+        $normalizedValue = strtolower(trim((string) $value));
+
+        // Active states
+        $activeStates = ['active', 'yes', '1', 'true', 'y', 'aktif', '1.0'];
+        // Inactive states
+        $inactiveStates = ['inactive', 'no', '0', 'false', 'n', 'tidak', '0.0'];
+
+        if (in_array($normalizedValue, $inactiveStates, true)) {
+            return 0;
+        }
+
+        if (in_array($normalizedValue, $activeStates, true)) {
+            return 1;
+        }
+
+        // Try to parse as integer
+        $intValue = filter_var($normalizedValue, FILTER_VALIDATE_INT);
+        if ($intValue !== false) {
+            return $intValue ? 1 : 0;
+        }
+
+        // Default to active if unrecognized
+        return 1;
     }
 
     /**
