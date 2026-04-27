@@ -19,8 +19,7 @@ class EditUser extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->success()
-            ->title('User updated successfully');
+            ->successNotificationTitle('User updated successfully');
     }
 
     protected function getHeaderActions(): array

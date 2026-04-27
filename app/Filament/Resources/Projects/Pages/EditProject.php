@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Projects\Pages;
 
 use App\Filament\Resources\Projects\ProjectResource;
+use App\Models\Customer;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
@@ -32,5 +33,27 @@ class EditProject extends EditRecord
             ForceDeleteAction::make(),
             RestoreAction::make(),
         ];
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        if (isset($data['assigned_users'])) {
+            $assignedUsers = $data['assigned_users'];
+            unset($data['assigned_users']);
+
+            $record = $this->getRecord();
+            if ($record) {
+                $record->collaborators()->sync($assignedUsers);
+            }
+        }
+
+        if (isset($data['customer_id'])) {
+            $customer = Customer::find($data['customer_id']);
+            if ($customer) {
+                $data['customer_name'] = $customer->name;
+            }
+        }
+
+        return $data;
     }
 }

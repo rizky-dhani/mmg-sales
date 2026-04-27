@@ -9,8 +9,14 @@ use App\Filament\Resources\Projects\Pages\ViewProject;
 use App\Filament\Resources\Projects\Schemas\ProjectForm;
 use App\Filament\Resources\Projects\Schemas\ProjectInfolist;
 use App\Filament\Resources\Projects\Tables\ProjectsTable;
+use App\Models\Milestone;
 use App\Models\Project;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -53,7 +59,7 @@ class ProjectResource extends Resource
             ->color('success')
             ->modalHeading('Strategic Checklist')
             ->modalWidth('4xl')
-            ->mountUsing(function (\Filament\Schemas\Schema $form, Project $record) {
+            ->mountUsing(function (Schema $form, Project $record) {
                 // \Log::info('Mounting action for project: ' . $record->id);
                 $form->fill([
                     'milestones' => $record->milestones->map(fn ($m) => [
@@ -64,24 +70,24 @@ class ProjectResource extends Resource
                 ]);
             })
             ->form([
-                \Filament\Forms\Components\Repeater::make('milestones')
+                Repeater::make('milestones')
                     ->schema([
-                        \Filament\Forms\Components\Select::make('milestone_id')
+                        Select::make('milestone_id')
                             ->label('Milestone')
-                            ->options(\App\Models\Milestone::pluck('name', 'id'))
+                            ->options(Milestone::pluck('name', 'id'))
                             ->required()
                             ->distinct()
                             ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
-                        \Filament\Forms\Components\Toggle::make('is_completed')
+                        Toggle::make('is_completed')
                             ->label('Completed')
                             ->live(),
-                        \Filament\Forms\Components\TextInput::make('notes')
+                        TextInput::make('notes')
                             ->label('Notes')
                             ->columnSpan(2),
                     ])
                     ->columns(4)
                     ->itemLabel(function (array $state): ?string {
-                        $milestone = \App\Models\Milestone::find($state['milestone_id'] ?? null);
+                        $milestone = Milestone::find($state['milestone_id'] ?? null);
                         if (! $milestone) {
                             return 'New Milestone';
                         }
@@ -114,7 +120,7 @@ class ProjectResource extends Resource
                 $record->updateConfidenceLevel();
             })
             ->after(function () {
-                \Filament\Notifications\Notification::make()
+                Notification::make()
                     ->title('Confidence Level Updated')
                     ->success()
                     ->send();
@@ -136,40 +142,5 @@ class ProjectResource extends Resource
             'view' => ViewProject::route('/{record}'),
             'edit' => EditProject::route('/{record}/edit'),
         ];
-    }
-
-    public static function mutateFormDataBeforeCreate(array $data): array
-    {
-        if (isset($data['assigned_users'])) {
-            $assignedUsers = $data['assigned_users'];
-            unset($data['assigned_users']);
-            session(['pending_collaborators' => $assignedUsers]);
-        }
-
-        return $data;
-    }
-
-    public static function mutateFormDataBeforeUpdate(array $data): array
-    {
-        if (isset($data['assigned_users'])) {
-            $assignedUsers = $data['assigned_users'];
-            unset($data['assigned_users']);
-
-            $record = static::getModel()::find(request()->route('record'));
-            if ($record) {
-                $record->collaborators()->sync($assignedUsers);
-            }
-        }
-
-        return $data;
-    }
-
-    public static function afterCreate(Project $record): void
-    {
-        $assignedUsers = session('pending_collaborators', []);
-        if (! empty($assignedUsers)) {
-            $record->collaborators()->sync($assignedUsers);
-            session()->forget('pending_collaborators');
-        }
     }
 }
