@@ -2,16 +2,20 @@
 
 namespace App\Filament\Resources\Activities\Tables;
 
+use App\Exports\ActivitiesExport;
 use App\Filament\Resources\Projects\ProjectResource;
 use App\Filament\Traits\HasVisibilityScope;
+use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ActivitiesTable
 {
@@ -32,7 +36,7 @@ class ActivitiesTable
                 TextColumn::make('performed_at')
                     ->label('Date')
                     ->date('d M Y')
-                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
+                    ->formatStateUsing(fn ($state) => strtoupper(Carbon::parse($state)->translatedFormat('d M Y')))
                     ->sortable(),
 
                 TextColumn::make('type')
@@ -82,20 +86,20 @@ class ActivitiesTable
                     ->toggleable(),
             ])
             ->filters([
-                \Filament\Tables\Filters\SelectFilter::make('customer')
+                SelectFilter::make('customer')
                     ->label('Customer')
                     ->relationship('customer', 'name')
                     ->searchable()
                     ->preload(),
             ])
             ->headerActions([
-                \Filament\Actions\Action::make('exportExcel')
+                Action::make('exportExcel')
                     ->label('Export to Excel')
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
                     ->action(function ($query) {
-                        return \Maatwebsite\Excel\Facades\Excel::download(
-                            new \App\Exports\ActivitiesExport($query),
+                        return Excel::download(
+                            new ActivitiesExport($query),
                             'activities-export-'.now()->format('Y-m-d').'.xlsx'
                         );
                     }),

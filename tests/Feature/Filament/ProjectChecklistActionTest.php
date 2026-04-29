@@ -5,13 +5,14 @@ use App\Models\Milestone;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 
 use function Pest\Livewire\livewire;
 
 uses(RefreshDatabase::class);
 
 it('can open and submit the project checklist action', function () {
-    \Spatie\Permission\Models\Role::create(['name' => 'Super Admin']);
+    Role::create(['name' => 'Super Admin']);
     $user = User::factory()->create();
     $user->assignRole('Super Admin');
     $this->actingAs($user);

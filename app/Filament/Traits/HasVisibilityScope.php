@@ -2,6 +2,7 @@
 
 namespace App\Filament\Traits;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
 trait HasVisibilityScope
@@ -94,7 +95,7 @@ trait HasVisibilityScope
         // Get users with positions that report to this user's position
         if ($user->position) {
             $subordinatePositionIds = $user->position->children()->pluck('id')->toArray();
-            $positionUserIds = \App\Models\User::whereIn('position_id', $subordinatePositionIds)
+            $positionUserIds = User::whereIn('position_id', $subordinatePositionIds)
                 ->pluck('id')
                 ->toArray();
             $subordinateIds = array_merge($subordinateIds, $positionUserIds);
@@ -103,14 +104,14 @@ trait HasVisibilityScope
         // Get users in subordinate territories
         if ($user->territory) {
             $descendantTerritoryIds = $user->territory->getAllDescendantIds();
-            $territoryUserIds = \App\Models\User::whereIn('territory_id', $descendantTerritoryIds)
+            $territoryUserIds = User::whereIn('territory_id', $descendantTerritoryIds)
                 ->pluck('id')
                 ->toArray();
             $subordinateIds = array_merge($subordinateIds, $territoryUserIds);
         }
 
         // Get direct subordinates (users who have this user as manager)
-        $directSubordinateIds = \App\Models\User::where('manager_id', $user->id)
+        $directSubordinateIds = User::where('manager_id', $user->id)
             ->pluck('id')
             ->toArray();
         $subordinateIds = array_merge($subordinateIds, $directSubordinateIds);
@@ -126,7 +127,7 @@ trait HasVisibilityScope
     {
         $salesRoles = ['Staff', 'Manager', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'];
 
-        return \App\Models\User::role($salesRoles)
+        return User::role($salesRoles)
             ->pluck('id')
             ->toArray();
     }

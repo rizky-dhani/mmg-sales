@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Targets\Tables;
 
+use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -24,7 +25,7 @@ class TargetTable
                     ->sortable(),
                 TextColumn::make('month')
                     ->label('Month')
-                    ->formatStateUsing(fn ($state) => $state ? \Carbon\Carbon::create()->month($state)->format('F') : 'N/A')
+                    ->formatStateUsing(fn ($state) => $state ? Carbon::create()->month($state)->format('F') : 'N/A')
                     ->sortable(),
                 TextColumn::make('annual_target')
                     ->label('Annual Target')

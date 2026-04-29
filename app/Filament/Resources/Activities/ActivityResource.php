@@ -9,7 +9,9 @@ use App\Filament\Resources\Activities\Pages\ViewActivity;
 use App\Filament\Resources\Activities\Schemas\ActivityForm;
 use App\Filament\Resources\Activities\Schemas\ActivityInfolist;
 use App\Filament\Resources\Activities\Tables\ActivitiesTable;
+use App\Filament\Resources\Projects\ProjectResource;
 use App\Models\Activity;
+use Filament\Actions\Action;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -48,9 +50,9 @@ class ActivityResource extends Resource
         return ActivitiesTable::configure($table);
     }
 
-    public static function getChecklistAction($actionClass = \Filament\Actions\Action::class): mixed
+    public static function getChecklistAction($actionClass = Action::class): mixed
     {
-        return \App\Filament\Resources\Projects\ProjectResource::getChecklistAction($actionClass);
+        return ProjectResource::getChecklistAction($actionClass);
     }
 
     public static function getRelations(): array

@@ -13,7 +13,8 @@ class CreateSubSegment extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Sub segment created successfully');
+            ->success()
+            ->title('Sub segment created successfully');
     }
 
     protected function getRedirectUrl(): string

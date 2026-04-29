@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Products\Schemas;
 
+use Carbon\Carbon;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -34,7 +35,7 @@ class ProductInfolist
                         TextEntry::make('manufacturer'),
                         TextEntry::make('expiry_date')
                             ->date('d M Y')
-                            ->formatStateUsing(fn ($state) => $state ? strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')) : '-'),
+                            ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('d M Y')) : '-'),
                         TextEntry::make('storage_requirements'),
                     ]),
 

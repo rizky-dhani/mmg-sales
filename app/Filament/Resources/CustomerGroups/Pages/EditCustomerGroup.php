@@ -19,7 +19,8 @@ class EditCustomerGroup extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Customer group updated successfully');
+            ->success()
+            ->title('Customer group updated successfully');
     }
 
     protected function getHeaderActions(): array

@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\Reports;
 
 use App\DTOs\ReportFilterData;
 use App\Services\Reports\ProductReportService;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget;
@@ -19,17 +20,17 @@ class ProductRevenueByPrincipalWidget extends TableWidget
         return $table
             ->records(fn () => $this->getRecords())
             ->columns([
-                \Filament\Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Principal'),
-                \Filament\Tables\Columns\TextColumn::make('revenue')
+                TextColumn::make('revenue')
                     ->label('Revenue')
                     ->money('IDR')
                     ->alignRight(),
-                \Filament\Tables\Columns\TextColumn::make('quantity')
+                TextColumn::make('quantity')
                     ->label('Qty')
                     ->alignRight()
                     ->numeric(),
-                \Filament\Tables\Columns\TextColumn::make('orders')
+                TextColumn::make('orders')
                     ->label('Orders')
                     ->alignRight(),
             ])

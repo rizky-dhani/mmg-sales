@@ -13,7 +13,8 @@ class CreateActivity extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Activity created successfully');
+            ->success()
+            ->title('Activity created successfully');
     }
 
     protected function getRedirectUrl(): string

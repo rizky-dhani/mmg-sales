@@ -22,7 +22,8 @@ class EditProject extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Project updated successfully');
+            ->success()
+            ->title('Project updated successfully');
     }
 
     protected function getHeaderActions(): array

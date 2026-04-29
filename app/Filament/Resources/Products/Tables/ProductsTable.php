@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Products\Tables;
 
 use App\Models\Principal;
+use Carbon\Carbon;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -58,7 +59,7 @@ class ProductsTable
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->date('d M Y')
-                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
+                    ->formatStateUsing(fn ($state) => strtoupper(Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

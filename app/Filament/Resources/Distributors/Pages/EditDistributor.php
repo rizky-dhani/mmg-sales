@@ -19,7 +19,8 @@ class EditDistributor extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Distributor updated successfully');
+            ->success()
+            ->title('Distributor updated successfully');
     }
 
     protected function getHeaderActions(): array

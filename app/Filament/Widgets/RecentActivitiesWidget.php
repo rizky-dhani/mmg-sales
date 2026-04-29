@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Activity;
+use App\Models\User;
 use App\Services\ActivityScopeService;
 use Filament\Actions\Action;
 use Filament\Tables;
@@ -19,7 +20,7 @@ class RecentActivitiesWidget extends TableWidget
 
     public function table(Table $table): Table
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $service = app(ActivityScopeService::class);
 

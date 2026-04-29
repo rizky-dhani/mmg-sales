@@ -13,7 +13,8 @@ class CreateProduct extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Product created successfully');
+            ->success()
+            ->title('Product created successfully');
     }
 
     protected function getRedirectUrl(): string

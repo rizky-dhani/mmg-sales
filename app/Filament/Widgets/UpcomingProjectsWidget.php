@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Filament\Resources\Projects\ProjectResource;
 use App\Models\Project;
+use Carbon\Carbon;
 use Filament\Actions\ViewAction;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -40,8 +41,8 @@ class UpcomingProjectsWidget extends BaseWidget
                 Tables\Columns\TextColumn::make('estimated_completion_date')
                     ->label('Est. Finish')
                     ->date('d M Y')
-                    ->formatStateUsing(fn ($state) => $state ? strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')) : '-')
-                    ->color(fn ($state) => \Carbon\Carbon::parse($state)->isPast() ? 'danger' : (\Carbon\Carbon::parse($state)->diffInDays(now()) <= 7 ? 'warning' : 'success')),
+                    ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('d M Y')) : '-')
+                    ->color(fn ($state) => Carbon::parse($state)->isPast() ? 'danger' : (Carbon::parse($state)->diffInDays(now()) <= 7 ? 'warning' : 'success')),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => ucfirst($state))

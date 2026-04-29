@@ -2,6 +2,8 @@
 
 use App\Models\Project;
 use App\Models\User;
+use App\Policies\ActivityPolicy;
+use App\Policies\ProjectPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -32,7 +34,7 @@ it('non-creator cannot add collaborator to project', function () {
 
     $this->actingAs($otherUser);
 
-    $policy = new \App\Policies\ProjectPolicy;
+    $policy = new ProjectPolicy;
 
     expect($policy->addCollaborator($otherUser, $project))->toBeFalse();
 });
@@ -66,7 +68,7 @@ it('collaborator can create activity on project', function () {
 
     $this->actingAs($collaborator);
 
-    $policy = new \App\Policies\ActivityPolicy;
+    $policy = new ActivityPolicy;
 
     expect($policy->createForProject($collaborator, $project))->toBeTrue();
 });
@@ -81,7 +83,7 @@ it('non-collaborator cannot create activity on project', function () {
 
     $this->actingAs($otherUser);
 
-    $policy = new \App\Policies\ActivityPolicy;
+    $policy = new ActivityPolicy;
 
     expect($policy->createForProject($otherUser, $project))->toBeFalse();
 });

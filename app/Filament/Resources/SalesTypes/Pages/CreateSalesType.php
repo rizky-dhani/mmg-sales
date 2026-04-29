@@ -13,7 +13,8 @@ class CreateSalesType extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Sales type created successfully');
+            ->success()
+            ->title('Sales type created successfully');
     }
 
     protected function getRedirectUrl(): string

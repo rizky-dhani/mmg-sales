@@ -5,6 +5,8 @@ namespace App\Services\Reports;
 use App\DTOs\CustomerReportData;
 use App\DTOs\ReportFilterData;
 use App\Models\Order;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
@@ -50,7 +52,7 @@ class CustomerReportService
         );
     }
 
-    private function buildBaseQuery(ReportFilterData $filters): \Illuminate\Database\Eloquent\Builder
+    private function buildBaseQuery(ReportFilterData $filters): Builder
     {
         $query = Order::query()
             ->whereBetween('order_date', [$filters->startDate, $filters->endDate]);
@@ -191,7 +193,7 @@ class CustomerReportService
             ->orderBy('month')
             ->get()
             ->map(fn ($row) => [
-                'period' => \Carbon\Carbon::create($row->year, $row->month)->format('M Y'),
+                'period' => Carbon::create($row->year, $row->month)->format('M Y'),
                 'revenue' => (float) $row->revenue,
                 'customers' => $row->customers,
             ]);

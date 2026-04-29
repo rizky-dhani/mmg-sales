@@ -19,7 +19,8 @@ class EditPermission extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Permission updated successfully');
+            ->success()
+            ->title('Permission updated successfully');
     }
 
     protected function getHeaderActions(): array

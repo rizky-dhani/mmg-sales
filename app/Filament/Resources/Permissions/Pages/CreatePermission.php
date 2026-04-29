@@ -13,7 +13,8 @@ class CreatePermission extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Permission created successfully');
+            ->success()
+            ->title('Permission created successfully');
     }
 
     protected function getRedirectUrl(): string

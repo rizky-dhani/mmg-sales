@@ -6,7 +6,7 @@ use App\Models\CustomerGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CustomerGroup>
+ * @extends Factory<CustomerGroup>
  */
 class CustomerGroupFactory extends Factory
 {

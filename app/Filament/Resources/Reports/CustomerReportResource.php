@@ -3,12 +3,13 @@
 namespace App\Filament\Resources\Reports;
 
 use App\Filament\Resources\Reports\Pages\CustomerReportPage;
+use App\Models\Customer;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 
 class CustomerReportResource extends Resource
 {
-    protected static ?string $model = \App\Models\Customer::class;
+    protected static ?string $model = Customer::class;
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 

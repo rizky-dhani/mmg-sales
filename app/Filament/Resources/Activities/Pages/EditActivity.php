@@ -19,7 +19,8 @@ class EditActivity extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Activity updated successfully');
+            ->success()
+            ->title('Activity updated successfully');
     }
 
     protected function getHeaderActions(): array

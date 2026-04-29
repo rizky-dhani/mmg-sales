@@ -6,6 +6,7 @@ use App\Models\Principal;
 use App\Models\Product;
 use App\Models\Project;
 use App\Models\SubSegment;
+use App\Models\User;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
@@ -20,7 +21,7 @@ class OrderForm
 {
     public static function configure(Schema $schema): Schema
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = auth()->user();
         $userPosition = $user?->position;
 

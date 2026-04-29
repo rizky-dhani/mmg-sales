@@ -13,7 +13,8 @@ class CreateDistributor extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Distributor created successfully');
+            ->success()
+            ->title('Distributor created successfully');
     }
 
     protected function getRedirectUrl(): string

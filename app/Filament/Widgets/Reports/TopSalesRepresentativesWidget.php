@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\Reports;
 
 use App\DTOs\ReportFilterData;
 use App\Services\Reports\SalesReportService;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters as InteractsWithPageFiltersTrait;
 use Filament\Widgets\TableWidget;
@@ -19,16 +20,16 @@ class TopSalesRepresentativesWidget extends TableWidget
         return $table
             ->records(fn () => $this->getRecords())
             ->columns([
-                \Filament\Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->label('Rank')
                     ->state(fn ($record, $rowLoop) => $rowLoop->iteration),
-                \Filament\Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Name'),
-                \Filament\Tables\Columns\TextColumn::make('revenue')
+                TextColumn::make('revenue')
                     ->label('Revenue')
                     ->money('IDR')
                     ->alignRight(),
-                \Filament\Tables\Columns\TextColumn::make('orders')
+                TextColumn::make('orders')
                     ->label('Orders')
                     ->alignRight(),
             ])

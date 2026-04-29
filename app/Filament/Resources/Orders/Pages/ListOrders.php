@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Orders\Pages;
 
 use App\Filament\Resources\Orders\OrderResource;
+use App\Filament\Widgets\SalesAchievementWidget;
 use App\Jobs\ImportOrdersJob;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
@@ -17,7 +18,7 @@ class ListOrders extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            \App\Filament\Widgets\SalesAchievementWidget::class,
+            SalesAchievementWidget::class,
         ];
     }
 

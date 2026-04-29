@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use Carbon\Carbon;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
@@ -25,7 +26,7 @@ class OrderInfolist
                                 TextEntry::make('order_date')
                                     ->label('Date')
                                     ->date('d M Y')
-                                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y'))),
+                                    ->formatStateUsing(fn ($state) => strtoupper(Carbon::parse($state)->translatedFormat('d M Y'))),
                                 TextEntry::make('status')
                                     ->badge()
                                     ->formatStateUsing(fn (string $state): string => match ($state) {

@@ -5,6 +5,8 @@ namespace App\Services\Reports;
 use App\DTOs\PipelineReportData;
 use App\DTOs\ReportFilterData;
 use App\Models\Project;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
@@ -60,7 +62,7 @@ class PipelineReportService
         );
     }
 
-    private function buildBaseQuery(ReportFilterData $filters): \Illuminate\Database\Eloquent\Builder
+    private function buildBaseQuery(ReportFilterData $filters): Builder
     {
         $query = Project::query()
             ->whereBetween('created_at', [$filters->startDate, $filters->endDate]);
@@ -169,7 +171,7 @@ class PipelineReportService
             ->orderBy('month')
             ->get()
             ->map(fn ($row) => [
-                'period' => \Carbon\Carbon::create($row->year, $row->month)->format('M Y'),
+                'period' => Carbon::create($row->year, $row->month)->format('M Y'),
                 'count' => $row->count,
                 'value' => (float) $row->value,
             ]);

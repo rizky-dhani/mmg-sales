@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\Reports;
 
 use App\DTOs\ReportFilterData;
 use App\Services\Reports\CustomerReportService;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget;
@@ -19,20 +20,20 @@ class TopCustomersWidget extends TableWidget
         return $table
             ->records(fn () => $this->getRecords())
             ->columns([
-                \Filament\Tables\Columns\TextColumn::make('rank')
+                TextColumn::make('rank')
                     ->label('Rank')
                     ->state(fn ($record, $rowLoop) => $rowLoop->iteration),
-                \Filament\Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Customer'),
-                \Filament\Tables\Columns\TextColumn::make('cd_ncd_type')
+                TextColumn::make('cd_ncd_type')
                     ->label('Type')
                     ->badge()
                     ->color(fn ($state) => $state === 'CD' ? 'blue' : 'green'),
-                \Filament\Tables\Columns\TextColumn::make('revenue')
+                TextColumn::make('revenue')
                     ->label('Revenue')
                     ->money('IDR')
                     ->alignRight(),
-                \Filament\Tables\Columns\TextColumn::make('orders')
+                TextColumn::make('orders')
                     ->label('Orders')
                     ->alignRight(),
             ])

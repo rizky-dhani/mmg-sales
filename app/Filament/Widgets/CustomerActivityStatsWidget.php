@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Customer;
+use App\Models\User;
 use App\Services\ActivityScopeService;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -19,7 +20,7 @@ class CustomerActivityStatsWidget extends StatsOverviewWidget
             return [];
         }
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $service = app(ActivityScopeService::class);
         $stats = $service->getCustomerActivityStats($user, $this->record->id);

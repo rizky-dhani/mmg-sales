@@ -13,7 +13,8 @@ class CreateCustomer extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Customer created successfully');
+            ->success()
+            ->title('Customer created successfully');
     }
 
     protected function getRedirectUrl(): string

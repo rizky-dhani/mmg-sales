@@ -19,7 +19,8 @@ class EditSalesType extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Sales type updated successfully');
+            ->success()
+            ->title('Sales type updated successfully');
     }
 
     protected function getHeaderActions(): array

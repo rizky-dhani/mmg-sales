@@ -19,7 +19,8 @@ class EditPosition extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Position updated successfully');
+            ->success()
+            ->title('Position updated successfully');
     }
 
     protected function getHeaderActions(): array

@@ -1,5 +1,6 @@
 <?php
 
+use App\Filament\Resources\Projects\ProjectResource;
 use App\Filament\Widgets\UpcomingProjectsWidget;
 use App\Models\Project;
 use App\Models\User;
@@ -47,5 +48,5 @@ it('can navigate to view project page from record url', function () {
     ]);
 
     livewire(UpcomingProjectsWidget::class)
-        ->assertTableActionHasUrl('view', \App\Filament\Resources\Projects\ProjectResource::getUrl('view', ['record' => $project]), $project);
+        ->assertTableActionHasUrl('view', ProjectResource::getUrl('view', ['record' => $project]), $project);
 });

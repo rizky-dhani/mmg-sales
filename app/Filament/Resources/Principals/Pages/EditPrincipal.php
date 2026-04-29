@@ -19,7 +19,8 @@ class EditPrincipal extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Principal updated successfully');
+            ->success()
+            ->title('Principal updated successfully');
     }
 
     protected function getHeaderActions(): array

@@ -3,6 +3,9 @@
 namespace App\Filament\Resources\Projects\Schemas;
 
 use App\Models\Contact;
+use App\Models\Principal;
+use App\Models\Product;
+use App\Models\User;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -42,7 +45,7 @@ class ProjectForm
                                 Select::make('assigned_users')
                                     ->label('Assign Users')
                                     ->multiple()
-                                    ->options(\App\Models\User::pluck('name', 'id'))
+                                    ->options(User::pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
                                     ->afterStateHydrated(function ($component, $state, $record) {
@@ -77,14 +80,14 @@ class ProjectForm
                                     ->schema([
                                         Select::make('principal_id')
                                             ->label('Principal')
-                                            ->options(\App\Models\Principal::pluck('name', 'id'))
+                                            ->options(Principal::pluck('name', 'id'))
                                             ->required()
                                             ->live()
                                             ->searchable(),
                                         Select::make('product_ids')
                                             ->label('Products')
                                             ->multiple()
-                                            ->options(fn ($get) => \App\Models\Product::where('principal_id', $get('principal_id'))->pluck('name', 'id'))
+                                            ->options(fn ($get) => Product::where('principal_id', $get('principal_id'))->pluck('name', 'id'))
                                             ->required()
                                             ->searchable(),
                                     ])

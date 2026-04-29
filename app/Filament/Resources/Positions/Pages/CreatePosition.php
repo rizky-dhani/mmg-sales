@@ -13,7 +13,8 @@ class CreatePosition extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Position created successfully');
+            ->success()
+            ->title('Position created successfully');
     }
 
     protected function getRedirectUrl(): string

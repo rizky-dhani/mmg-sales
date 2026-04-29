@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Principal;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
+ * @extends Factory<Product>
  */
 class ProductFactory extends Factory
 {
@@ -14,7 +16,7 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->words(3, true),
             'sku' => fake()->unique()->slug(),
-            'principal_id' => \App\Models\Principal::factory(),
+            'principal_id' => Principal::factory(),
             'category' => fake()->randomElement(['medical_equipment', 'pharmaceutical', 'consumables', 'diagnostics', 'other']),
             'description' => fake()->paragraph(),
             'unit_price' => fake()->numberBetween(5000, 5000000),

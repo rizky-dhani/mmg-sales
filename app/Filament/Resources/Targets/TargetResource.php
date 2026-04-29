@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Targets;
 
 use App\Filament\Resources\Targets\Pages\ManageTargets;
 use App\Models\Target;
+use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
@@ -85,7 +86,7 @@ class TargetResource extends Resource
                     ->sortable(),
                 TextColumn::make('month')
                     ->label('Month')
-                    ->formatStateUsing(fn ($state) => $state ? \Carbon\Carbon::create()->month($state)->format('F') : 'N/A')
+                    ->formatStateUsing(fn ($state) => $state ? Carbon::create()->month($state)->format('F') : 'N/A')
                     ->sortable(),
                 TextColumn::make('annual_target')
                     ->label('Annual Target')

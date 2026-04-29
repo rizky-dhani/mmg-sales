@@ -3,10 +3,11 @@
 namespace Database\Factories;
 
 use App\Models\Segment;
+use App\Models\SubSegment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SubSegment>
+ * @extends Factory<SubSegment>
  */
 class SubSegmentFactory extends Factory
 {

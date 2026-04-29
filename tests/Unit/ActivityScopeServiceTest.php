@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Models\Customer;
 use App\Models\User;
 use App\Services\ActivityScopeService;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,7 +19,7 @@ class ActivityScopeServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+        $this->seed(RolesAndPermissionsSeeder::class);
         $this->service = new ActivityScopeService;
     }
 

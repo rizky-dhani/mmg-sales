@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Segments\Tables;
 
+use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -32,7 +33,7 @@ class SegmentsTable
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->date('d M Y')
-                    ->formatStateUsing(fn ($state) => strtoupper(\Carbon\Carbon::parse($state)->translatedFormat('d M Y')))
+                    ->formatStateUsing(fn ($state) => strtoupper(Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

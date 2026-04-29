@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Segment;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Segment>
+ * @extends Factory<Segment>
  */
 class SegmentFactory extends Factory
 {

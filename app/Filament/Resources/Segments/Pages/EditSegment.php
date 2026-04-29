@@ -19,7 +19,8 @@ class EditSegment extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Segment updated successfully');
+            ->success()
+            ->title('Segment updated successfully');
     }
 
     protected function getHeaderActions(): array

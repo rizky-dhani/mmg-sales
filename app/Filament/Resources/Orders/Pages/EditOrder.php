@@ -19,7 +19,8 @@ class EditOrder extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Order updated successfully');
+            ->success()
+            ->title('Order updated successfully');
     }
 
     protected function getHeaderActions(): array

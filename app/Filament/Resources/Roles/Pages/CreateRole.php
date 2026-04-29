@@ -13,7 +13,8 @@ class CreateRole extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Role created successfully');
+            ->success()
+            ->title('Role created successfully');
     }
 
     protected function getRedirectUrl(): string

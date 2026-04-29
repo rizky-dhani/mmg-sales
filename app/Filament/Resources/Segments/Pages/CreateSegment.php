@@ -13,7 +13,8 @@ class CreateSegment extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Segment created successfully');
+            ->success()
+            ->title('Segment created successfully');
     }
 
     protected function getRedirectUrl(): string

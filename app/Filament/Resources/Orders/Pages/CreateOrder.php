@@ -13,7 +13,8 @@ class CreateOrder extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Order created successfully');
+            ->success()
+            ->title('Order created successfully');
     }
 
     protected function getRedirectUrl(): string

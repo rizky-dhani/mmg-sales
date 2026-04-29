@@ -19,7 +19,8 @@ class EditTerritory extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Territory updated successfully');
+            ->success()
+            ->title('Territory updated successfully');
     }
 
     protected function getHeaderActions(): array

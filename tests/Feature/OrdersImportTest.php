@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Imports\OrdersImport;
+use App\Jobs\ImportOrdersJob;
 use App\Models\Customer;
 use App\Models\Department;
 use App\Models\Distributor;
@@ -15,6 +16,7 @@ use App\Models\Segment;
 use App\Models\Territory;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Facades\Excel;
 
 uses(RefreshDatabase::class);
@@ -155,7 +157,7 @@ test('ImportOrdersJob dispatches and sends notification', function () {
 
     // Create a temporary file
     $tempFileName = 'import_test_'.uniqid().'.xlsx';
-    Excel::store(new class($data) implements \Maatwebsite\Excel\Concerns\FromCollection
+    Excel::store(new class($data) implements FromCollection
     {
         public function __construct(public $data) {}
 
@@ -167,7 +169,7 @@ test('ImportOrdersJob dispatches and sends notification', function () {
     $fullPath = storage_path('app/public/'.$tempFileName);
 
     // 2. Dispatch Job
-    $job = new \App\Jobs\ImportOrdersJob($fullPath, $user->id);
+    $job = new ImportOrdersJob($fullPath, $user->id);
     $job->handle();
 
     // 3. Assertions

@@ -3,12 +3,13 @@
 namespace App\Filament\Resources\Reports;
 
 use App\Filament\Resources\Reports\Pages\PipelineReportPage;
+use App\Models\Project;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 
 class PipelineReportResource extends Resource
 {
-    protected static ?string $model = \App\Models\Project::class;
+    protected static ?string $model = Project::class;
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedPresentationChartLine;
 

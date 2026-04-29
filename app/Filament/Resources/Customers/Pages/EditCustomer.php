@@ -21,7 +21,8 @@ class EditCustomer extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Customer updated successfully');
+            ->success()
+            ->title('Customer updated successfully');
     }
 
     protected function getHeaderActions(): array

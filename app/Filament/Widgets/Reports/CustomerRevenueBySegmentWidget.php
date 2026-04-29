@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\Reports;
 
 use App\DTOs\ReportFilterData;
 use App\Services\Reports\CustomerReportService;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget;
@@ -19,13 +20,13 @@ class CustomerRevenueBySegmentWidget extends TableWidget
         return $table
             ->records(fn () => $this->getRecords())
             ->columns([
-                \Filament\Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Segment'),
-                \Filament\Tables\Columns\TextColumn::make('revenue')
+                TextColumn::make('revenue')
                     ->label('Revenue')
                     ->money('IDR')
                     ->alignRight(),
-                \Filament\Tables\Columns\TextColumn::make('orders')
+                TextColumn::make('orders')
                     ->label('Orders')
                     ->alignRight(),
             ])

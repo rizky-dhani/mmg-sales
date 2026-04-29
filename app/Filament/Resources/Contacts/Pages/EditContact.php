@@ -21,7 +21,8 @@ class EditContact extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Contact updated successfully');
+            ->success()
+            ->title('Contact updated successfully');
     }
 
     protected function getHeaderActions(): array

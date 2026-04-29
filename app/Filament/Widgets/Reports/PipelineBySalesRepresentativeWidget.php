@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\Reports;
 
 use App\DTOs\ReportFilterData;
 use App\Services\Reports\PipelineReportService;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget;
@@ -19,12 +20,12 @@ class PipelineBySalesRepresentativeWidget extends TableWidget
         return $table
             ->records(fn () => $this->getRecords())
             ->columns([
-                \Filament\Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label('Sales Rep'),
-                \Filament\Tables\Columns\TextColumn::make('count')
+                TextColumn::make('count')
                     ->label('Projects')
                     ->alignRight(),
-                \Filament\Tables\Columns\TextColumn::make('value')
+                TextColumn::make('value')
                     ->label('Pipeline Value')
                     ->money('IDR')
                     ->alignRight(),

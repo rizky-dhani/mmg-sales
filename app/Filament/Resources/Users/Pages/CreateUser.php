@@ -13,7 +13,8 @@ class CreateUser extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('User created successfully');
+            ->success()
+            ->title('User created successfully');
     }
 
     protected function getRedirectUrl(): string

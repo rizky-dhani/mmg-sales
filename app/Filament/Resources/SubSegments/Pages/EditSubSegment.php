@@ -19,7 +19,8 @@ class EditSubSegment extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Sub segment updated successfully');
+            ->success()
+            ->title('Sub segment updated successfully');
     }
 
     protected function getHeaderActions(): array

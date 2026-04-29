@@ -13,7 +13,8 @@ class CreateCustomerGroup extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Customer group created successfully');
+            ->success()
+            ->title('Customer group created successfully');
     }
 
     protected function getRedirectUrl(): string

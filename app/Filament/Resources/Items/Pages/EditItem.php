@@ -19,7 +19,8 @@ class EditItem extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Item updated successfully');
+            ->success()
+            ->title('Item updated successfully');
     }
 
     protected function getHeaderActions(): array

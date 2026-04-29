@@ -13,7 +13,8 @@ class CreateContact extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Contact created successfully');
+            ->success()
+            ->title('Contact created successfully');
     }
 
     protected function getRedirectUrl(): string

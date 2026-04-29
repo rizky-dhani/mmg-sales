@@ -19,7 +19,8 @@ class EditRole extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Role updated successfully');
+            ->success()
+            ->title('Role updated successfully');
     }
 
     protected function getHeaderActions(): array

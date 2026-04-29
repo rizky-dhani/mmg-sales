@@ -13,7 +13,8 @@ class CreateTerritory extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Territory created successfully');
+            ->success()
+            ->title('Territory created successfully');
     }
 
     protected function getRedirectUrl(): string

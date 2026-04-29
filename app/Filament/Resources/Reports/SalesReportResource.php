@@ -3,12 +3,13 @@
 namespace App\Filament\Resources\Reports;
 
 use App\Filament\Resources\Reports\Pages\SalesReportPage;
+use App\Models\Order;
 use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 
 class SalesReportResource extends Resource
 {
-    protected static ?string $model = \App\Models\Order::class;
+    protected static ?string $model = Order::class;
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 

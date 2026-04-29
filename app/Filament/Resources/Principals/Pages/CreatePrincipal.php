@@ -13,7 +13,8 @@ class CreatePrincipal extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Principal created successfully');
+            ->success()
+            ->title('Principal created successfully');
     }
 
     protected function getRedirectUrl(): string

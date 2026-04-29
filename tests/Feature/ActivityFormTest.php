@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Filament\Resources\Activities\Pages\CreateActivity;
+use App\Models\Contact;
+use App\Models\Customer;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -42,8 +44,8 @@ it('can create an activity with a contact', function () {
     $user->assignRole('Super Admin');
     actingAs($user);
 
-    $customer = \App\Models\Customer::factory()->create();
-    $contact = \App\Models\Contact::factory()->create(['customer_id' => $customer->id]);
+    $customer = Customer::factory()->create();
+    $contact = Contact::factory()->create(['customer_id' => $customer->id]);
 
     livewire(CreateActivity::class)
         ->set('data.customer_id', $customer->id)

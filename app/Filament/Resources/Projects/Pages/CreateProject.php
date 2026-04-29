@@ -15,7 +15,8 @@ class CreateProject extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Project created successfully');
+            ->success()
+            ->title('Project created successfully');
     }
 
     protected function getRedirectUrl(): string

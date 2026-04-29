@@ -13,7 +13,8 @@ class CreateItem extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Item created successfully');
+            ->success()
+            ->title('Item created successfully');
     }
 
     protected function getRedirectUrl(): string

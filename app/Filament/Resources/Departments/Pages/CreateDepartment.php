@@ -13,7 +13,8 @@ class CreateDepartment extends CreateRecord
     protected function getCreatedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Department created successfully');
+            ->success()
+            ->title('Department created successfully');
     }
 
     protected function getRedirectUrl(): string

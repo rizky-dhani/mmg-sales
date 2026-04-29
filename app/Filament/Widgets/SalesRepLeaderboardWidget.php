@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\User;
 use App\Services\ActivityScopeService;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -25,7 +26,7 @@ class SalesRepLeaderboardWidget extends TableWidget
 
     public function table(Table $table): Table
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
         $service = app(ActivityScopeService::class);
 

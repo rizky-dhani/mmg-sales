@@ -19,7 +19,8 @@ class EditDepartment extends EditRecord
     protected function getSavedNotification(): ?Notification
     {
         return Notification::make()
-            ->successNotificationTitle('Department updated successfully');
+            ->success()
+            ->title('Department updated successfully');
     }
 
     protected function getHeaderActions(): array
