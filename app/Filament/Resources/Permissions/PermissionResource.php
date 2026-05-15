@@ -50,4 +50,14 @@ class PermissionResource extends Resource
             'edit' => EditPermission::route('/{record}/edit'),
         ];
     }
+
+    /**
+     * Generate permissions for a model.
+     */
+    public static function generateForModel(string $model, array $actions): void
+    {
+        foreach ($actions as $action) {
+            Permission::findOrCreate("{$action}_{$model}");
+        }
+    }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Helpers\PermissionHelper;
+use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Section as ComponentsSection;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class UserForm
@@ -13,7 +15,7 @@ class UserForm
     {
         return $schema
             ->components([
-                ComponentsSection::make('Basic Information')
+                Section::make('Basic Information')
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
@@ -25,14 +27,15 @@ class UserForm
                             ->required(),
                     ]),
 
-                ComponentsSection::make('Organization & Hierarchy')
+                Section::make('Organization & Hierarchy')
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
                         Select::make('department_id')
                             ->relationship('department', 'name')
                             ->default(null)
-                            ->preload(),
+                            ->preload()
+                            ->live(),
                         Select::make('position_id')
                             ->relationship('position', 'name')
                             ->default(null)
@@ -45,11 +48,31 @@ class UserForm
                             ->relationship('manager', 'name')
                             ->default(null)
                             ->preload(),
+
+                        // Department-filtered role assignment
                         Select::make('roles')
-                            ->relationship('roles', 'name')
+                            ->relationship('roles', 'name', function ($query, $get) {
+                                $departmentId = $get('department_id');
+                                if ($departmentId) {
+                                    $query->where(function ($q) use ($departmentId) {
+                                        $q->whereNull('department_id')
+                                            ->orWhere('department_id', $departmentId);
+                                    });
+                                }
+                            })
                             ->multiple()
                             ->preload()
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->helperText('Only global roles and roles matching the user\'s department are shown.'),
+
+                        // Direct permission overrides
+                        CheckboxList::make('permissions')
+                            ->relationship('permissions', 'name')
+                            ->options(fn () => PermissionHelper::getGroupedOptions())
+                            ->columns(3)
+                            ->gridDirection('row')
+                            ->label('Direct Permissions')
+                            ->helperText('Grant additional permissions beyond what roles provide.'),
                     ]),
             ]);
     }

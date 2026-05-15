@@ -22,8 +22,24 @@ abstract class BasePolicy
             return true;
         }
 
-        if (! empty($this->authorizedRoles) && $user->hasAnyRole($this->authorizedRoles)) {
-            return true;
+        // Only consider roles whose department matches the user's department (or global)
+        $validRoles = $user->roles->filter(function ($role) use ($user) {
+            return is_null($role->department_id)
+                || $role->department_id === $user->department_id;
+        });
+
+        // User has roles but none match their current department
+        if ($validRoles->isEmpty() && $user->roles->isNotEmpty()) {
+            return false;
+        }
+
+        // Check authorizedRoles bypass against valid roles only
+        if (! empty($this->authorizedRoles)) {
+            $validRoleNames = $validRoles->pluck('name');
+
+            if ($validRoleNames->intersect($this->authorizedRoles)->isNotEmpty()) {
+                return true;
+            }
         }
 
         return null;

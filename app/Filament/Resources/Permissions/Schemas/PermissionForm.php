@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Permissions\Schemas;
 
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 
 class PermissionForm
@@ -10,7 +12,18 @@ class PermissionForm
     {
         return $schema
             ->components([
-                //
+                TextInput::make('name')
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(255)
+                    ->regex('/^[a-z_]+$/'),
+                Select::make('guard_name')
+                    ->options([
+                        'web' => 'Web',
+                        'api' => 'API',
+                    ])
+                    ->default('web')
+                    ->required(),
             ]);
     }
 }

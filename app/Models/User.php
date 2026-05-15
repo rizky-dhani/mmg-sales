@@ -26,6 +26,20 @@ class User extends Authenticatable implements FilamentUser
                 $user->password = Hash::make('Mmg2026!');
             }
         });
+
+        static::updating(function (self $user): void {
+            if ($user->isDirty('department_id')) {
+                $newDepartmentId = $user->department_id;
+                $rolesToDetach = $user->roles()
+                    ->whereNotNull('department_id')
+                    ->where('department_id', '!=', $newDepartmentId)
+                    ->pluck('id');
+
+                if ($rolesToDetach->isNotEmpty()) {
+                    $user->roles()->detach($rolesToDetach);
+                }
+            }
+        });
     }
 
     /**
