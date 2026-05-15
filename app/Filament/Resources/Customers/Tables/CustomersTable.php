@@ -42,12 +42,12 @@ class CustomersTable
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'hospital_clinic' => 'Hospital/Apothecary/Clinic',
                         'pt_cv' => 'PT/CV',
-                        default => ucfirst($state),
+                        'other' => 'Other',
                     })
                     ->color(fn (string $state): string => match ($state) {
                         'hospital_clinic' => 'primary',
                         'pt_cv' => 'info',
-                        default => 'gray',
+                        'other' => 'gray',
                     }),
 
                 TextColumn::make('city')
@@ -59,6 +59,15 @@ class CustomersTable
                     ->label('Active')
                     ->boolean()
                     ->sortable(),
+
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'active' => 'success',
+                        'passive' => 'danger',
+                    })
+                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
 
                 // Toggleable
                 TextColumn::make('tax_number')
