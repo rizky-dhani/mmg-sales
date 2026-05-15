@@ -31,9 +31,14 @@ class CustomersImport implements ToCollection, WithHeadingRow
             $isActive = $this->normalizeIsActive($row['is_active'] ?? null);
             $status = $this->normalizeStatus($row['status'] ?? null);
             $cdNcdType = $this->normalizeCdNcdType($row['cd_ncd_type'] ?? null);
+            $customerAccCode = $row['customer_acc_code'] ?? null;
 
-            Customer::updateOrCreate(
-                ['name' => $row['name']],
+            // Match by customer_acc_code if provided, otherwise fall back to name
+            $uniqueBy = ! empty($customerAccCode)
+                ? ['customer_acc_code' => $customerAccCode]
+                : ['name' => $row['name']];
+
+            Customer::updateOrCreate($uniqueBy,
                 [
                     'name' => $row['name'],
                     'customer_name' => $row['customer_name'] ?? $row['name'],
@@ -54,7 +59,7 @@ class CustomersImport implements ToCollection, WithHeadingRow
                     'status' => $status,
                     'cd_ncd_type' => $cdNcdType,
                     'customer_group_id' => $customerGroupId,
-                    'customer_acc_code' => $row['customer_acc_code'] ?? null,
+                    'customer_acc_code' => $customerAccCode,
                 ]
             );
         }
