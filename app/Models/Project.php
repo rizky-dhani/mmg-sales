@@ -92,6 +92,11 @@ class Project extends Model
         return $days.' '.str('day')->plural($days);
     }
 
+    public function contactPerson(): BelongsTo
+    {
+        return $this->belongsTo(Contact::class, 'contact_person');
+    }
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);

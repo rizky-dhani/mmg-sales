@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
-use App\Models\Contact;
 use App\Models\Principal;
 use App\Models\Product;
 use App\Models\User;
@@ -38,7 +37,7 @@ class ProjectForm
                                     ->live(),
                                 Select::make('contact_person')
                                     ->label('Contact Person')
-                                    ->options(fn ($get) => Contact::where('customer_id', $get('customer_id'))->get()->pluck('name', 'id'))
+                                    ->relationship('contactPerson', 'name')
                                     ->searchable()
                                     ->preload()
                                     ->visible(fn ($get) => $get('customer_id')),

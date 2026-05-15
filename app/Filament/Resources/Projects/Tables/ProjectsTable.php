@@ -40,7 +40,7 @@ class ProjectsTable
                     ->sortable()
                     ->weight('bold'),
 
-                TextColumn::make('contact_person')
+                TextColumn::make('contactPerson.name')
                     ->label('Contact Person')
                     ->searchable(),
 

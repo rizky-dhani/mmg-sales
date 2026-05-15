@@ -21,7 +21,7 @@ class ProjectInfolist
                         TextEntry::make('customer_name')
                             ->label('Customer')
                             ->weight('bold'),
-                        TextEntry::make('contact_person')
+                        TextEntry::make('contactPerson.name')
                             ->label('Contact Person'),
                         TextEntry::make('status')
                             ->badge()

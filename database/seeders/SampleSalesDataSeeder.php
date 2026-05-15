@@ -92,7 +92,7 @@ class SampleSalesDataSeeder extends Seeder
         for ($i = 1; $i <= 15; $i++) {
             $project = Project::create([
                 'customer_name' => 'Prospect '.Str::random(5),
-                'contact_person' => 'Contact '.$i,
+                'contact_person' => $customerIds ? Contact::where('customer_id', $customerIds[array_rand($customerIds)])->value('id') : null,
                 'email' => 'contact'.$i.'@prospect.com',
                 'phone' => '0812'.rand(10000000, 99999999),
                 'status' => $projectStatuses[array_rand($projectStatuses)],

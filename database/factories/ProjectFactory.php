@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Contact;
 use App\Models\Customer;
 use App\Models\Project;
 use App\Models\User;
@@ -28,7 +29,7 @@ class ProjectFactory extends Factory
         return [
             'title' => fake()->randomElement($opportunityTypes).' - '.fake()->city(),
             'customer_name' => fake('id_ID')->company(),
-            'contact_person' => fake('id_ID')->name(),
+            'contact_person' => Contact::factory(),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake('id_ID')->phoneNumber(),
             'status' => fake()->randomElement(['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']),

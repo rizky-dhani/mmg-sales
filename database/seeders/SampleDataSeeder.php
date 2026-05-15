@@ -90,7 +90,7 @@ class SampleDataSeeder extends Seeder
             $project = Project::create([
                 'title' => fake()->randomElement($projectTitles).' - '.$customer->name,
                 'customer_name' => $customer->name,
-                'contact_person' => $customer->contacts->first()->name ?? fake()->name(),
+                'contact_person' => $customer->contacts->first()->id ?? null,
                 'email' => $customer->email,
                 'phone' => $customer->phone,
                 'status' => $status,
