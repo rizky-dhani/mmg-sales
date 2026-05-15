@@ -29,6 +29,7 @@ class CustomersImport implements ToCollection, WithHeadingRow
             $customerGroupId = $this->resolveCustomerGroupId($row['customer_group'] ?? $row['customer_group_id'] ?? null);
             $typeData = $this->normalizeType($row['type'] ?? null);
             $isActive = $this->normalizeIsActive($row['is_active'] ?? null);
+            $status = $this->normalizeStatus($row['status'] ?? null);
             $cdNcdType = $this->normalizeCdNcdType($row['cd_ncd_type'] ?? null);
 
             Customer::updateOrCreate(
@@ -46,8 +47,11 @@ class CustomersImport implements ToCollection, WithHeadingRow
                     'country' => $row['country'] ?? 'Indonesia',
                     'email' => $row['email'] ?? null,
                     'phone' => $row['phone'] ?? null,
+                    'phone_purchasing' => $row['phone_purchasing'] ?? null,
+                    'phone_finance' => $row['phone_finance'] ?? null,
                     'website' => $row['website'] ?? null,
                     'is_active' => $isActive,
+                    'status' => $status,
                     'cd_ncd_type' => $cdNcdType,
                     'customer_group_id' => $customerGroupId,
                     'customer_acc_code' => $row['customer_acc_code'] ?? null,
@@ -118,6 +122,38 @@ class CustomersImport implements ToCollection, WithHeadingRow
 
         // Default to active if unrecognized
         return 1;
+    }
+
+    /**
+     * Normalize the status value to match the ENUM column ('active', 'passive').
+     * Handles common variations from imports.
+     */
+    protected function normalizeStatus(?string $value): string
+    {
+        if (empty($value)) {
+            return 'active'; // Default to active
+        }
+
+        $normalized = strtolower(trim($value));
+
+        $activeStates = ['active', '1', 'yes', 'true', 'y', 'aktif'];
+        $passiveStates = ['passive', 'inactive', '0', 'no', 'false', 'n', 'tidak'];
+
+        if (in_array($normalized, $passiveStates, true)) {
+            return 'passive';
+        }
+
+        if (in_array($normalized, $activeStates, true)) {
+            return 'active';
+        }
+
+        // Try to parse as integer (truthy = active, falsy = passive)
+        $intValue = filter_var($normalized, FILTER_VALIDATE_INT);
+        if ($intValue !== false) {
+            return $intValue ? 'active' : 'passive';
+        }
+
+        return 'active';
     }
 
     /**
