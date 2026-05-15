@@ -4,7 +4,6 @@ namespace App\Filament\Resources\Projects\Pages;
 
 use App\Filament\Resources\Projects\ProjectResource;
 use App\Models\Customer;
-use App\Models\Project;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -42,11 +41,11 @@ class CreateProject extends CreateRecord
         return $data;
     }
 
-    protected function afterCreate(Project $record): void
+    protected function afterCreate(): void
     {
         $assignedUsers = session('pending_collaborators', []);
         if (! empty($assignedUsers)) {
-            $record->collaborators()->sync($assignedUsers);
+            $this->getRecord()->collaborators()->sync($assignedUsers);
             session()->forget('pending_collaborators');
         }
     }
