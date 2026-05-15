@@ -32,6 +32,7 @@ class Customer extends Model
         'phone_finance',
         'website',
         'is_active',
+        'status',
         'cd_ncd_type',
         'customer_group_id',
         'customer_code',
