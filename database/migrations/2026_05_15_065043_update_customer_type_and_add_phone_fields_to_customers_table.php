@@ -12,6 +12,17 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Step 1: Migrate existing data to new type values
+        // hospital, clinic, pharmacy → hospital_clinic
+        DB::table('customers')
+            ->whereIn('type', ['hospital', 'clinic', 'pharmacy'])
+            ->update(['type' => 'hospital_clinic']);
+
+        // laboratory, distributor → other
+        DB::table('customers')
+            ->whereIn('type', ['laboratory', 'distributor'])
+            ->update(['type' => 'other']);
+
         if (DB::getDriverName() === 'sqlite') {
             // SQLite doesn't support ENUM or MODIFY COLUMN.
             // The original migration created a CHECK constraint via $table->enum().
@@ -39,13 +50,22 @@ return new class extends Migration
             $table->dropColumn(['phone_purchasing', 'phone_finance']);
         });
 
+        // Restore original ENUM first, then map data back (best-effort)
         if (DB::getDriverName() === 'sqlite') {
-            // Restore ENUM-like CHECK constraint in SQLite via a string column
             Schema::table('customers', function (Blueprint $table) {
                 $table->string('type', 50)->default('other')->change();
             });
         } else {
             DB::statement("ALTER TABLE customers MODIFY COLUMN type ENUM('hospital', 'clinic', 'pharmacy', 'laboratory', 'distributor', 'other') NOT NULL DEFAULT 'other'");
         }
+
+        // Best-effort reverse data migration
+        DB::table('customers')
+            ->where('type', 'hospital_clinic')
+            ->update(['type' => 'hospital']);
+
+        DB::table('customers')
+            ->where('type', 'pt_cv')
+            ->update(['type' => 'other']);
     }
 };
