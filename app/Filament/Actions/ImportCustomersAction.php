@@ -25,7 +25,11 @@ class ImportCustomersAction extends Action
             ->form([
                 FileUpload::make('file')
                     ->label('Excel File')
-                    ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'])
+                    ->acceptedFileTypes([
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                        'application/vnd.ms-excel',
+                        'application/zip',
+                    ])
                     ->disk('public')
                     ->directory('imports')
                     ->required(),
