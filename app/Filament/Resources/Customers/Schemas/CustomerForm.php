@@ -24,11 +24,8 @@ class CustomerForm
                             ->columnSpanFull(),
                         Select::make('type')
                             ->options([
-                                'hospital' => 'Hospital',
-                                'clinic' => 'Clinic',
-                                'pharmacy' => 'Pharmacy',
-                                'laboratory' => 'Laboratory',
-                                'distributor' => 'Distributor',
+                                'hospital_clinic' => 'Hospital/Apothecary/Clinic',
+                                'pt_cv' => 'PT/CV',
                                 'other' => 'Other',
                             ])
                             ->default('other')

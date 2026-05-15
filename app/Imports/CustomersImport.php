@@ -14,11 +14,8 @@ class CustomersImport implements ToCollection, WithHeadingRow
      * Allowed values for the customer type ENUM column.
      */
     protected const ALLOWED_TYPES = [
-        'hospital',
-        'clinic',
-        'pharmacy',
-        'laboratory',
-        'distributor',
+        'hospital_clinic',
+        'pt_cv',
         'other',
     ];
 

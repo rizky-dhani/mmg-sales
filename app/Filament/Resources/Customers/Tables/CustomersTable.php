@@ -39,12 +39,14 @@ class CustomersTable
                 TextColumn::make('type')
                     ->label('Type')
                     ->badge()
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'hospital_clinic' => 'Hospital/Apothecary/Clinic',
+                        'pt_cv' => 'PT/CV',
+                        default => ucfirst($state),
+                    })
                     ->color(fn (string $state): string => match ($state) {
-                        'hospital' => 'primary',
-                        'clinic' => 'info',
-                        'pharmacy' => 'success',
-                        'laboratory' => 'warning',
+                        'hospital_clinic' => 'primary',
+                        'pt_cv' => 'info',
                         default => 'gray',
                     }),
 

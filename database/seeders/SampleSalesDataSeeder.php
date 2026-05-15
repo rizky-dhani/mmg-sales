@@ -63,10 +63,10 @@ class SampleSalesDataSeeder extends Seeder
         $itemIds = Item::pluck('id')->toArray();
 
         $customersData = [
-            ['email' => 'rs_central@example.com', 'name' => 'RS Central Jakarta', 'type' => 'hospital', 'class' => 'tier_1'],
-            ['email' => 'klinik_bunda@example.com', 'name' => 'Klinik Bunda', 'type' => 'clinic', 'class' => 'tier_2'],
-            ['email' => 'apotek_jaya@example.com', 'name' => 'Apotek Jaya', 'type' => 'pharmacy', 'class' => 'tier_3'],
-            ['email' => 'lab_pintar@example.com', 'name' => 'Lab Pintar', 'type' => 'laboratory', 'class' => 'tier_2'],
+            ['email' => 'rs_central@example.com', 'name' => 'RS Central Jakarta', 'type' => 'hospital_clinic', 'class' => 'tier_1'],
+            ['email' => 'klinik_bunda@example.com', 'name' => 'Klinik Bunda', 'type' => 'hospital_clinic', 'class' => 'tier_2'],
+            ['email' => 'apotek_jaya@example.com', 'name' => 'Apotek Jaya', 'type' => 'hospital_clinic', 'class' => 'tier_3'],
+            ['email' => 'pt_sehat@example.com', 'name' => 'PT Sehat Sentosa', 'type' => 'pt_cv', 'class' => 'tier_2'],
         ];
 
         foreach ($customersData as $c) {
