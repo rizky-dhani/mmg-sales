@@ -19,9 +19,6 @@ class ProductForm
                     ->schema([
                         TextInput::make('name')
                             ->required(),
-                        TextInput::make('sku')
-                            ->label('SKU')
-                            ->required(),
                         Select::make('category')
                             ->options([
                                 'medical_equipment' => 'Medical equipment',
