@@ -15,8 +15,7 @@ class ContactFactory extends Factory
     {
         return [
             'customer_id' => Customer::factory(),
-            'first_name' => fake('id_ID')->firstName(),
-            'last_name' => fake('id_ID')->lastName(),
+            'name' => fake('id_ID')->name(),
             'position' => fake()->jobTitle(),
             'department' => fake()->randomElement(['Purchasing', 'Medical', 'Finance', 'Logistics']),
             'email' => fake()->unique()->safeEmail(),

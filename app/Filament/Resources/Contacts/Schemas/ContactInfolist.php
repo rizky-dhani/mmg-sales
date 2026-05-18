@@ -19,9 +19,8 @@ class ContactInfolist
                         TextEntry::make('customer.name')
                             ->label('Customer')
                             ->weight('bold'),
-                        TextEntry::make('full_name')
-                            ->label('Name')
-                            ->getStateUsing(fn ($record) => $record->first_name.' '.$record->last_name),
+                        TextEntry::make('name')
+                            ->label('Name'),
                         TextEntry::make('position'),
                         TextEntry::make('department'),
                         TextEntry::make('email')

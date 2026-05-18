@@ -37,9 +37,7 @@ class ContactForm
                         Section::make('Personal Information')
                             ->columns(2)
                             ->schema([
-                                TextInput::make('first_name')
-                                    ->required(),
-                                TextInput::make('last_name')
+                                TextInput::make('name')
                                     ->required(),
                                 TextInput::make('position')
                                     ->default(null),

@@ -15,8 +15,7 @@ class Contact extends Model
 
     protected $fillable = [
         'customer_id',
-        'first_name',
-        'last_name',
+        'name',
         'position',
         'department',
         'email',
@@ -31,11 +30,6 @@ class Contact extends Model
     protected $codeColumn = 'contact_code';
 
     protected $codePrefix = 'CON';
-
-    public function getNameAttribute(): string
-    {
-        return "{$this->first_name} {$this->last_name}";
-    }
 
     public function customer(): BelongsTo
     {

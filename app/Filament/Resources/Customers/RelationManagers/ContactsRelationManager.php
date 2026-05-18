@@ -24,7 +24,7 @@ class ContactsRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                TextInput::make('first_name')
+                TextInput::make('name')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -33,9 +33,9 @@ class ContactsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('first_name')
+            ->recordTitleAttribute('name')
             ->columns([
-                TextColumn::make('first_name')
+                TextColumn::make('name')
                     ->searchable(),
             ])
             ->filters([

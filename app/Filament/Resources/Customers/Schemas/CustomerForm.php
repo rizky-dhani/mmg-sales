@@ -19,6 +19,10 @@ class CustomerForm
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
+                        TextInput::make('customer_acc_code')
+                            ->label('Internal Code')
+                            ->default(null)
+                            ->columnSpanFull(),
                         TextInput::make('name')
                             ->required()
                             ->columnSpanFull(),

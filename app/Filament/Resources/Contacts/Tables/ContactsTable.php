@@ -30,13 +30,8 @@ class ContactsTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('first_name')
-                    ->label('First Name')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('last_name')
-                    ->label('Last Name')
+                TextColumn::make('name')
+                    ->label('Name')
                     ->searchable()
                     ->sortable(),
 

@@ -77,7 +77,7 @@ class ActivityForm
 
                         Select::make('contact_id')
                             ->label('Contact Person')
-                            ->options(fn ($get) => Contact::where('customer_id', $get('customer_id'))->get()->pluck('name', 'id'))
+                            ->options(fn ($get) => Contact::where('customer_id', $get('customer_id'))->pluck('name', 'id'))
                             ->searchable()
                             ->preload()
                             ->visible(fn ($get) => $get('customer_id')),
