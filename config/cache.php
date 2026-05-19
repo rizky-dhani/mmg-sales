@@ -130,6 +130,7 @@ return [
         App\DTOs\PipelineReportData::class,
         App\DTOs\CustomerReportData::class,
         App\DTOs\ProductReportData::class,
+        Illuminate\Support\Collection::class,
     ],
 
 ];
