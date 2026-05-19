@@ -4,12 +4,12 @@ namespace App\Imports;
 
 use App\Models\Department;
 use App\Models\Position;
+use App\Models\Role;
 use App\Models\Territory;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Spatie\Permission\Models\Role;
 
 class UsersImport implements ToCollection, WithHeadingRow
 {

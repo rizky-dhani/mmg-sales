@@ -3,9 +3,9 @@
 use App\Filament\Resources\Projects\Pages\ListProjects;
 use App\Models\Milestone;
 use App\Models\Project;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
 
 use function Pest\Livewire\livewire;
 

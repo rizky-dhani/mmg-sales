@@ -8,11 +8,11 @@ use App\Filament\Resources\Products\Pages\EditProduct;
 use App\Filament\Resources\Products\Pages\ViewProduct;
 use App\Models\Principal;
 use App\Models\Product;
+use App\Models\Role;
 use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 use function Pest\Livewire\livewire;
 
