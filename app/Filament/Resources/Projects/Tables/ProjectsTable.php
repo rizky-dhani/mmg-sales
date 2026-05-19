@@ -28,6 +28,7 @@ class ProjectsTable
             ->modifyQueryUsing(function (Builder $query) {
                 return self::applyVisibilityScope($query, 'created_by');
             })
+            ->defaultSort('project_code', 'desc')
             ->columns([
                 TextColumn::make('project_code')
                     ->label('Project Code')
