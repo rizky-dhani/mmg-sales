@@ -6,7 +6,7 @@ use App\Helpers\PermissionHelper;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
-use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Unique;
 use Spatie\Permission\Models\Permission;
 
 class RoleForm
@@ -18,7 +18,7 @@ class RoleForm
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255)
-                    ->unique(ignoreRecord: true, modifyRuleUsing: function (Rule $rule, $get) {
+                    ->unique(ignoreRecord: true, modifyRuleUsing: function (Unique $rule, $get) {
                         $departmentId = $get('department_id');
                         if ($departmentId) {
                             return $rule->where('department_id', $departmentId);
