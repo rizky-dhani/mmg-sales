@@ -45,7 +45,8 @@ class CreateProject extends CreateRecord
     {
         $assignedUsers = session('pending_collaborators', []);
         if (! empty($assignedUsers)) {
-            $this->getRecord()->collaborators()->sync($assignedUsers);
+            $this->getRecord()->collaborators()
+                ->syncWithPivotValues($assignedUsers, ['added_by' => auth()->id()]);
             session()->forget('pending_collaborators');
         }
     }

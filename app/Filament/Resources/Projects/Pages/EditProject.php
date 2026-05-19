@@ -44,7 +44,8 @@ class EditProject extends EditRecord
 
             $record = $this->getRecord();
             if ($record) {
-                $record->collaborators()->sync($assignedUsers);
+                $record->collaborators()
+                    ->syncWithPivotValues($assignedUsers, ['added_by' => auth()->id()]);
             }
         }
 
