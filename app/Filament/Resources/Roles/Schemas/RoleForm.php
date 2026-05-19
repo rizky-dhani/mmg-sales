@@ -8,6 +8,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
 use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Permission;
 
 class RoleForm
 {
@@ -42,7 +43,17 @@ class RoleForm
                     ->helperText('Leave empty for global roles. Scoped roles only grant permissions to users in the selected department.'),
                 CheckboxList::make('permissions')
                     ->relationship('permissions', 'name')
-                    ->options(fn () => PermissionHelper::getGroupedOptions())
+                    ->getOptionLabelFromRecordUsing(function (Permission $record): string {
+                        $parsed = PermissionHelper::parsePermissionName($record->name);
+
+                        if ($parsed === null) {
+                            return $record->name;
+                        }
+
+                        return PermissionHelper::getActionLabel($parsed['action'])
+                            .' '
+                            .PermissionHelper::getModelLabel($parsed['model']);
+                    })
                     ->columns(3)
                     ->gridDirection('row')
                     ->bulkToggleable(),

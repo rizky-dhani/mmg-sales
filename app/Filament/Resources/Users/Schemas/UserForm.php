@@ -8,6 +8,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Spatie\Permission\Models\Permission;
 
 class UserForm
 {
@@ -68,7 +69,17 @@ class UserForm
                         // Direct permission overrides
                         CheckboxList::make('permissions')
                             ->relationship('permissions', 'name')
-                            ->options(fn () => PermissionHelper::getGroupedOptions())
+                            ->getOptionLabelFromRecordUsing(function (Permission $record): string {
+                                $parsed = PermissionHelper::parsePermissionName($record->name);
+
+                                if ($parsed === null) {
+                                    return $record->name;
+                                }
+
+                                return PermissionHelper::getActionLabel($parsed['action'])
+                                    .' '
+                                    .PermissionHelper::getModelLabel($parsed['model']);
+                            })
                             ->columns(3)
                             ->gridDirection('row')
                             ->label('Direct Permissions')
