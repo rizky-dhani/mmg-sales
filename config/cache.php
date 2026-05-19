@@ -131,6 +131,7 @@ return [
         App\DTOs\CustomerReportData::class,
         App\DTOs\ProductReportData::class,
         Illuminate\Support\Collection::class,
+        Illuminate\Database\Eloquent\Collection::class,
     ],
 
 ];
