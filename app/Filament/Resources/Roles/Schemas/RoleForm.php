@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Roles\Schemas;
 
 use App\Helpers\PermissionHelper;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -41,22 +40,24 @@ class RoleForm
                     ->placeholder('Global (all departments)')
                     ->preload()
                     ->helperText('Leave empty for global roles. Scoped roles only grant permissions to users in the selected department.'),
-                CheckboxList::make('permissions')
+                Select::make('permissions')
+                    ->multiple()
                     ->relationship('permissions', 'name')
-                    ->getOptionLabelFromRecordUsing(function (Permission $record): string {
-                        $parsed = PermissionHelper::parsePermissionName($record->name);
+                    ->options(fn () => Permission::all()
+                        ->groupBy(function (Permission $permission): string {
+                            $parsed = PermissionHelper::parsePermissionName($permission->name);
 
-                        if ($parsed === null) {
-                            return $record->name;
-                        }
-
-                        return PermissionHelper::getActionLabel($parsed['action'])
-                            .' '
-                            .PermissionHelper::getModelLabel($parsed['model']);
-                    })
-                    ->columns(3)
-                    ->gridDirection('row')
-                    ->bulkToggleable(),
+                            return $parsed
+                                ? PermissionHelper::getModelLabel($parsed['model'])
+                                : 'Other';
+                        })
+                        ->mapWithKeys(fn ($group, string $groupName) => [
+                            $groupName => $group->pluck('name', 'id'),
+                        ])
+                        ->toArray())
+                    ->searchable()
+                    ->preload()
+                    ->columnSpanFull(),
             ]);
     }
 }
