@@ -125,6 +125,11 @@ return [
     |
     */
 
-    'serializable_classes' => false,
+    'serializable_classes' => [
+        App\DTOs\SalesReportData::class,
+        App\DTOs\PipelineReportData::class,
+        App\DTOs\CustomerReportData::class,
+        App\DTOs\ProductReportData::class,
+    ],
 
 ];
