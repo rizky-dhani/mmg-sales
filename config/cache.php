@@ -1,5 +1,10 @@
 <?php
 
+use App\DTOs\CustomerReportData;
+use App\DTOs\PipelineReportData;
+use App\DTOs\ProductReportData;
+use App\DTOs\SalesReportData;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 return [
@@ -126,11 +131,11 @@ return [
     */
 
     'serializable_classes' => [
-        App\DTOs\SalesReportData::class,
-        App\DTOs\PipelineReportData::class,
-        App\DTOs\CustomerReportData::class,
-        App\DTOs\ProductReportData::class,
-        Illuminate\Support\Collection::class,
+        SalesReportData::class,
+        PipelineReportData::class,
+        CustomerReportData::class,
+        ProductReportData::class,
+        Collection::class,
         Illuminate\Database\Eloquent\Collection::class,
     ],
 

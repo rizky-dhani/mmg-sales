@@ -49,8 +49,6 @@ class ProductsImport implements ToCollection, WithHeadingRow
             return (int) $value;
         }
 
-        $principal = Principal::where('name', $value)->first();
-
-        return $principal?->id;
+        return Principal::firstOrCreate(['name' => $value])->id;
     }
 }
