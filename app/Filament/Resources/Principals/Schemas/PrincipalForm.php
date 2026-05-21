@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Principals\Schemas;
 
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -24,18 +23,6 @@ class PrincipalForm
                             ->required(),
                         Toggle::make('is_active')
                             ->required(),
-                    ])
-                    ->columns(2),
-
-                Section::make('Business Details')
-                    ->schema([
-                        Select::make('supplier_type')
-                            ->options([
-                                'IVD' => 'IVD',
-                                'CL' => 'CL',
-                                'Non-CL' => 'Non-CL',
-                            ])
-                            ->default(null),
                     ])
                     ->columns(2),
 

@@ -17,7 +17,6 @@ class Principal extends Model
         'description',
         'address',
         'is_active',
-        'supplier_type',
         'website',
         'principal_code',
         'principal_acc_code',
