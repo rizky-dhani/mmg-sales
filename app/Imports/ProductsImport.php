@@ -5,6 +5,7 @@ namespace App\Imports;
 use App\Models\Principal;
 use App\Models\Product;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
@@ -49,6 +50,23 @@ class ProductsImport implements ToCollection, WithHeadingRow
             return (int) $value;
         }
 
-        return Principal::firstOrCreate(['name' => $value])->id;
+        return Principal::firstOrCreate(
+            ['name' => $value],
+            ['initial' => $this->generateInitial($value)]
+        )->id;
+    }
+
+    private function generateInitial(string $name): string
+    {
+        $base = Str::upper(Str::substr($name, 0, 3));
+        $initial = $base;
+        $counter = 1;
+
+        while (Principal::where('initial', $initial)->exists()) {
+            $initial = $base.$counter;
+            $counter++;
+        }
+
+        return $initial;
     }
 }
