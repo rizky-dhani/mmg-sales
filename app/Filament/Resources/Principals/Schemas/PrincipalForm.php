@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Principals\Schemas;
 
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
@@ -26,19 +25,6 @@ class PrincipalForm
                     ])
                     ->columns(2),
 
-                Section::make('Contact Information')
-                    ->columnSpanFull()
-                    ->schema([
-                        TextInput::make('website')
-                            ->label('Website')
-                            ->url()
-                            ->default(null),
-                        Textarea::make('address')
-                            ->label('Address')
-                            ->default(null)
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(2),
             ]);
     }
 }
