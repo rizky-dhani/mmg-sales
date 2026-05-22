@@ -15,6 +15,7 @@ class ActivityInfolist
         return $schema
             ->components([
                 Grid::make(2)
+                    ->columnSpanFull()
                     ->schema([
                         Section::make('Core Information')
                             ->columns(2)
