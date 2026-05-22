@@ -20,8 +20,10 @@ class ActivityForm
     {
         return $schema
             ->components([
-                // Always visible: Project + Customer selection
-                Grid::make(2)
+                // Always visible: Project & Customer selection
+                Section::make('Project & Customer')
+                    ->columnSpanFull()
+                    ->columns(2)
                     ->schema([
                         Select::make('project_id')
                             ->label('Project')
