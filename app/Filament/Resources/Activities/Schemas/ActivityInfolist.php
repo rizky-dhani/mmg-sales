@@ -17,7 +17,7 @@ class ActivityInfolist
                 Grid::make(2)
                     ->schema([
                         Section::make('Core Information')
-                            ->columns(4)
+                            ->columns(2)
                             ->schema([
                                 TextEntry::make('project.project_code')
                                     ->label('Project Code'),
@@ -40,7 +40,7 @@ class ActivityInfolist
                             ]),
 
                         Section::make('Interaction Details')
-                            ->columns(4)
+                            ->columns(2)
                             ->schema([
                                 TextEntry::make('location')
                                     ->placeholder('-'),
@@ -70,10 +70,7 @@ class ActivityInfolist
                                     ->label('Duration')
                                     ->suffix(' min'),
                             ]),
-                    ]),
 
-                Grid::make(2)
-                    ->schema([
                         Section::make('Follow-up')
                             ->columns(2)
                             ->schema([
@@ -91,10 +88,12 @@ class ActivityInfolist
                             ]),
 
                         Section::make('Notes & Feedback')
+                            ->columns(2)
                             ->schema([
                                 TextEntry::make('description')
                                     ->label('Summary')
-                                    ->markdown(),
+                                    ->markdown()
+                                    ->columnSpanFull(),
 
                                 Grid::make(2)
                                     ->schema([
