@@ -19,7 +19,7 @@ class ActivityInfolist
                         Section::make('Core Information')
                             ->columns(4)
                             ->schema([
-                                TextEntry::make('project.code')
+                                TextEntry::make('project.project_code')
                                     ->label('Project Code'),
                                 TextEntry::make('customer.name')
                                     ->label('Customer')
