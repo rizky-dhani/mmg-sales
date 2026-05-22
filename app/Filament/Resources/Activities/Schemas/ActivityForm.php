@@ -27,9 +27,13 @@ class ActivityForm
                     ->schema([
                         Select::make('project_id')
                             ->label('Project')
-                            ->relationship('project', 'title')
-                            ->getOptionLabelFromRecordUsing(fn (Project $record) => "{$record->project_code} - {$record->title}")
-                            ->searchable()
+                            ->relationship(
+                                name: 'project',
+                                titleAttribute: 'title',
+                                modifyQueryUsing: fn ($query) => $query->with('contactPerson'),
+                            )
+                            ->getOptionLabelFromRecordUsing(fn (Project $record) => "{$record->project_code} - {$record->customer_name} (CP: {$record->contactPerson?->name})")
+                            ->searchable(['project_code', 'title', 'customer_name'])
                             ->preload()
                             ->live()
                             ->afterStateUpdated(function ($state, callable $set) {
