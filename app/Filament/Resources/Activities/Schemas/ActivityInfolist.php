@@ -95,15 +95,11 @@ class ActivityInfolist
                                     ->label('Summary')
                                     ->markdown()
                                     ->columnSpanFull(),
-
-                                Grid::make(2)
-                                    ->schema([
-                                        TextEntry::make('purpose'),
-                                        TextEntry::make('expectations'),
-                                        TextEntry::make('targets'),
-                                        TextEntry::make('stakeholder_feedback')
-                                            ->label('Feedback'),
-                                    ]),
+                                TextEntry::make('purpose'),
+                                TextEntry::make('expectations'),
+                                TextEntry::make('targets'),
+                                TextEntry::make('stakeholder_feedback')
+                                    ->label('Feedback'),
                             ]),
                     ]),
             ]);
