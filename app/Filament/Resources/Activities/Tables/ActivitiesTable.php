@@ -34,11 +34,25 @@ class ActivitiesTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('project.project_code')
+                    ->label('Project Code')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('performed_at')
                     ->label('Date')
                     ->date('d M Y')
                     ->formatStateUsing(fn ($state) => strtoupper(Carbon::parse($state)->translatedFormat('d M Y')))
                     ->sortable(),
+
+                TextColumn::make('customer.name')
+                    ->label('Customer')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('subject')
+                    ->label('Subject')
+                    ->searchable(),
 
                 TextColumn::make('type')
                     ->badge()
@@ -51,31 +65,13 @@ class ActivitiesTable
                     })
                     ->sortable(),
 
-                TextColumn::make('customer.name')
-                    ->label('Customer')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('project.project_code')
-                    ->label('Project Code')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('project.title')
-                    ->label('Project')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('subject')
-                    ->label('Subject')
-                    ->searchable(),
-
                 TextColumn::make('user.name')
                     ->label('Sales Rep')
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('outcome')
+                    ->label('Status')
                     ->badge()
                     ->color(fn ($state): string => match ($state) {
                         'Interested' => 'success',
@@ -84,12 +80,6 @@ class ActivitiesTable
                         'Need more info' => 'info',
                         default => 'gray',
                     }),
-
-                TextColumn::make('confidence_level')
-                    ->label('Confidence')
-                    ->suffix('%')
-                    ->numeric()
-                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('customer')
