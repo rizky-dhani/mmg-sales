@@ -23,15 +23,13 @@ class ActivityInfolist
                                 TextEntry::make('project.project_code')
                                     ->label('Project Code'),
                                 TextEntry::make('customer.name')
-                                    ->label('Customer')
-                                    ->weight('bold'),
+                                    ->label('Customer'),
                                 TextEntry::make('contact.name')
                                     ->label('Contact Person'),
                                 TextEntry::make('type')
                                     ->badge()
                                     ->formatStateUsing(fn (string $state): string => ucfirst($state)),
-                                TextEntry::make('subject')
-                                    ->weight('bold'),
+                                TextEntry::make('subject'),
                                 TextEntry::make('user.name')
                                     ->label('Sales Rep'),
                                 TextEntry::make('performed_at')
