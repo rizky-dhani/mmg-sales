@@ -20,9 +20,37 @@ class ActivityForm
     {
         return $schema
             ->components([
+                // Always visible: Project + Customer selection
+                Grid::make(2)
+                    ->schema([
+                        Select::make('project_id')
+                            ->label('Project')
+                            ->relationship('project', 'title')
+                            ->getOptionLabelFromRecordUsing(fn (Project $record) => "{$record->project_code} - {$record->title}")
+                            ->searchable()
+                            ->preload()
+                            ->live()
+                            ->afterStateUpdated(function ($state, callable $set) {
+                                $set('customer_id', null);
+                                if ($project = Project::find($state)) {
+                                    $set('customer_id', $project->customer_id);
+                                }
+                            }),
+
+                        Select::make('customer_id')
+                            ->label('Customer')
+                            ->relationship('customer', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->disabled()
+                            ->dehydrated(),
+                    ]),
+
+                // Core Information (hidden until project is selected)
                 Section::make('Core Information')
                     ->columnSpanFull()
-                    ->columns(4)
+                    ->columns(2)
+                    ->visible(fn ($get) => filled($get('project_id')))
                     ->schema([
                         Select::make('type')
                             ->options([
@@ -51,29 +79,19 @@ class ActivityForm
                             ->preload()
                             ->searchable(),
 
+                        DateTimePicker::make('performed_at')
+                            ->label('Date & Time')
+                            ->required()
+                            ->default(now()),
+
                         Select::make('attendees')
                             ->label('Other Sales Reps')
                             ->relationship('attendees', 'name')
                             ->multiple()
                             ->preload()
                             ->searchable()
+                            ->columnSpanFull()
                             ->visible(fn ($get) => $get('type') === 'Shared Meeting'),
-
-                        DateTimePicker::make('performed_at')
-                            ->label('Date & Time')
-                            ->required()
-                            ->default(now()),
-                    ]),
-
-                Section::make('Customer Context')
-                    ->columnSpanFull()
-                    ->columns(3)
-                    ->schema([
-                        Select::make('customer_id')
-                            ->relationship('customer', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->live(),
 
                         Select::make('contact_id')
                             ->label('Contact Person')
@@ -81,18 +99,12 @@ class ActivityForm
                             ->searchable()
                             ->preload()
                             ->visible(fn ($get) => $get('customer_id')),
-
-                        Select::make('project_id')
-                            ->label('Project')
-                            ->options(fn ($get) => Project::where('customer_id', $get('customer_id'))->pluck('title', 'id'))
-                            ->searchable()
-                            ->preload()
-                            ->visible(fn ($get) => $get('customer_id')),
                     ]),
 
+                // Interaction Details (hidden until project is selected)
                 Section::make('Interaction Details')
                     ->columns(2)
-                    ->visible(fn ($get) => in_array($get('type'), ['Online Meeting', 'In-person Meeting', 'Shared Meeting', 'Demo', 'Presentation']))
+                    ->visible(fn ($get) => filled($get('project_id')) && in_array($get('type'), ['Online Meeting', 'In-person Meeting', 'Shared Meeting', 'Demo', 'Presentation']))
                     ->schema([
                         TextInput::make('location')
                             ->maxLength(255)
@@ -130,37 +142,40 @@ class ActivityForm
                             ]),
                     ]),
 
-                Section::make('Follow-up & Planning')
-                    ->columnSpanFull()
-                    ->columns(2)
+                // Follow-up & Planning + Notes & Feedback (side-by-side, hidden until project selected)
+                Grid::make(2)
+                    ->visible(fn ($get) => filled($get('project_id')))
                     ->schema([
-                        Toggle::make('is_worth_keeping')
-                            ->label('Is this lead/project worth keeping?')
-                            ->default(true),
-
-                        DatePicker::make('next_contact_date')
-                            ->label('Next Contact Date'),
-
-                        Textarea::make('follow_up_notes')
-                            ->columnSpanFull()
-                            ->rows(2),
-                    ]),
-
-                Section::make('Notes & Feedback')
-                    ->columnSpanFull()
-                    ->schema([
-                        Textarea::make('description')
-                            ->label('Summary Notes')
-                            ->rows(3)
-                            ->columnSpanFull(),
-
-                        Grid::make(2)
-                            ->visible(fn ($get) => in_array($get('type'), ['Online Meeting', 'In-person Meeting', 'Shared Meeting', 'Demo', 'Presentation']))
+                        Section::make('Follow-up & Planning')
+                            ->columns(2)
                             ->schema([
-                                Textarea::make('purpose')->rows(2),
-                                Textarea::make('expectations')->rows(2),
-                                Textarea::make('targets')->rows(2),
-                                Textarea::make('stakeholder_feedback')->rows(2),
+                                Toggle::make('is_worth_keeping')
+                                    ->label('Is this lead/project worth keeping?')
+                                    ->default(true),
+
+                                DatePicker::make('next_contact_date')
+                                    ->label('Next Contact Date'),
+
+                                Textarea::make('follow_up_notes')
+                                    ->columnSpanFull()
+                                    ->rows(2),
+                            ]),
+
+                        Section::make('Notes & Feedback')
+                            ->schema([
+                                Textarea::make('description')
+                                    ->label('Summary Notes')
+                                    ->rows(3)
+                                    ->columnSpanFull(),
+
+                                Grid::make(2)
+                                    ->visible(fn ($get) => in_array($get('type'), ['Online Meeting', 'In-person Meeting', 'Shared Meeting', 'Demo', 'Presentation']))
+                                    ->schema([
+                                        Textarea::make('purpose')->rows(2),
+                                        Textarea::make('expectations')->rows(2),
+                                        Textarea::make('targets')->rows(2),
+                                        Textarea::make('stakeholder_feedback')->rows(2),
+                                    ]),
                             ]),
                     ]),
             ]);
