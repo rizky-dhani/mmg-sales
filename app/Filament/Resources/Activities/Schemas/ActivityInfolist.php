@@ -18,7 +18,7 @@ class ActivityInfolist
                     ->columnSpanFull()
                     ->schema([
                         Section::make('Core Information')
-                            ->columns(2)
+                            ->columns(4)
                             ->schema([
                                 TextEntry::make('project.project_code')
                                     ->label('Project Code'),
@@ -41,7 +41,7 @@ class ActivityInfolist
                             ]),
 
                         Section::make('Interaction Details')
-                            ->columns(2)
+                            ->columns(4)
                             ->schema([
                                 TextEntry::make('location')
                                     ->placeholder('-'),
@@ -73,7 +73,7 @@ class ActivityInfolist
                             ]),
 
                         Section::make('Follow-up')
-                            ->columns(2)
+                            ->columns(3)
                             ->schema([
                                 TextEntry::make('next_contact_date')
                                     ->label('Next Contact Date')
@@ -89,7 +89,7 @@ class ActivityInfolist
                             ]),
 
                         Section::make('Notes & Feedback')
-                            ->columns(2)
+                            ->columns(4)
                             ->schema([
                                 TextEntry::make('description')
                                     ->label('Summary')
