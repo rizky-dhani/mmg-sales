@@ -56,6 +56,11 @@ class ActivitiesTable
                     ->searchable()
                     ->sortable(),
 
+                TextColumn::make('project.project_code')
+                    ->label('Project Code')
+                    ->searchable()
+                    ->sortable(),
+
                 TextColumn::make('project.title')
                     ->label('Project')
                     ->searchable()
