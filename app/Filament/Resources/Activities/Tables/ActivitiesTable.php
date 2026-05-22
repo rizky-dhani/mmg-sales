@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Activities\Tables;
 
 use App\Exports\ActivitiesExport;
-use App\Filament\Resources\Projects\ProjectResource;
 use App\Filament\Traits\HasVisibilityScope;
 use App\Models\Activity;
 use Carbon\Carbon;
@@ -101,8 +100,6 @@ class ActivitiesTable
                     }),
             ])
             ->recordActions([
-                ProjectResource::getChecklistAction(Action::class)
-                    ->visible(fn ($record) => $record->project_id),
                 ViewAction::make(),
                 EditAction::make()
                     ->visible(fn (Activity $record) => self::canModifyRecord($record, 'user_id')),
