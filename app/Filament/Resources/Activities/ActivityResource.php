@@ -31,7 +31,7 @@ class ActivityResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
-    protected static ?string $recordTitleAttribute = 'subject';
+    protected static ?string $recordTitleAttribute = 'activity_code';
 
     public static function form(Schema $schema): Schema
     {
