@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Activities\Tables;
 use App\Exports\ActivitiesExport;
 use App\Filament\Resources\Projects\ProjectResource;
 use App\Filament\Traits\HasVisibilityScope;
+use App\Models\Activity;
 use Carbon\Carbon;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
