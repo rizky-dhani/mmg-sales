@@ -87,6 +87,7 @@ class ActivityInfolist
                             ]),
 
                         Section::make('Notes & Feedback')
+                            ->columnSpanFull()
                             ->columns(4)
                             ->schema([
                                 TextEntry::make('description')
