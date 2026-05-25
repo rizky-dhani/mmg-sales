@@ -148,7 +148,6 @@ class OrderForm
                                     ->label('Sales Rep')
                                     ->options(fn () => Position::where('level', 8)->pluck('name', 'id'))
                                     ->default($user?->position_id)
-                                    ->required()
                                     ->preload()
                                     ->searchable(),
                                 Select::make('pm_jpm_pe_position_id')
@@ -161,21 +160,18 @@ class OrderForm
                                     ->label('Supervisor')
                                     ->options(fn () => Position::where('level', 4)->pluck('name', 'id'))
                                     ->default(fn () => $findAncestorByLevel($userPosition, 4))
-                                    ->required()
                                     ->preload()
                                     ->searchable(),
                                 Select::make('rsm_asm_position_id')
                                     ->label('RSM/ASM')
                                     ->options(fn () => Position::where('level', 3)->pluck('name', 'id'))
                                     ->default(fn () => $findAncestorByLevel($userPosition, 3))
-                                    ->required()
                                     ->preload()
                                     ->searchable(),
                                 Select::make('head_position_id')
                                     ->label('Head')
                                     ->options(fn () => Position::where('level', 2)->pluck('name', 'id'))
                                     ->default(fn () => $findAncestorByLevel($userPosition, 2))
-                                    ->required()
                                     ->preload()
                                     ->searchable(),
                             ]),
@@ -304,6 +300,7 @@ class OrderForm
                                             ->numeric()
                                             ->prefix('IDR')
                                             ->live()
+                                            ->readOnly(fn ($get) => ! $get('principal_id') || ! $get('product_id'))
                                             ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
                                             ->columnSpan(1),
                                     ]),
