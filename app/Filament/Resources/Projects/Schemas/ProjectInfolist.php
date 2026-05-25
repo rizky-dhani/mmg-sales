@@ -39,7 +39,8 @@ class ProjectInfolist
                             ->copyable(),
                         TextEntry::make('phone')
                             ->copyable(),
-                        TextEntry::make('estimated_value')
+                        TextEntry::make('estimated_revenue')
+                            ->label('Expected Revenue')
                             ->money('IDR'),
                         TextEntry::make('confidence_level')
                             ->label('Confidence')
