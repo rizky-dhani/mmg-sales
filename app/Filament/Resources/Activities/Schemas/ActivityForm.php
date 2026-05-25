@@ -116,6 +116,7 @@ class ActivityForm
                             ->visible(fn ($get) => in_array($get('type'), ['Online Meeting', 'In-person Meeting', 'Shared Meeting', 'Demo', 'Presentation']))
                             ->schema([
                                 TextInput::make('location')
+                                    ->columnSpanFull()
                                     ->maxLength(255)
                                     ->visible(fn ($get) => in_array($get('type'), ['In-person Meeting', 'Shared Meeting'])),
 
@@ -158,6 +159,7 @@ class ActivityForm
                                 Hidden::make('duration_minutes'),
 
                                 Select::make('outcome')
+                                    ->columnSpanFull()
                                     ->options([
                                         'Interested' => 'Interested',
                                         'No Answer' => 'No Answer',
