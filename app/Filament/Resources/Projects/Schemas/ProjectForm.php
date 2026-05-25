@@ -87,7 +87,9 @@ class ProjectForm
                                         Select::make('product_ids')
                                             ->label('Products')
                                             ->multiple()
-                                            ->options(fn ($get) => Product::where('principal_id', $get('principal_id'))->pluck('name', 'id'))
+                                            ->options(fn ($get) => $get('principal_id')
+                                                ? Product::where('principal_id', $get('principal_id'))->pluck('name', 'id')
+                                                : [])
                                             ->required()
                                             ->searchable(),
                                     ])
