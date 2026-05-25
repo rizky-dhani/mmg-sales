@@ -78,7 +78,7 @@ class OrderForm
                                     ->required()
                                     ->searchable(),
                                 Select::make('sales_type_id')
-                                    ->label('Sales Type')
+                                    ->label('Purchase Type')
                                     ->relationship('salesType', 'name')
                                     ->required()
                                     ->preload()
