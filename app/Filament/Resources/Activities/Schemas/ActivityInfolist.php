@@ -70,7 +70,7 @@ class ActivityInfolist
                                     ->suffix(' min'),
                             ]),
 
-                        Section::make('Follow-up & Planning')
+                        Section::make('Follow-up')
                             ->columns(3)
                             ->schema([
                                 TextEntry::make('next_contact_date')
