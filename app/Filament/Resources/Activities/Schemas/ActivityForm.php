@@ -57,6 +57,7 @@ class ActivityForm
                 // Core Information + Interaction Details (side-by-side, hidden until project selected)
                 Grid::make(2)
                     ->visible(fn ($get) => filled($get('project_id')))
+                    ->columnSpanFull()
                     ->schema([
                         Section::make('Core Information')
                             ->columns(2)
@@ -170,6 +171,7 @@ class ActivityForm
                 // Follow-up & Planning + Notes & Feedback (side-by-side, hidden until project selected)
                 Grid::make(2)
                     ->visible(fn ($get) => filled($get('project_id')))
+                    ->columnSpanFull()
                     ->schema([
                         Section::make('Follow-up & Planning')
                             ->columns(2)
