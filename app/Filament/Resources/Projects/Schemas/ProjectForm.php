@@ -34,10 +34,11 @@ class ProjectForm
                                     ->searchable()
                                     ->preload()
                                     ->required()
-                                    ->live(),
+                                    ->live()
+                                    ->afterStateUpdated(fn (callable $set) => $set('contact_person', null)),
                                 Select::make('contact_person')
                                     ->label('Contact Person')
-                                    ->relationship('contactPerson', 'name')
+                                    ->options(fn ($get) => \App\Models\Contact::where('customer_id', $get('customer_id'))->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
                                     ->visible(fn ($get) => $get('customer_id')),
