@@ -130,7 +130,6 @@ class ProjectsTable
                 TrashedFilter::make(),
             ])
             ->recordActions([
-                ProjectResource::getChecklistAction(Action::class),
                 ViewAction::make(),
                 EditAction::make()
                     ->visible(fn (Project $record) => self::canModifyRecord($record, 'created_by')),
