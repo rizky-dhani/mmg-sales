@@ -289,7 +289,8 @@ class OrderForm
                                             ->label('Unit Price')
                                             ->numeric()
                                             ->prefix('IDR')
-                                            ->readOnly()
+                                            ->live()
+                                            ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
                                             ->columnSpan(1),
                                     ]),
                                 Grid::make(1)
