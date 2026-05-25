@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use App\Models\Position;
 use App\Models\Principal;
 use App\Models\Product;
 use App\Models\Project;
@@ -24,6 +25,19 @@ class OrderForm
         /** @var User $user */
         $user = auth()->user();
         $userPosition = $user?->position;
+
+        $findAncestorByLevel = function (?Position $position, int $targetLevel): ?int {
+            if (! $position) {
+                return null;
+            }
+
+            $current = $position;
+            while ($current && $current->level > $targetLevel) {
+                $current = $current->parent;
+            }
+
+            return $current?->id;
+        };
 
         return $schema
             ->components([
@@ -130,40 +144,46 @@ class OrderForm
                                     ->required()
                                     ->preload()
                                     ->searchable(),
-                                Select::make('sr_position_id')
-                                    ->label('Sales Rep')
-                                    ->relationship('srPosition', 'name')
-                                    ->default($user?->position_id)
-                                    ->required()
-                                    ->preload()
-                                    ->searchable(),
-                                Select::make('spv_position_id')
-                                    ->label('Supervisor')
-                                    ->relationship('spvPosition', 'name')
-                                    ->default($userPosition?->parent_id)
+                                Select::make('head_position_id')
+                                    ->label('Head')
+                                    ->options(fn () => Position::where('level', 2)->pluck('name', 'id'))
+                                    ->default(fn () => $findAncestorByLevel($userPosition, 2))
                                     ->required()
                                     ->preload()
                                     ->searchable(),
                                 Select::make('rsm_asm_position_id')
                                     ->label('RSM/ASM')
-                                    ->relationship('rsmAsmPosition', 'name')
-                                    ->default($userPosition?->parent?->parent_id)
+                                    ->options(fn () => Position::where('level', 3)->pluck('name', 'id'))
+                                    ->default(fn () => $findAncestorByLevel($userPosition, 3))
                                     ->required()
                                     ->preload()
                                     ->searchable(),
-                                Select::make('head_position_id')
-                                    ->label('Head')
-                                    ->relationship('headPosition', 'name')
-                                    ->default($userPosition?->parent?->parent?->parent_id)
+                                Select::make('spv_position_id')
+                                    ->label('Supervisor')
+                                    ->options(fn () => Position::where('level', 4)->pluck('name', 'id'))
+                                    ->default(fn () => $findAncestorByLevel($userPosition, 4))
                                     ->required()
                                     ->preload()
                                     ->searchable(),
                                 Select::make('pm_jpm_pe_position_id')
                                     ->label('PM/JPM/PE')
-                                    ->relationship('pmJpmPePosition', 'name')
+                                    ->options(fn () => Position::whereBetween('level', [5, 7])->pluck('name', 'id'))
                                     ->default(null)
                                     ->preload()
                                     ->searchable(),
+                                Select::make('sr_position_id')
+                                    ->label('Sales Rep')
+                                    ->options(fn () => Position::where('level', 8)->pluck('name', 'id'))
+                                    ->default($user?->position_id)
+                                    ->required()
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('user_position_id')
+                                    ->label('Position')
+                                    ->options(fn () => $user?->position ? [$user->position->id => $user->position->name] : [])
+                                    ->default($user?->position_id)
+                                    ->disabled()
+                                    ->dehydrated(false),
                             ]),
 
                         Select::make('project_id')

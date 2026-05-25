@@ -24,7 +24,6 @@ class Project extends Model
         'status',
         'source',
         'priority',
-        'confidence_level',
         'estimated_value',
         'estimated_revenue',
         'estimated_completion_date',
@@ -39,7 +38,6 @@ class Project extends Model
     ];
 
     protected $casts = [
-        'confidence_level' => 'integer',
         'estimated_value' => 'decimal:2',
         'estimated_revenue' => 'decimal:2',
         'estimated_completion_date' => 'date',
@@ -60,28 +58,6 @@ class Project extends Model
                 $project->created_by = auth()->id();
             }
         });
-    }
-
-    public function milestones(): BelongsToMany
-    {
-        return $this->belongsToMany(Milestone::class, 'project_milestone')
-            ->using(ProjectMilestone::class)
-            ->withPivot(['is_completed', 'completed_at', 'notes'])
-            ->withTimestamps();
-    }
-
-    public function calculateConfidenceLevel(): int
-    {
-        return (int) $this->milestones()
-            ->wherePivot('is_completed', true)
-            ->sum('weight');
-    }
-
-    public function updateConfidenceLevel(): void
-    {
-        $this->updateQuietly([
-            'confidence_level' => $this->calculateConfidenceLevel(),
-        ]);
     }
 
     public function getAgingAttribute(): string

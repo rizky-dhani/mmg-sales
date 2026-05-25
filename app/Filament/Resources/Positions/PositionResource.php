@@ -23,7 +23,7 @@ class PositionResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'System Settings';
 
-    protected static ?string $navigationParentItem = 'Departments';
+    protected static ?string $navigationParentItem = 'Users';
 
     protected static ?int $navigationSort = 2;
 
