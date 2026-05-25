@@ -4,8 +4,10 @@ namespace App\Filament\Resources\Activities\Schemas;
 
 use App\Models\Contact;
 use App\Models\Project;
+use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -129,14 +131,30 @@ class ActivityForm
                                     ->visible(fn ($get) => $get('type') === 'Messaging'),
 
                                 DateTimePicker::make('visit_started_at')
-                                    ->label('Started At'),
+                                    ->label('Started At')
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                        $endedAt = $get('visit_ended_at');
+                                        if ($state && $endedAt) {
+                                            $start = Carbon::parse($state);
+                                            $end = Carbon::parse($endedAt);
+                                            $set('duration_minutes', $start->diffInMinutes($end));
+                                        }
+                                    }),
 
                                 DateTimePicker::make('visit_ended_at')
-                                    ->label('Ended At'),
+                                    ->label('Ended At')
+                                    ->live()
+                                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                                        $startedAt = $get('visit_started_at');
+                                        if ($startedAt && $state) {
+                                            $start = Carbon::parse($startedAt);
+                                            $end = Carbon::parse($state);
+                                            $set('duration_minutes', $start->diffInMinutes($end));
+                                        }
+                                    }),
 
-                                TextInput::make('duration_minutes')
-                                    ->numeric()
-                                    ->suffix('minutes'),
+                                Hidden::make('duration_minutes'),
 
                                 Select::make('outcome')
                                     ->options([
