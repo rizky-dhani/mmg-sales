@@ -84,17 +84,6 @@ class ProjectsTable
                     ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('d M Y')) : '-')
                     ->sortable(),
 
-                TextColumn::make('confidence_level')
-                    ->label('Confidence')
-                    ->formatStateUsing(fn ($state) => $state.'%')
-                    ->badge()
-                    ->color(fn ($state) => match (true) {
-                        $state >= 80 => 'success',
-                        $state >= 50 => 'warning',
-                        default => 'danger',
-                    })
-                    ->sortable(),
-
                 TextColumn::make('source')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => str_replace('_', ' ', ucfirst($state)))
