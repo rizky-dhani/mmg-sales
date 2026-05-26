@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
+use App\Models\Contact;
 use App\Models\Principal;
 use App\Models\Product;
 use App\Models\User;
@@ -38,7 +39,7 @@ class ProjectForm
                                     ->afterStateUpdated(fn (callable $set) => $set('contact_person', null)),
                                 Select::make('contact_person')
                                     ->label('Contact Person')
-                                    ->options(fn ($get) => \App\Models\Contact::where('customer_id', $get('customer_id'))->pluck('name', 'id'))
+                                    ->options(fn ($get) => Contact::where('customer_id', $get('customer_id'))->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
                                     ->visible(fn ($get) => $get('customer_id')),
@@ -59,8 +60,7 @@ class ProjectForm
                             ->schema([
                                 TextInput::make('email')
                                     ->label('Email Address')
-                                    ->email()
-                                    ->required(),
+                                    ->email(),
                                 TextInput::make('phone')
                                     ->label('Phone Number')
                                     ->tel()
