@@ -13,7 +13,6 @@ class ViewProject extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            ProjectResource::getChecklistAction(),
             EditAction::make(),
         ];
     }

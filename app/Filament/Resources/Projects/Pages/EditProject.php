@@ -29,7 +29,6 @@ class EditProject extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            ProjectResource::getChecklistAction(),
             DeleteAction::make(),
             ForceDeleteAction::make(),
             RestoreAction::make(),
