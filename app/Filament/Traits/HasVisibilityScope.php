@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\Builder;
 trait HasVisibilityScope
 {
     /**
-     * Apply visibility scope based on user role and hierarchy.
-     * Staff: own records only
-     * Supervisor: oversee subordinate records (view-only)
-     * RSM/ASM: oversee their territory/position hierarchy
-     * Director: oversee all Manager (RSM/ASM) and below records (view-only)
+     * Apply visibility scope based on position hierarchy (AND) and territory hierarchy (AND),
+     * with direct reports (OR) included via manager_id.
+     *
+     * - Super Admin: sees everything
+     * - Director: sees all sales team records (view-only)
+     * - Staff: own records only
+     * - Others: own records + subordinates resolved via position AND territory intersection
      */
     public static function applyVisibilityScope(Builder $query, string $userColumn = 'user_id'): Builder
     {
@@ -27,7 +29,7 @@ trait HasVisibilityScope
             return $query;
         }
 
-        // Director - can see all records from Manager (RSM/ASM) and below
+        // Director - can see all records from the sales team
         if ($user->hasRole('Director')) {
             $salesTeamIds = self::getSalesTeamUserIds();
 
@@ -39,10 +41,10 @@ trait HasVisibilityScope
             return $query->where($userColumn, $user->id);
         }
 
-        // Manager, Supervisor, RSM, ASM - oversee subordinate records
-        if ($user->hasRole(['Manager', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'])) {
-            $subordinateIds = self::getSubordinateUserIds($user);
+        // Other users: resolve subordinates via position + territory AND logic
+        $subordinateIds = self::getSubordinateUserIds($user);
 
+        if (! empty($subordinateIds)) {
             return $query->where(function ($q) use ($user, $userColumn, $subordinateIds) {
                 $q->where($userColumn, $user->id) // Own records
                     ->orWhereIn($userColumn, $subordinateIds); // Subordinate records
@@ -55,9 +57,10 @@ trait HasVisibilityScope
 
     /**
      * Check if user can edit/delete a specific record.
-     * Staff: only own records
-     * Supervisor+: oversee but cannot modify subordinate records
-     * Director: view-only, cannot modify any records
+     *
+     * - Super Admin: can modify anything
+     * - Director: view-only (cannot modify any records)
+     * - Everyone else: can only modify their own records
      */
     public static function canModifyRecord($record, string $userColumn = 'user_id'): bool
     {
@@ -77,46 +80,65 @@ trait HasVisibilityScope
             return false;
         }
 
-        // Staff, Manager, Supervisor, RSM, ASM can only modify their own records
-        if ($user->hasRole(['Staff', 'Manager', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'])) {
-            return $record->{$userColumn} === $user->id;
-        }
-
-        return false;
+        // Everyone else: can only modify their own records
+        return $record->{$userColumn} === $user->id;
     }
 
     /**
-     * Get IDs of all subordinate users based on position hierarchy and territory.
+     * Get IDs of all subordinate users based on position AND territory hierarchy,
+     * plus direct reports (manager_id).
+     *
+     * Logic:
+     *   subordinateIds = (positionDescendants ∩ territoryDescendants) ∪ directReports
+     *
+     * If either position or territory chain is empty for the user, the other is used alone
+     * (so users with only a position or only a territory still get appropriate scoping).
      */
     private static function getSubordinateUserIds($user): array
     {
-        $subordinateIds = [];
+        $positionUserIds = [];
+        $territoryUserIds = [];
 
-        // Get users with positions that report to this user's position
+        // Users in descendant positions (full tree via parent_id hierarchy)
         if ($user->position) {
-            $subordinatePositionIds = $user->position->children()->pluck('id')->toArray();
-            $positionUserIds = User::whereIn('position_id', $subordinatePositionIds)
+            $descendantPositionIds = $user->position->getAllDescendantIds();
+
+            $positionUserIds = User::whereIn('position_id', $descendantPositionIds)
+                ->where('id', '!=', $user->id)
                 ->pluck('id')
                 ->toArray();
-            $subordinateIds = array_merge($subordinateIds, $positionUserIds);
         }
 
-        // Get users in subordinate territories
+        // Users in descendant territories (full tree via parent_id hierarchy)
         if ($user->territory) {
             $descendantTerritoryIds = $user->territory->getAllDescendantIds();
+
             $territoryUserIds = User::whereIn('territory_id', $descendantTerritoryIds)
+                ->where('id', '!=', $user->id)
                 ->pluck('id')
                 ->toArray();
-            $subordinateIds = array_merge($subordinateIds, $territoryUserIds);
         }
 
-        // Get direct subordinates (users who have this user as manager)
-        $directSubordinateIds = User::where('manager_id', $user->id)
+        // AND: intersection when BOTH position and territory chains exist
+        $hasPositionSubordinates = ! empty($positionUserIds);
+        $hasTerritorySubordinates = ! empty($territoryUserIds);
+
+        if ($hasPositionSubordinates && $hasTerritorySubordinates) {
+            $subordinateIds = array_intersect($positionUserIds, $territoryUserIds);
+        } elseif ($hasPositionSubordinates) {
+            $subordinateIds = $positionUserIds;
+        } elseif ($hasTerritorySubordinates) {
+            $subordinateIds = $territoryUserIds;
+        } else {
+            $subordinateIds = [];
+        }
+
+        // OR: add direct reports (users who have this user as manager)
+        $directReportIds = User::where('manager_id', $user->id)
             ->pluck('id')
             ->toArray();
-        $subordinateIds = array_merge($subordinateIds, $directSubordinateIds);
 
-        return array_unique($subordinateIds);
+        return array_unique(array_merge($subordinateIds, $directReportIds));
     }
 
     /**

@@ -13,7 +13,7 @@ class SalesOverview extends BaseWidget
 
     public static function canView(): bool
     {
-        return false;
+        return true;
     }
 
     protected function getStats(): array
