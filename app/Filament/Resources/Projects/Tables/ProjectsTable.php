@@ -2,11 +2,9 @@
 
 namespace App\Filament\Resources\Projects\Tables;
 
-use App\Filament\Resources\Projects\ProjectResource;
 use App\Filament\Traits\HasVisibilityScope;
 use App\Models\Project;
 use Carbon\Carbon;
-use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -80,8 +78,8 @@ class ProjectsTable
 
                 TextColumn::make('estimated_completion_date')
                     ->label('Est. Finish')
-                    ->date('d M Y')
-                    ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('d M Y')) : '-')
+                    ->date('M Y')
+                    ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('M Y')) : '-')
                     ->sortable(),
 
                 TextColumn::make('source')
