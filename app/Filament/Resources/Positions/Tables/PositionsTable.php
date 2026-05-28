@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Positions\Tables;
 
 use App\Models\Department;
-use App\Models\Position;
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -11,21 +10,21 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 class PositionsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->query(fn (Builder $query): Builder => $query
+            ->modifyQueryUsing(fn (Builder $query): Builder => $query
                 ->orderBy(
                     Department::select('name')
                         ->whereColumn('departments.id', 'positions.department_id')
                 )
                 ->orderBy('level')
                 ->orderBy(
-                    Position::select('level')
-                        ->whereColumn('positions.id', 'positions.parent_id')
+                    DB::raw('(SELECT level FROM positions AS pos_parent WHERE pos_parent.id = positions.parent_id)')
                 )
             )
             ->columns([
