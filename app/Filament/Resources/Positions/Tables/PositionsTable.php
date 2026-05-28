@@ -15,13 +15,13 @@ class PositionsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')
-                    ->label('Position Name')
+                TextColumn::make('code')
+                    ->label('Code')
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('code')
-                    ->label('Code')
+                TextColumn::make('name')
+                    ->label('Position Name')
                     ->searchable()
                     ->sortable(),
 
