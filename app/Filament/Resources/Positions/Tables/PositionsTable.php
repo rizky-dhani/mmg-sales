@@ -14,6 +14,7 @@ class PositionsTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('level', 'asc')
             ->columns([
                 TextColumn::make('code')
                     ->label('Code')
