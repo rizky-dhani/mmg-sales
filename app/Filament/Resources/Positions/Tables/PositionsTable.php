@@ -2,19 +2,32 @@
 
 namespace App\Filament\Resources\Positions\Tables;
 
+use App\Models\Department;
+use App\Models\Position;
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class PositionsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('level', 'asc')
+            ->query(fn (Builder $query): Builder => $query
+                ->orderBy(
+                    Department::select('name')
+                        ->whereColumn('departments.id', 'positions.department_id')
+                )
+                ->orderBy('level')
+                ->orderBy(
+                    Position::select('level')
+                        ->whereColumn('positions.id', 'positions.parent_id')
+                )
+            )
             ->columns([
                 TextColumn::make('code')
                     ->label('Code')
