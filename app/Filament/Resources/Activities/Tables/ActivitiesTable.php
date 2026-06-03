@@ -15,6 +15,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ActivitiesTable
@@ -25,7 +26,37 @@ class ActivitiesTable
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-                return self::applyVisibilityScope($query, 'user_id');
+                $user = auth()->user();
+
+                if (! $user) {
+                    return $query;
+                }
+
+                // Apply base visibility scope (user_id-based filtering)
+                self::applyVisibilityScope($query, 'user_id');
+
+                // For non-Super Admin users, also include activities on projects
+                // where the user is the creator or a collaborator.
+                // This ensures project creators and assignees can see all activities
+                // related to their projects, even if they didn't personally perform them.
+                if (! $user->hasRole('Super Admin')) {
+                    $projectIds = DB::table('project_collaborators')
+                        ->where('user_id', $user->id)
+                        ->pluck('project_id')
+                        ->merge(
+                            DB::table('projects')
+                                ->where('created_by', $user->id)
+                                ->pluck('id')
+                        )
+                        ->unique()
+                        ->toArray();
+
+                    if (! empty($projectIds)) {
+                        $query->orWhereIn('project_id', $projectIds);
+                    }
+                }
+
+                return $query;
             })
             ->columns([
                 TextColumn::make('activity_code')

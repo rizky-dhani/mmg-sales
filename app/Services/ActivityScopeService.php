@@ -36,13 +36,19 @@ class ActivityScopeService
     }
 
     /**
-     * Get project IDs where the user is a collaborator.
+     * Get project IDs where the user is a collaborator or creator.
      */
     public function getCollaboratorProjectIds(User $user): Collection
     {
-        return \DB::table('project_collaborators')
+        $collaboratorIds = \DB::table('project_collaborators')
             ->where('user_id', $user->id)
             ->pluck('project_id');
+
+        $creatorIds = \DB::table('projects')
+            ->where('created_by', $user->id)
+            ->pluck('id');
+
+        return $collaboratorIds->merge($creatorIds)->unique();
     }
 
     /**
