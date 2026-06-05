@@ -103,6 +103,33 @@ class DatabaseBackup extends Page implements HasTable
 
     private function findDumpBinary(): ?string
     {
+        if (PHP_OS_FAMILY === 'Windows') {
+            // Try `where` command (Windows equivalent of `which`)
+            foreach (['mysqldump.exe', 'mariadb-dump.exe', 'mysqldump', 'mariadb-dump'] as $binary) {
+                $result = Process::run("where {$binary} 2>nul");
+
+                if ($result->successful() && ($path = trim(explode("\n", $result->output())[0])) !== '') {
+                    return $path;
+                }
+            }
+
+            // Search in Laragon MySQL/MariaDB directories
+            $searchPatterns = [
+                'C:/laragon/bin/mariadb/mariadb*/bin/mariadb-dump.exe',
+                'C:/laragon/bin/mysql/mysql*/bin/mysqldump.exe',
+            ];
+
+            foreach ($searchPatterns as $pattern) {
+                $matches = glob($pattern);
+
+                if (! empty($matches)) {
+                    return $matches[0];
+                }
+            }
+
+            return null;
+        }
+
         $candidates = ['mariadb-dump', 'mysqldump'];
 
         // Check using `which` for binaries on PATH
