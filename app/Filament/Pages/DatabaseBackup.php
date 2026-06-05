@@ -46,8 +46,20 @@ class DatabaseBackup extends Page implements HasTable
                 ->icon('heroicon-o-archive-box-arrow-down')
                 ->requiresConfirmation()
                 ->modalHeading('Run Database Backup')
-                ->modalDescription('This will create a backup using mysqldump. Continue?')
+                ->modalDescription('This will dump the database and save a .sql file to storage. Continue?')
                 ->action(function (): void {
+                    $dumpBinary = $this->findDumpBinary();
+
+                    if ($dumpBinary === null) {
+                        Notification::make()
+                            ->title('Database dump tool not found')
+                            ->body('Install mysql-client or mariadb-client (e.g., apt install mariadb-client).')
+                            ->danger()
+                            ->send();
+
+                        return;
+                    }
+
                     $filename = 'mmg_sales-'.now()->format('Y-m-d-H-i-s').'.sql';
                     $dir = storage_path('backups/db');
 
@@ -64,7 +76,7 @@ class DatabaseBackup extends Page implements HasTable
                     $port = config("database.connections.{$connection}.port");
                     $database = config("database.connections.{$connection}.database");
 
-                    $result = Process::run("mysqldump --user={$user} --password={$password} --host={$host} --port={$port} {$database} > {$path}");
+                    $result = Process::run("{$dumpBinary} --user={$user} --password=".escapeshellarg($password)." --host={$host} --port={$port} {$database} > {$path}");
 
                     if ($result->successful()) {
                         Backup::create([
@@ -87,6 +99,36 @@ class DatabaseBackup extends Page implements HasTable
                     }
                 }),
         ];
+    }
+
+    private function findDumpBinary(): ?string
+    {
+        $candidates = ['mariadb-dump', 'mysqldump'];
+
+        // Check using `which` for binaries on PATH
+        foreach ($candidates as $binary) {
+            $result = Process::run("which {$binary} 2>/dev/null");
+
+            if ($result->successful() && ($path = trim($result->output())) !== '') {
+                return $path;
+            }
+        }
+
+        // Fallback: common installation paths
+        $commonPaths = [
+            '/usr/bin/mysqldump',
+            '/usr/local/bin/mysqldump',
+            '/usr/bin/mariadb-dump',
+            '/usr/local/bin/mariadb-dump',
+        ];
+
+        foreach ($commonPaths as $path) {
+            if (file_exists($path) && is_executable($path)) {
+                return $path;
+            }
+        }
+
+        return null;
     }
 
     public function table(Table $table): Table
