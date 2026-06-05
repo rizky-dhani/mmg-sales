@@ -2,14 +2,24 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\Backup;
 use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\EmbeddedTable;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Concerns\InteractsWithTable;
+use Filament\Tables\Contracts\HasTable;
+use Filament\Tables\Table;
 use Illuminate\Support\Facades\Process;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
-class DatabaseBackup extends Page
+class DatabaseBackup extends Page implements HasTable
 {
+    use InteractsWithTable;
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-circle-stack';
 
     protected static ?string $navigationLabel = 'Database Backup';
@@ -57,6 +67,12 @@ class DatabaseBackup extends Page
                     $result = Process::run("mysqldump --user={$user} --password={$password} --host={$host} --port={$port} {$database} > {$path}");
 
                     if ($result->successful()) {
+                        Backup::create([
+                            'filename' => $filename,
+                            'size' => file_exists($path) ? filesize($path) : 0,
+                            'created_by' => auth()->id(),
+                        ]);
+
                         Notification::make()
                             ->title('Backup completed successfully')
                             ->body("Saved as {$filename}")
@@ -73,47 +89,73 @@ class DatabaseBackup extends Page
         ];
     }
 
-    public function getBackupFiles(): array
+    public function table(Table $table): Table
     {
-        $dir = storage_path('backups/db');
-
-        if (! is_dir($dir)) {
-            return [];
-        }
-
-        $files = collect(glob($dir.'/*.sql'))
-            ->map(fn (string $path): array => [
-                'filename' => basename($path),
-                'size' => filesize($path),
-                'last_modified' => filemtime($path),
+        return $table
+            ->query(Backup::query()->with('creator'))
+            ->defaultSort('created_at', 'desc')
+            ->columns([
+                TextColumn::make('filename')
+                    ->label('Filename')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('size')
+                    ->label('Size')
+                    ->formatStateUsing(fn (int $state): string => $state > 1024 * 1024
+                        ? number_format($state / 1024 / 1024, 2).' MB'
+                        : number_format($state / 1024, 1).' KB')
+                    ->sortable(),
+                TextColumn::make('creator.name')
+                    ->label('Created by')
+                    ->badge()
+                    ->color('gray')
+                    ->placeholder('—'),
+                TextColumn::make('created_at')
+                    ->label('Created at')
+                    ->dateTime('Y-m-d H:i:s')
+                    ->sortable(),
             ])
-            ->sortByDesc('last_modified')
-            ->values()
-            ->toArray();
+            ->recordActions([
+                ActionGroup::make([
+                    Action::make('download')
+                        ->label('Download')
+                        ->icon('heroicon-o-arrow-down-tray')
+                        ->color('gray')
+                        ->action(function (Backup $record): BinaryFileResponse {
+                            $path = storage_path('backups/db/'.basename($record->filename));
 
-        return $files;
+                            abort_unless(file_exists($path), 404);
+
+                            return response()->download($path);
+                        }),
+                    Action::make('delete')
+                        ->label('Delete')
+                        ->icon('heroicon-o-trash')
+                        ->color('danger')
+                        ->requiresConfirmation()
+                        ->action(function (Backup $record): void {
+                            $path = storage_path('backups/db/'.basename($record->filename));
+
+                            if (file_exists($path)) {
+                                unlink($path);
+                            }
+
+                            $record->delete();
+
+                            Notification::make()
+                                ->title('Backup deleted successfully')
+                                ->success()
+                                ->send();
+                        }),
+                ]),
+            ]);
     }
 
-    public function download(string $filename): BinaryFileResponse
+    public function content(Schema $schema): Schema
     {
-        $path = storage_path('backups/db/'.basename($filename));
-
-        abort_unless(file_exists($path), 404);
-
-        return response()->download($path);
-    }
-
-    public function deleteBackup(string $filename): void
-    {
-        $path = storage_path('backups/db/'.basename($filename));
-
-        if (file_exists($path)) {
-            unlink($path);
-        }
-
-        Notification::make()
-            ->title('Backup deleted successfully')
-            ->success()
-            ->send();
+        return $schema
+            ->components([
+                EmbeddedTable::make(),
+            ]);
     }
 }
