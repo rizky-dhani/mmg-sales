@@ -26,6 +26,8 @@ readonly class ReportFilterData
         public ?string $orderStatus = null,
         public ?string $paymentStatus = null,
         public ?string $projectStatus = null,
+        public ?string $projectSource = null,
+        public ?string $projectPriority = null,
         public ?string $cdNcdType = null,
         public array $userIds = [],
     ) {}
@@ -71,6 +73,8 @@ readonly class ReportFilterData
             $this->orderStatus,
             $this->paymentStatus,
             $this->projectStatus,
+            $this->projectSource,
+            $this->projectPriority,
             $this->cdNcdType,
             implode('-', $this->userIds),
         ];
@@ -110,6 +114,8 @@ readonly class ReportFilterData
             orderStatus: $data['order_status'] ?? null,
             paymentStatus: $data['payment_status'] ?? null,
             projectStatus: $data['project_status'] ?? null,
+            projectSource: $data['project_source'] ?? null,
+            projectPriority: $data['project_priority'] ?? null,
             cdNcdType: $data['cd_ncd_type'] ?? null,
             userIds: $data['user_ids'] ?? [],
         );

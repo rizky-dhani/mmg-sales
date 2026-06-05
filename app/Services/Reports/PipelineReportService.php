@@ -83,6 +83,14 @@ class PipelineReportService
             $query->where('status', $filters->projectStatus);
         }
 
+        if ($filters->projectSource) {
+            $query->where('source', $filters->projectSource);
+        }
+
+        if ($filters->projectPriority) {
+            $query->where('priority', $filters->projectPriority);
+        }
+
         return $query;
     }
 
@@ -101,6 +109,14 @@ class PipelineReportService
 
         if (! empty($filters->userIds)) {
             $comparisonQuery->whereIn('assigned_to', $filters->userIds);
+        }
+
+        if ($filters->projectSource) {
+            $comparisonQuery->where('source', $filters->projectSource);
+        }
+
+        if ($filters->projectPriority) {
+            $comparisonQuery->where('priority', $filters->projectPriority);
         }
 
         $wonProjects = (clone $comparisonQuery)->where('status', 'won')->count();
@@ -184,6 +200,8 @@ class PipelineReportService
             ->whereNotNull('closed_at')
             ->when($filters->userId, fn ($q) => $q->where('assigned_to', $filters->userId))
             ->when(! empty($filters->userIds), fn ($q) => $q->whereIn('assigned_to', $filters->userIds))
+            ->when($filters->projectSource, fn ($q) => $q->where('source', $filters->projectSource))
+            ->when($filters->projectPriority, fn ($q) => $q->where('priority', $filters->projectPriority))
             ->with(['customer:id,name', 'assignedUser:id,name'])
             ->orderByDesc('closed_at')
             ->limit(10)
@@ -206,6 +224,8 @@ class PipelineReportService
             ->whereNotNull('closed_at')
             ->when($filters->userId, fn ($q) => $q->where('assigned_to', $filters->userId))
             ->when(! empty($filters->userIds), fn ($q) => $q->whereIn('assigned_to', $filters->userIds))
+            ->when($filters->projectSource, fn ($q) => $q->where('source', $filters->projectSource))
+            ->when($filters->projectPriority, fn ($q) => $q->where('priority', $filters->projectPriority))
             ->with(['customer:id,name', 'assignedUser:id,name'])
             ->orderByDesc('closed_at')
             ->limit(10)
