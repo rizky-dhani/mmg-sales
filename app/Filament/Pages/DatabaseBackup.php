@@ -76,7 +76,17 @@ class DatabaseBackup extends Page implements HasTable
                     $port = config("database.connections.{$connection}.port");
                     $database = config("database.connections.{$connection}.database");
 
-                    $result = Process::run("{$dumpBinary} --user={$user} --password=".escapeshellarg($password)." --host={$host} --port={$port} {$database} > {$path}");
+                    $command = "{$dumpBinary} --user={$user} --password=".escapeshellarg($password)." --host={$host} --port={$port}";
+
+                    // MySQL 8.0+ mysqldump queries information_schema.COLUMN_STATISTICS
+                    // which doesn't exist in MariaDB — disable it for compatibility
+                    if (str_contains(basename($dumpBinary), 'mysql')) {
+                        $command .= ' --column-statistics=0';
+                    }
+
+                    $command .= " {$database} > {$path}";
+
+                    $result = Process::run($command);
 
                     if ($result->successful()) {
                         Backup::create([
