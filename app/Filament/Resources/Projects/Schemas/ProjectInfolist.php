@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
+use Carbon\Carbon;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
@@ -44,7 +45,7 @@ class ProjectInfolist
                             ->money('IDR'),
                         TextEntry::make('estimated_completion_date')
                             ->label('Expected Finish')
-                            ->date()
+                            ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('M Y')) : '-')
                             ->weight('bold'),
                         TextEntry::make('assignedUser.name')
                             ->label('Sales Rep'),
