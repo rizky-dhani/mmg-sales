@@ -48,6 +48,7 @@ class ProjectResource extends Resource
     {
         return [
             RelationManagers\CollaboratorsRelationManager::class,
+            RelationManagers\ActivitiesRelationManager::class,
         ];
     }
 

@@ -42,16 +42,10 @@ class ProjectInfolist
                         TextEntry::make('estimated_revenue')
                             ->label('Expected Revenue')
                             ->money('IDR'),
-                        TextEntry::make('confidence_level')
-                            ->label('Confidence')
-                            ->numeric()
-                            ->suffix('%')
-                            ->weight('bold')
-                            ->color(fn ($state) => match (true) {
-                                $state >= 80 => 'success',
-                                $state >= 50 => 'warning',
-                                default => 'danger',
-                            }),
+                        TextEntry::make('estimated_completion_date')
+                            ->label('Expected Finish')
+                            ->date()
+                            ->weight('bold'),
                         TextEntry::make('assignedUser.name')
                             ->label('Sales Rep'),
                         TextEntry::make('creator.name')
