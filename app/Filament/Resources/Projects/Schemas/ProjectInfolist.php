@@ -47,8 +47,9 @@ class ProjectInfolist
                             ->label('Expected Finish')
                             ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('M Y')) : '-')
                             ->weight('bold'),
-                        TextEntry::make('assignedUser.name')
-                            ->label('Sales Rep'),
+                        TextEntry::make('collaborators.name')
+                            ->label('Sales Rep')
+                            ->formatStateUsing(fn ($state, $record) => $record->collaborators->pluck('name')->join(', ')),
                         TextEntry::make('creator.name')
                             ->label('Created By'),
                     ]),
