@@ -65,7 +65,7 @@ class PipelineReportService
     private function buildBaseQuery(ReportFilterData $filters): Builder
     {
         $query = Project::query()
-            ->whereBetween('created_at', [$filters->startDate, $filters->endDate]);
+            ->whereBetween('projects.created_at', [$filters->startDate, $filters->endDate]);
 
         if ($filters->userId) {
             $query->whereHas('collaborators', fn ($q) => $q->where('user_id', $filters->userId));
