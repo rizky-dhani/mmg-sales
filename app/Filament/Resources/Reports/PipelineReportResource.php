@@ -17,9 +17,9 @@ class PipelineReportResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
-    protected static ?string $navigationLabel = 'Pipeline Report';
+    protected static ?string $navigationLabel = 'Project Report';
 
-    protected static ?string $slug = 'reports/pipeline';
+    protected static ?string $slug = 'reports/project';
 
     public static function getPages(): array
     {
@@ -30,6 +30,6 @@ class PipelineReportResource extends Resource
 
     public static function canAccess(): bool
     {
-        return auth()->user()->can('view_pipeline_reports');
+        return auth()->user()->can('view_project_reports');
     }
 }

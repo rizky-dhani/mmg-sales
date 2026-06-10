@@ -1,0 +1,52 @@
+{
+  "version": "1.0",
+  "last_updated": "2026-06-05T00:00:00Z",
+  "libraries": {
+    "filament": {
+      "files": [
+        {
+          "filename": "custom-pages-creation.md",
+          "topic": "Creating custom pages — artisan commands, page structure, rendering",
+          "tech_stack": "Filament v5",
+          "fetched": "2026-06-05T00:00:00Z",
+          "source": "Filament Official Docs"
+        },
+        {
+          "filename": "navigation-sorting-groups-clusters.md",
+          "topic": "Navigation — adding pages, sorting, groups, clusters",
+          "tech_stack": "Filament v5",
+          "fetched": "2026-06-05T00:00:00Z",
+          "source": "Filament Official Docs"
+        },
+        {
+          "filename": "page-authorization.md",
+          "topic": "Authorization — canAccess, middleware, policies, gate-based access",
+          "tech_stack": "Filament v5",
+          "fetched": "2026-06-05T00:00:00Z",
+          "source": "Filament Official Docs"
+        },
+        {
+          "filename": "executing-commands-from-pages.md",
+          "topic": "Executing artisan/shell commands from Filament pages",
+          "tech_stack": "Filament v5 / Laravel 12",
+          "fetched": "2026-06-05T00:00:00Z",
+          "source": "Laravel Docs + Filament Best Practices"
+        },
+        {
+          "filename": "file-downloads-from-pages.md",
+          "topic": "File downloads from custom pages",
+          "tech_stack": "Filament v5 / Laravel 12",
+          "fetched": "2026-06-05T00:00:00Z",
+          "source": "Filament Official Docs + Laravel Docs"
+        },
+        {
+          "filename": "form-actions-button-actions.md",
+          "topic": "Form actions and button actions on custom pages",
+          "tech_stack": "Filament v5",
+          "fetched": "2026-06-05T00:00:00Z",
+          "source": "Filament Official Docs"
+        }
+      ]
+    }
+  }
+}
