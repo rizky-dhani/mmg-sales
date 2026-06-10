@@ -34,3 +34,8 @@ docs
 .ai
 .opencode
 openspec
+/.agents
+/.tmp
+/bugs
+/mjg-vm.sql
+/.commandcode
