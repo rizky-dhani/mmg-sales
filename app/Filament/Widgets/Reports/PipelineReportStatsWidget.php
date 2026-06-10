@@ -15,6 +15,8 @@ class PipelineReportStatsWidget extends StatsOverviewWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    protected ?int $columns = 6;
+
     protected function getStats(): array
     {
         $filters = $this->pageFilters ?? [];
