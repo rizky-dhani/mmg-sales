@@ -9,7 +9,6 @@ use App\Filament\Widgets\Reports\MonthlyPipelineTrendWidget;
 use App\Filament\Widgets\Reports\PipelineBySalesRepresentativeWidget;
 use App\Filament\Widgets\Reports\PipelineByStatusWidget;
 use App\Filament\Widgets\Reports\PipelineReportStatsWidget;
-use App\Filament\Widgets\Reports\WinLossProjectWidget;
 use App\Models\Customer;
 use App\Models\User;
 use Filament\Actions\Action;
@@ -46,7 +45,6 @@ class PipelineReportPage extends Page
             PipelineByStatusWidget::class,
             MonthlyPipelineTrendWidget::class,
             PipelineBySalesRepresentativeWidget::class,
-            WinLossProjectWidget::class,
         ];
     }
 
