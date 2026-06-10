@@ -29,9 +29,9 @@ class PipelineReportService
         $wonProjects = (clone $primaryQuery)->where('status', 'won')->count();
         $lostProjects = (clone $primaryQuery)->where('status', 'lost')->count();
 
-        $totalPipelineValue = (clone $primaryQuery)->sum('estimated_value');
-        $wonValue = (clone $primaryQuery)->where('status', 'won')->sum('estimated_value');
-        $lostValue = (clone $primaryQuery)->where('status', 'lost')->sum('estimated_value');
+        $totalPipelineValue = (clone $primaryQuery)->sum('estimated_revenue');
+        $wonValue = (clone $primaryQuery)->where('status', 'won')->sum('estimated_revenue');
+        $lostValue = (clone $primaryQuery)->where('status', 'lost')->sum('estimated_revenue');
 
         $winRate = ($wonProjects + $lostProjects) > 0
             ? ($wonProjects / ($wonProjects + $lostProjects)) * 100
@@ -68,11 +68,11 @@ class PipelineReportService
             ->whereBetween('created_at', [$filters->startDate, $filters->endDate]);
 
         if ($filters->userId) {
-            $query->where('assigned_to', $filters->userId);
+            $query->whereHas('collaborators', fn ($q) => $q->where('user_id', $filters->userId));
         }
 
         if (! empty($filters->userIds)) {
-            $query->whereIn('assigned_to', $filters->userIds);
+            $query->whereHas('collaborators', fn ($q) => $q->whereIn('user_id', $filters->userIds));
         }
 
         if ($filters->customerId) {
@@ -126,7 +126,7 @@ class PipelineReportService
             : 0;
 
         return [
-            'totalPipelineValue' => (clone $comparisonQuery)->sum('estimated_value'),
+            'totalPipelineValue' => (clone $comparisonQuery)->sum('estimated_revenue'),
             'winRate' => $winRate,
         ];
     }
@@ -150,7 +150,7 @@ class PipelineReportService
     private function getPipelineByStatus(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->selectRaw('status, COUNT(*) as count, SUM(estimated_value) as value')
+            ->selectRaw('status, COUNT(*) as count, SUM(estimated_revenue) as value')
             ->groupBy('status')
             ->get()
             ->map(fn ($row) => [
@@ -163,25 +163,33 @@ class PipelineReportService
     private function getPipelineBySalesRep(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->selectRaw('assigned_to, COUNT(*) as count, SUM(estimated_value) as value')
-            ->with('assignedUser:id,name')
-            ->whereNotNull('assigned_to')
-            ->groupBy('assigned_to')
+            ->join('project_collaborators', 'projects.id', '=', 'project_collaborators.project_id')
+            ->join('users as collaborators', 'project_collaborators.user_id', '=', 'collaborators.id')
+            ->leftJoin('users as adders', 'project_collaborators.added_by', '=', 'adders.id')
+            ->selectRaw('
+                collaborators.id as user_id,
+                collaborators.name,
+                COUNT(DISTINCT projects.id) as count,
+                COALESCE(SUM(projects.estimated_revenue), 0) as value,
+                GROUP_CONCAT(DISTINCT adders.name SEPARATOR ", ") as creator_names
+            ')
+            ->groupBy('collaborators.id', 'collaborators.name')
             ->orderByDesc('value')
             ->limit(10)
             ->get()
             ->map(fn ($row) => [
-                'user_id' => $row->assigned_to,
-                'name' => $row->assignedUser?->name ?? 'Unknown',
-                'count' => $row->count,
+                'user_id' => $row->user_id,
+                'name' => $row->name,
+                'count' => (int) $row->count,
                 'value' => (float) $row->value,
+                'creator_name' => $row->creator_names,
             ]);
     }
 
     private function getMonthlyTrend(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count, SUM(estimated_value) as value')
+            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, COUNT(*) as count, SUM(estimated_revenue) as value')
             ->groupBy('year', 'month')
             ->orderBy('year')
             ->orderBy('month')
@@ -211,7 +219,7 @@ class PipelineReportService
                 'code' => $project->code,
                 'name' => $project->name,
                 'customer' => $project->customer?->name,
-                'value' => (float) $project->estimated_value,
+                'value' => (float) $project->estimated_revenue,
                 'sales_rep' => $project->assignedUser?->name,
                 'closed_at' => $project->closed_at?->format('d M Y'),
             ]);
@@ -235,7 +243,7 @@ class PipelineReportService
                 'code' => $project->code,
                 'name' => $project->name,
                 'customer' => $project->customer?->name,
-                'value' => (float) $project->estimated_value,
+                'value' => (float) $project->estimated_revenue,
                 'sales_rep' => $project->assignedUser?->name,
                 'closed_at' => $project->closed_at?->format('d M Y'),
                 'loss_reason' => $project->loss_reason,
@@ -254,7 +262,7 @@ class PipelineReportService
                 'Customer' => $project->customer?->name,
                 'Sales Rep' => $project->assignedUser?->name,
                 'Status' => ucfirst($project->status),
-                'Estimated Value' => $project->estimated_value,
+                'Estimated Value' => $project->estimated_revenue,
                 'Confidence Level' => $project->confidence_level,
                 'Created Date' => $project->created_at?->format('d M Y'),
                 'Closed Date' => $project->closed_at?->format('d M Y'),

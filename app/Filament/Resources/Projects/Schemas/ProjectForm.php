@@ -54,6 +54,11 @@ class ProjectForm
                                             $component->state($record->collaborators->pluck('id')->toArray());
                                         }
                                     }),
+                                Select::make('assigned_to')
+                                    ->label('Assigned To')
+                                    ->relationship('assignedUser', 'name')
+                                    ->searchable()
+                                    ->preload(),
                             ]),
 
                         Section::make('Contact Information')
@@ -147,6 +152,19 @@ class ProjectForm
                                         'urgent' => 'Urgent',
                                     ])
                                     ->default('medium')
+                                    ->required()
+                                    ->searchable(),
+                                Select::make('status')
+                                    ->options([
+                                        'new' => 'New',
+                                        'contacted' => 'Contacted',
+                                        'qualified' => 'Qualified',
+                                        'proposal' => 'Proposal',
+                                        'negotiation' => 'Negotiation',
+                                        'won' => 'Won',
+                                        'lost' => 'Lost',
+                                    ])
+                                    ->default('new')
                                     ->required()
                                     ->searchable(),
                             ]),

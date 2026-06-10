@@ -23,8 +23,8 @@ class CRMOverview extends BaseWidget
         $totalCompanies = Customer::count();
         $totalProjects = Project::count();
 
-        // Pipeline Value: Sum of estimated value for open projects
-        $pipelineValue = Project::whereNotIn('status', ['won', 'lost'])->sum('estimated_value');
+        // Pipeline Value: Sum of estimated revenue for open projects
+        $pipelineValue = Project::whereNotIn('status', ['won', 'lost'])->sum('estimated_revenue');
 
         // Stale Projects: No contact for > 30 days
         $staleProjectsCount = Project::whereNotIn('status', ['won', 'lost'])

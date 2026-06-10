@@ -11,7 +11,6 @@ use App\Filament\Widgets\Reports\PipelineByStatusWidget;
 use App\Filament\Widgets\Reports\PipelineReportStatsWidget;
 use App\Filament\Widgets\Reports\WinLossProjectWidget;
 use App\Models\Customer;
-use App\Models\Project;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
@@ -83,9 +82,7 @@ class PipelineReportPage extends Page
                             ->schema([
                                 Select::make('user_id')
                                     ->label('Sales Representative')
-                                    ->options(fn () => User::whereIn('id',
-                                        Project::distinct()->whereNotNull('assigned_to')->pluck('assigned_to')
-                                    )->pluck('name', 'id'))
+                                    ->options(fn () => User::whereIn('id', fn ($q) => $q->from('project_collaborators')->select('user_id'))->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload(),
                                 Select::make('customer_id')

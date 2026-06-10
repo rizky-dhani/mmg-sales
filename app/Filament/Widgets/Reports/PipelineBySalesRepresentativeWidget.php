@@ -22,6 +22,9 @@ class PipelineBySalesRepresentativeWidget extends TableWidget
             ->columns([
                 TextColumn::make('name')
                     ->label('Sales Rep'),
+                TextColumn::make('creator_name')
+                    ->label('Added By')
+                    ->state(fn ($record): string => $record['creator_name'] ?? '-'),
                 TextColumn::make('count')
                     ->label('Projects')
                     ->alignRight(),
