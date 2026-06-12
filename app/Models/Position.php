@@ -12,6 +12,16 @@ class Position extends Model
 {
     use HasCode, HasFactory;
 
+    // Level constants for order form role mapping
+    // Lowest level number = highest position in the company hierarchy
+    const HEAD_LEVEL = 1;
+
+    const RSM_ASM_LEVEL = 2;
+
+    const SPV_LEVEL = 3;
+
+    const SR_LEVEL = 4;
+
     protected $fillable = [
         'name',
         'code',
