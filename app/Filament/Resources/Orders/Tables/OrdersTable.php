@@ -126,7 +126,7 @@ class OrdersTable
                     ->label('Distributor')
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                TextColumn::make('salesType.name')
+                TextColumn::make('sales_type_id')
                     ->label('Sales Type')
                     ->toggleable(isToggledHiddenByDefault: true),
 

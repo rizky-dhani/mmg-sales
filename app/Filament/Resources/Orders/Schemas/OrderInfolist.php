@@ -78,7 +78,7 @@ class OrderInfolist
 
                         Grid::make(3)
                             ->schema([
-                                TextEntry::make('salesType.name')
+                                TextEntry::make('sales_type_id')
                                     ->label('Sales Type'),
                                 TextEntry::make('jual_kso')
                                     ->label('Jual/KSO'),

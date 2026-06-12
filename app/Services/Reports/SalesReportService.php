@@ -99,10 +99,6 @@ class SalesReportService
             $query->where('sub_segment_id', $filters->subSegmentId);
         }
 
-        if ($filters->salesTypeId) {
-            $query->where('sales_type_id', $filters->salesTypeId);
-        }
-
         if ($filters->itemId) {
             $query->where('item_id', $filters->itemId);
         }

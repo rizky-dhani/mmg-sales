@@ -13,7 +13,6 @@ use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
 use App\Models\Project;
-use App\Models\SalesType;
 use App\Models\Segment;
 use App\Models\SubSegment;
 use App\Models\Territory;
@@ -47,7 +46,7 @@ class SampleDataSeeder extends Seeder
         }
 
         $customerGroups = CustomerGroup::factory(3)->create();
-        $salesTypes = SalesType::factory(3)->create();
+        $salesTypes = ['INAPROC', 'non-INAPROC'];
         $distributors = Distributor::factory(3)->create();
 
         $customers = Customer::factory(20)->create();
@@ -137,7 +136,7 @@ class SampleDataSeeder extends Seeder
                 'segment_id' => $subSegment->segment_id,
                 'sub_segment_id' => $subSegment->id,
                 'area_city_id' => $territories->random()->id,
-                'sales_type_id' => $salesTypes->random()->id,
+                'sales_type_id' => $salesTypes[array_rand($salesTypes)],
                 'distributor_id' => $distributors->random()->id,
                 'department_id' => $srUser->department_id ?? $departments->random()->id,
                 'sr_position_id' => $srUser->position_id ?? $positions->where('code', 'SR')->first()->id,

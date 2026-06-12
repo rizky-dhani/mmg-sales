@@ -93,9 +93,11 @@ class OrderForm
                                     ->searchable(),
                                 Select::make('sales_type_id')
                                     ->label('Purchase Type')
-                                    ->relationship('salesType', 'name')
+                                    ->options([
+                                        'INAPROC' => 'INAPROC',
+                                        'non-INAPROC' => 'non-INAPROC',
+                                    ])
                                     ->required()
-                                    ->preload()
                                     ->searchable(),
                             ]),
 

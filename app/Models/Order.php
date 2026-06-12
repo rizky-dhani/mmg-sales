@@ -135,11 +135,6 @@ class Order extends Model
         return $this->belongsTo(Principal::class);
     }
 
-    public function salesType(): BelongsTo
-    {
-        return $this->belongsTo(SalesType::class);
-    }
-
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);

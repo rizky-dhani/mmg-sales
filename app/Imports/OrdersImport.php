@@ -10,7 +10,6 @@ use App\Models\Item;
 use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
-use App\Models\SalesType;
 use App\Models\Segment;
 use App\Models\SubSegment;
 use App\Models\Territory;
@@ -64,7 +63,7 @@ class OrdersImport implements ToCollection
 
                 $segment = Segment::where('name', $row[14])->first() ?? throw new Exception("Segment not found: {$row[14]}");
                 $principal = Principal::where('name', $row[15])->first() ?? throw new Exception("Principal not found: {$row[15]}");
-                $salesType = SalesType::where('name', $row[17])->first() ?? throw new Exception("Sales Type not found: {$row[17]}");
+                // sales_type_id is stored as string directly (e.g. INAPROC, non-INAPROC)
                 $item = Item::where('name', $row[20])->first() ?? throw new Exception("Item not found: {$row[20]}");
                 $distributor = Distributor::where('name', $row[28])->first() ?? throw new Exception("Distributor not found: {$row[28]}");
 
@@ -91,7 +90,7 @@ class OrdersImport implements ToCollection
                     'segment_id' => $segment->id,
                     'principal_id' => $principal->id,
                     'reg_inst' => $row[16],
-                    'sales_type_id' => $salesType->id,
+                    'sales_type_id' => $row[17],
                     'item_id' => $item->id,
                     'qty_hna' => (int) $row[21],
                     'total_hna_gross_sales' => (float) $row[23],

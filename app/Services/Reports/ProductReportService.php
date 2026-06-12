@@ -74,10 +74,6 @@ class ProductReportService
             $query->where('segment_id', $filters->segmentId);
         }
 
-        if ($filters->salesTypeId) {
-            $query->where('sales_type_id', $filters->salesTypeId);
-        }
-
         if ($filters->customerId) {
             $query->where('end_customer_id', $filters->customerId);
         }

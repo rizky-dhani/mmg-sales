@@ -11,7 +11,6 @@ use App\Models\Item;
 use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
-use App\Models\SalesType;
 use App\Models\Segment;
 use App\Models\Territory;
 use App\Models\User;
@@ -34,7 +33,6 @@ test('orders import parses valid data correctly', function () {
     $customer = Customer::create(['name' => 'PT. Batam Karya Husada']);
     $principal = Principal::create(['name' => 'Abbott', 'code' => 'ABBOTT']);
     $segment = Segment::create(['name' => 'UNIVERSITY', 'code' => 'UNIV']);
-    $salesType = SalesType::create(['name' => 'E-Catalog', 'code' => 'ECAT']);
     $distributor = Distributor::create(['name' => 'MJG', 'code' => 'MJG']);
 
     $item = Item::create([
@@ -104,7 +102,6 @@ test('orders import skips duplicates correctly', function () {
     $customer = Customer::create(['name' => 'PT. Batam Karya Husada']);
     $principal = Principal::create(['name' => 'Abbott', 'code' => 'ABBOTT']);
     $segment = Segment::create(['name' => 'UNIVERSITY', 'code' => 'UNIV']);
-    $salesType = SalesType::create(['name' => 'E-Catalog', 'code' => 'ECAT']);
     $distributor = Distributor::create(['name' => 'MJG', 'code' => 'MJG']);
 
     $item = Item::create([
@@ -144,7 +141,6 @@ test('ImportOrdersJob dispatches and sends notification', function () {
     Customer::create(['name' => 'PT. Batam Karya Husada']);
     Principal::create(['name' => 'Abbott', 'code' => 'ABB']);
     Segment::create(['name' => 'UNIVERSITY', 'code' => 'UNIV']);
-    SalesType::create(['name' => 'E-Catalog', 'code' => 'ECAT']);
     Item::create(['name' => '9H48.02 - EMERALD DILUENT', 'principal_id' => Principal::where('name', 'Abbott')->first()->id, 'unit_price' => 10000000, 'internal_code' => 'ABB-TD-00303', 'principle_code' => '9H48.02']);
     Distributor::create(['name' => 'MJG', 'code' => 'MJG']);
 

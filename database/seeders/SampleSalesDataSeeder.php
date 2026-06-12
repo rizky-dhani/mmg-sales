@@ -11,7 +11,6 @@ use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
 use App\Models\Project;
-use App\Models\SalesType;
 use App\Models\Segment;
 use App\Models\SubSegment;
 use App\Models\Territory;
@@ -50,9 +49,6 @@ class SampleSalesDataSeeder extends Seeder
 
         $genSubSegment = SubSegment::updateOrCreate(['code' => 'GEN'], ['name' => 'Generic', 'segment_id' => $pharmaSegment->id]);
         $dispSubSegment = SubSegment::updateOrCreate(['code' => 'DISP'], ['name' => 'Disposable', 'segment_id' => $medEquipSegment->id]);
-
-        $inaprocSalesType = SalesType::updateOrCreate(['code' => 'INAPROC'], ['name' => 'INAPROC']);
-        $nonInaprocSalesType = SalesType::updateOrCreate(['code' => 'Non-INAPROC'], ['name' => 'Non-INAPROC']);
 
         $distributor = Distributor::updateOrCreate(
             ['code' => 'DIST01'],
@@ -132,7 +128,7 @@ class SampleSalesDataSeeder extends Seeder
                 'segment_id' => rand(0, 1) ? $pharmaSegment->id : $medEquipSegment->id,
                 'principal_id' => $selectedItem->principal_id,
                 'reg_inst' => rand(0, 1) ? 'REG' : 'INST',
-                'sales_type_id' => rand(0, 1) ? $inaprocSalesType->id : $nonInaprocSalesType->id,
+                'sales_type_id' => rand(0, 1) ? 'INAPROC' : 'non-INAPROC',
                 'item_id' => $selectedItem->id,
                 'qty_hna' => $qty,
                 'total_hna_gross_sales' => $totalGross,

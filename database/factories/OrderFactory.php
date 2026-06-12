@@ -11,7 +11,6 @@ use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
 use App\Models\Project;
-use App\Models\SalesType;
 use App\Models\Segment;
 use App\Models\SubSegment;
 use App\Models\Territory;
@@ -47,7 +46,7 @@ class OrderFactory extends Factory
             'segment_id' => Segment::factory(),
             'principal_id' => Principal::factory(),
             'reg_inst' => fake()->randomElement(['REG', 'INST']),
-            'sales_type_id' => SalesType::factory(),
+            'sales_type_id' => fake()->randomElement(['INAPROC', 'non-INAPROC']),
             'item_id' => Item::factory(),
             'qty_hna' => fake()->numberBetween(1, 100),
             'total_hna_gross_sales' => $subtotal,
