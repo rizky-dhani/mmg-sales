@@ -154,7 +154,7 @@ class OrderForm
                                     ->searchable(),
                                 Select::make('pm_jpm_pe_position_id')
                                     ->label('PM/JPM/PE')
-                                    ->options(fn () => Position::whereBetween('level', [Position::RSM_ASM_LEVEL, Position::SR_LEVEL])->pluck('name', 'id'))
+                                    ->options(fn () => Position::whereBetween('level', [Position::RSM_LEVEL, Position::SR_LEVEL])->pluck('name', 'id'))
                                     ->default(null)
                                     ->preload()
                                     ->searchable(),
@@ -166,14 +166,14 @@ class OrderForm
                                     ->searchable(),
                                 Select::make('rsm_asm_position_id')
                                     ->label('RSM/ASM')
-                                    ->options(fn () => Position::where('level', Position::RSM_ASM_LEVEL)->pluck('name', 'id'))
-                                    ->default(fn () => $findAncestorByLevel($userPosition, Position::RSM_ASM_LEVEL))
+                                    ->options(fn () => Position::whereIn('level', [Position::RSM_LEVEL, Position::ASM_LEVEL])->pluck('name', 'id'))
+                                    ->default(fn () => $findAncestorByLevel($userPosition, Position::RSM_LEVEL))
                                     ->preload()
                                     ->searchable(),
                                 Select::make('head_position_id')
                                     ->label('Head')
-                                    ->options(fn () => Position::where('level', Position::HEAD_LEVEL)->pluck('name', 'id'))
-                                    ->default(fn () => $findAncestorByLevel($userPosition, Position::HEAD_LEVEL))
+                                    ->options(fn () => Position::where('level', Position::DIRECTOR_LEVEL)->pluck('name', 'id'))
+                                    ->default(fn () => $findAncestorByLevel($userPosition, Position::DIRECTOR_LEVEL))
                                     ->preload()
                                     ->searchable(),
                             ]),

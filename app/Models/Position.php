@@ -14,13 +14,15 @@ class Position extends Model
 
     // Level constants for order form role mapping
     // Lowest level number = highest position in the company hierarchy
-    const HEAD_LEVEL = 1;
+    const DIRECTOR_LEVEL = 1;
 
-    const RSM_ASM_LEVEL = 2;
+    const RSM_LEVEL = 2;
 
-    const SPV_LEVEL = 3;
+    const ASM_LEVEL = 3;
 
-    const SR_LEVEL = 4;
+    const SPV_LEVEL = 4;
+
+    const SR_LEVEL = 5;
 
     protected $fillable = [
         'name',
