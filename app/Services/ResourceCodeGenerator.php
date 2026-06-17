@@ -21,6 +21,11 @@ class ResourceCodeGenerator
         return sprintf('MMG-ORD-%d-%06d', $year, $sequence);
     }
 
+    public function getNextSequenceValue(string $prefix, ?string $partition = null, ?string $table = null, ?string $column = null): int
+    {
+        return $this->getNextSequence($prefix, $partition, $table, $column);
+    }
+
     protected function getNextSequence(string $prefix, ?string $partition = null, ?string $table = null, ?string $column = null): int
     {
         $lockKey = "code_gen_{$prefix}_{$partition}";
@@ -34,19 +39,19 @@ class ResourceCodeGenerator
 
             $nextValue = 1;
 
-            if ($table && $column) {
+            if ($sequence) {
+                $nextValue = $sequence->sequence_value + 1;
+            } elseif ($table && $column) {
                 $maxCode = DB::table($table)
-                    ->where($column, 'like', "MMG-{$prefix}-%")
+                    ->where($column, 'like', "%-{$prefix}-%")
                     ->max($column);
 
                 if ($maxCode) {
-                    preg_match('/MMG-'.preg_quote($prefix, '/').'-(\d+)/', $maxCode, $matches);
+                    preg_match('/'.preg_quote($prefix, '/').'-(\d+)$/', $maxCode, $matches);
                     if ($matches) {
                         $nextValue = (int) $matches[1] + 1;
                     }
                 }
-            } elseif ($sequence) {
-                $nextValue = $sequence->sequence_value + 1;
             }
 
             if ($sequence) {

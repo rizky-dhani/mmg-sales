@@ -77,7 +77,7 @@ describe('Model Code Generation', function () {
         $product = Product::factory()->create();
 
         expect($product->product_code)->not->toBeNull();
-        expect($product->product_code)->toMatch('/^MMG-PRO-\d{6}$/');
+        expect($product->product_code)->toMatch('/^[A-Z0-9]+-TD-\d{6}$/');
     });
 
     it('generates sequential codes for multiple projects', function () {

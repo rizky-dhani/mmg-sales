@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ResourceCodeGenerator;
 use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,8 +27,6 @@ class Product extends Model
 
     protected $codeColumn = 'product_code';
 
-    protected $codePrefix = 'PRO';
-
     protected function casts(): array
     {
         return [
@@ -39,5 +38,16 @@ class Product extends Model
     public function principal(): BelongsTo
     {
         return $this->belongsTo(Principal::class);
+    }
+
+    public function generateCode(): string
+    {
+        $principal = $this->principal ?? Principal::find($this->principal_id);
+        $initial = $principal?->initial ?? 'XX';
+
+        $generator = app(ResourceCodeGenerator::class);
+        $sequence = $generator->getNextSequenceValue('TD', null, $this->getTable(), $this->getCodeColumnName());
+
+        return sprintf('%s-TD-%06d', strtoupper($initial), $sequence);
     }
 }

@@ -10,14 +10,20 @@ trait HasCode
     {
         static::creating(function ($model) {
             if (empty($model->{$model->getCodeColumnName()})) {
-                $generator = app(ResourceCodeGenerator::class);
-                $model->{$model->getCodeColumnName()} = $generator->generate(
-                    $model->getCodePrefix(),
-                    $model->getTable(),
-                    $model->getCodeColumnName()
-                );
+                $model->{$model->getCodeColumnName()} = $model->generateCode();
             }
         });
+    }
+
+    public function generateCode(): string
+    {
+        $generator = app(ResourceCodeGenerator::class);
+
+        return $generator->generate(
+            $this->getCodePrefix(),
+            $this->getTable(),
+            $this->getCodeColumnName()
+        );
     }
 
     public function getCodeColumnName(): string
