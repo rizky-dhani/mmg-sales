@@ -31,6 +31,11 @@ class PermissionsTable
                             .' '
                             .PermissionHelper::getModelLabel($parsed['model']);
                     }),
+                TextColumn::make('model')
+                    ->label('Model')
+                    ->state(fn ($record): ?string => PermissionHelper::parsePermissionName($record->name)['model'] ?? null)
+                    ->formatStateUsing(fn (?string $state): string => $state ? PermissionHelper::getModelLabel($state) : '-')
+                    ->sortable(),
                 TextColumn::make('roles.name')
                     ->label('Assigned Roles')
                     ->badge()
@@ -64,6 +69,25 @@ class PermissionsTable
 
                         $query->whereHas('roles', function ($q) use ($departmentIds): void {
                             $q->whereIn('department_id', $departmentIds);
+                        });
+                    })
+                    ->multiple(),
+                SelectFilter::make('model')
+                    ->label('Model')
+                    ->options(fn (): array => collect(PermissionHelper::getModels())
+                        ->mapWithKeys(fn (string $model): array => [$model => PermissionHelper::getModelLabel($model)])
+                        ->toArray())
+                    ->query(function ($query, array $data): void {
+                        if (empty($data['value'])) {
+                            return;
+                        }
+
+                        $modelSlugs = is_array($data['value']) ? $data['value'] : [$data['value']];
+
+                        $query->where(function ($q) use ($modelSlugs): void {
+                            foreach ($modelSlugs as $slug) {
+                                $q->orWhere('name', 'like', "%_{$slug}");
+                            }
                         });
                     })
                     ->multiple(),
