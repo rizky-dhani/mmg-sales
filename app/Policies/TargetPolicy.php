@@ -13,7 +13,7 @@ class TargetPolicy extends BasePolicy
      */
     protected function isDirectorOrSuperAdmin(User $user): bool
     {
-        return $user->hasRole(['Director', 'Super Admin']);
+        return $user->hasAnyBaseRole(['Director', 'Super Admin']);
     }
 
     public function before(User $user, string $ability): ?bool
@@ -27,36 +27,36 @@ class TargetPolicy extends BasePolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('Director');
+        return $user->hasBaseRole('Director');
     }
 
     public function view(User $user, $model): bool
     {
-        return $user->hasRole('Director');
+        return $user->hasBaseRole('Director');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasRole('Director');
+        return $user->hasBaseRole('Director');
     }
 
     public function update(User $user, $model): bool
     {
-        return $user->hasRole('Director');
+        return $user->hasBaseRole('Director');
     }
 
     public function delete(User $user, $model): bool
     {
-        return $user->hasRole('Director');
+        return $user->hasBaseRole('Director');
     }
 
     public function restore(User $user, $model): bool
     {
-        return $user->hasRole('Director');
+        return $user->hasBaseRole('Director');
     }
 
     public function forceDelete(User $user, $model): bool
     {
-        return $user->hasRole('Director');
+        return $user->hasBaseRole('Director');
     }
 }

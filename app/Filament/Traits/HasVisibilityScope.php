@@ -30,14 +30,14 @@ trait HasVisibilityScope
         }
 
         // Director - can see all records from the sales team
-        if ($user->hasRole('Director')) {
+        if ($user->hasBaseRole('Director')) {
             $salesTeamIds = self::getSalesTeamUserIds();
 
             return $query->whereIn($userColumn, $salesTeamIds);
         }
 
         // Staff - can only see their own records
-        if ($user->hasRole('Staff')) {
+        if ($user->hasBaseRole('Staff')) {
             return $query->where($userColumn, $user->id);
         }
 
@@ -76,7 +76,7 @@ trait HasVisibilityScope
         }
 
         // Director is view-only, cannot modify any records
-        if ($user->hasRole('Director')) {
+        if ($user->hasBaseRole('Director')) {
             return false;
         }
 
@@ -149,8 +149,12 @@ trait HasVisibilityScope
     {
         $salesRoles = ['Staff', 'Manager', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'];
 
-        return User::role($salesRoles)
-            ->pluck('id')
-            ->toArray();
+        return User::whereHas('roles', function ($query) use ($salesRoles): void {
+            $query->where(function ($q) use ($salesRoles): void {
+                foreach ($salesRoles as $role) {
+                    $q->orWhere('name', $role)->orWhere('name', 'like', "{$role} - %");
+                }
+            });
+        })->pluck('id')->toArray();
     }
 }

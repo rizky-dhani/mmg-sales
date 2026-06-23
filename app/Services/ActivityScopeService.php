@@ -16,7 +16,7 @@ class ActivityScopeService
     {
         $query = Activity::query();
 
-        if ($user->hasRole('Super Admin') || $user->hasRole('Board of Director') || $user->hasRole('Head')) {
+        if ($user->hasRole('Super Admin') || $user->hasBaseRole('Director') || $user->hasBaseRole('Manager')) {
             return $query;
         }
 
@@ -56,7 +56,7 @@ class ActivityScopeService
      */
     public function getAllSubordinateIds(User $user): Collection
     {
-        if ($user->hasRole('Super Admin') || $user->hasRole('Board of Director') || $user->hasRole('Head')) {
+        if ($user->hasRole('Super Admin') || $user->hasBaseRole('Director') || $user->hasBaseRole('Manager')) {
             return User::pluck('id');
         }
 

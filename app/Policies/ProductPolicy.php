@@ -13,7 +13,7 @@ class ProductPolicy extends BasePolicy
      */
     protected function isAdminFromImportPurchasing(User $user): bool
     {
-        return $user->hasRole('Admin') &&
+        return $user->hasBaseRole('Admin') &&
                $user->department?->name === 'Import & Purchasing';
     }
 

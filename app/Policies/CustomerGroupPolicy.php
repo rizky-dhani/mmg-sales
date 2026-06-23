@@ -13,7 +13,7 @@ class CustomerGroupPolicy extends BasePolicy
      */
     protected function isAdminFromSales(User $user): bool
     {
-        return $user->hasRole('Admin') &&
+        return $user->hasBaseRole('Admin') &&
                $user->department?->name === 'Sales';
     }
 

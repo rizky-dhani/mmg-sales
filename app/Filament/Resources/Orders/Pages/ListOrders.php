@@ -29,7 +29,7 @@ class ListOrders extends ListRecords
                 ->label('Import Orders')
                 ->color('success')
                 ->icon('heroicon-o-arrow-up-tray')
-                ->visible(fn () => auth()->user()->hasAnyRole(['Super Admin', 'RegionalSalesManager', 'AreaSalesManager']))
+                ->visible(fn () => auth()->user()->hasAnyBaseRole(['Super Admin', 'Regional Sales Manager', 'Area Sales Manager']))
                 ->modalHeading('Import Orders via Excel')
                 ->modalDescription('Upload an Excel (.xlsx) file matching the fixed template to import orders in bulk.')
                 ->form([

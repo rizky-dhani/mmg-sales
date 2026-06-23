@@ -108,7 +108,20 @@ class PermissionsTable
                         ->form([
                             Select::make('role_id')
                                 ->label('Role')
-                                ->options(fn (): array => Role::pluck('name', 'id')->toArray())
+                                ->options(function (): array {
+                                    $roles = Role::with('department')->orderBy('name')->get();
+                                    $grouped = [];
+                                    foreach ($roles as $role) {
+                                        $group = $role->department?->name ?? 'Global';
+                                        $label = $role->department
+                                            ? "{$role->name} ({$role->department->name})"
+                                            : $role->name;
+                                        $grouped[$group][$role->id] = $label;
+                                    }
+                                    ksort($grouped, SORT_NATURAL);
+
+                                    return $grouped;
+                                })
                                 ->searchable()
                                 ->required(),
                         ])

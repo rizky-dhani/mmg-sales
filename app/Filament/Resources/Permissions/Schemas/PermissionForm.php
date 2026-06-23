@@ -44,19 +44,15 @@ class PermissionForm
 
         $grouped = [];
         foreach ($roles as $role) {
-            $group = $role->department?->name ?? 'General';
-            $label = $role->department
-                ? "{$role->name} ({$role->department->name})"
-                : $role->name;
-            $grouped[$group][$role->id] = $label;
+            $group = $role->department?->name ?? 'Global';
+            $grouped[$group][$role->id] = $role->name;
         }
 
-        // Sort groups: General first, then alphabetical
         ksort($grouped, SORT_NATURAL);
-        if (isset($grouped['General'])) {
-            $general = $grouped['General'];
-            unset($grouped['General']);
-            $grouped = ['General' => $general] + $grouped;
+        if (isset($grouped['Global'])) {
+            $global = $grouped['Global'];
+            unset($grouped['Global']);
+            $grouped = ['Global' => $global] + $grouped;
         }
 
         return $grouped;
