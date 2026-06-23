@@ -29,6 +29,14 @@ class ResourceCodeGenerator
         return sprintf('LEAD-%d-%06d', $year, $sequence);
     }
 
+    public function generateForActivity(?int $year = null): string
+    {
+        $year = $year ?? now()->year;
+        $sequence = $this->getNextSequence('ACT', (string) $year);
+
+        return sprintf('ACT-%d-%06d', $year, $sequence);
+    }
+
     public function getNextSequenceValue(string $prefix, ?string $partition = null, ?string $table = null, ?string $column = null): int
     {
         return $this->getNextSequence($prefix, $partition, $table, $column);

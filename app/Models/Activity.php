@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ResourceCodeGenerator;
 use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -64,6 +65,11 @@ class Activity extends Model
     protected $codeColumn = 'activity_code';
 
     protected $codePrefix = 'ACT';
+
+    public function generateCode(): string
+    {
+        return app(ResourceCodeGenerator::class)->generateForActivity();
+    }
 
     public function lead(): BelongsTo
     {
