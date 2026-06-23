@@ -4,13 +4,13 @@ namespace App\Policies;
 
 use App\Models\User;
 
-class ProjectPolicy extends BasePolicy
+class LeadPolicy extends BasePolicy
 {
-    protected string $model = 'project';
+    protected string $model = 'lead';
 
     /**
      * Determine whether the user can update the model.
-     * Staff can only update their own projects.
+     * Staff can only update their own leads.
      * Supervisors+ can oversee but cannot modify subordinate records.
      */
     public function update(User $user, $model): bool
@@ -25,7 +25,7 @@ class ProjectPolicy extends BasePolicy
 
     /**
      * Determine whether the user can delete the model.
-     * Staff can only delete their own projects.
+     * Staff can only delete their own leads.
      * Supervisors+ can oversee but cannot delete subordinate records.
      */
     public function delete(User $user, $model): bool
@@ -38,18 +38,18 @@ class ProjectPolicy extends BasePolicy
         return $model->created_by === $user->id;
     }
 
-    public function addCollaborator(User $user, $project): bool
+    public function addCollaborator(User $user, $lead): bool
     {
-        return $this->isCreator($user, $project);
+        return $this->isCreator($user, $lead);
     }
 
-    public function removeCollaborator(User $user, $project): bool
+    public function removeCollaborator(User $user, $lead): bool
     {
-        return $this->isCreator($user, $project);
+        return $this->isCreator($user, $lead);
     }
 
-    private function isCreator(User $user, $project): bool
+    private function isCreator(User $user, $lead): bool
     {
-        return $project->created_by === $user->id;
+        return $lead->created_by === $user->id;
     }
 }

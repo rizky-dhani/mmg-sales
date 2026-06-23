@@ -2,8 +2,8 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Resources\Projects\Schemas\ProjectForm;
-use App\Models\Project;
+use App\Filament\Resources\Leads\Schemas\LeadForm;
+use App\Models\Lead;
 use Filament\Actions\CreateAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Group;
@@ -15,13 +15,13 @@ use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardPage;
 use Relaticle\Flowforge\Column;
 
-class ProjectBoard extends BoardPage
+class LeadBoard extends BoardPage
 {
     protected static string|null|\BackedEnum $navigationIcon = 'heroicon-o-view-columns';
 
-    protected static ?string $navigationLabel = 'Project Board';
+    protected static ?string $navigationLabel = 'Lead Board';
 
-    protected static ?string $title = 'Project Board';
+    protected static ?string $title = 'Lead Board';
 
     protected static string|null|\UnitEnum $navigationGroup = 'CRM';
 
@@ -48,8 +48,8 @@ class ProjectBoard extends BoardPage
                         ->label('')
                         ->weight('bold')
                         ->size(TextSize::Medium)
-                        ->placeholder('Untitled Project')
-                        ->url(fn (Project $record) => route('filament.admin.resources.projects.edit', $record)),
+                        ->placeholder('Untitled Lead')
+                        ->url(fn (Lead $record) => route('filament.admin.resources.leads.edit', $record)),
 
                     TextEntry::make('customer_name')
                         ->label('')
@@ -91,7 +91,7 @@ class ProjectBoard extends BoardPage
                             ->label('')
                             ->badge()
                             ->icon('heroicon-m-clock')
-                            ->color(fn (Project $record): string => match (true) {
+                            ->color(fn (Lead $record): string => match (true) {
                                 $record->created_at->diffInDays($record->converted_at ?? now()) > 45 => 'danger',
                                 $record->created_at->diffInDays($record->converted_at ?? now()) > 14 => 'warning',
                                 default => 'success',
@@ -122,14 +122,14 @@ class ProjectBoard extends BoardPage
     {
         return [
             CreateAction::make()
-                ->model(Project::class)
-                ->form(fn (Schema $schema) => ProjectForm::configure($schema)->getComponents())
-                ->successRedirectUrl(fn (Project $record): string => route('filament.admin.resources.projects.edit', $record)),
+                ->model(Lead::class)
+                ->form(fn (Schema $schema) => LeadForm::configure($schema)->getComponents())
+                ->successRedirectUrl(fn (Lead $record): string => route('filament.admin.resources.leads.edit', $record)),
         ];
     }
 
     public function getEloquentQuery(): Builder
     {
-        return Project::query()->with(['latestActivity', 'assignedUser']);
+        return Lead::query()->with(['latestActivity', 'assignedUser']);
     }
 }

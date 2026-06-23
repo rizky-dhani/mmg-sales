@@ -27,7 +27,7 @@ class ActivitiesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithM
 
     public function query()
     {
-        return $this->query->with(['user', 'customer', 'contact', 'project']);
+        return $this->query->with(['user', 'customer', 'contact', 'lead']);
     }
 
     public function title(): string
@@ -43,7 +43,7 @@ class ActivitiesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithM
             'Sales Rep',
             'Customer',
             'Contact Person',
-            'Project',
+            'Lead',
             'Subject',
             'Purpose',
             'Expectations',
@@ -72,7 +72,7 @@ class ActivitiesExport implements FromQuery, ShouldAutoSize, WithHeadings, WithM
             $activity->user?->name ?? '-',
             $activity->customer?->name ?? '-',
             $activity->contact?->name ?? '-',
-            $activity->project?->name ?? '-',
+            $activity->lead?->name ?? '-',
             $activity->subject,
             $activity->purpose ?? '-',
             $activity->expectations ?? '-',

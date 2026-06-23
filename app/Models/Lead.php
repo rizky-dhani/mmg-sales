@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ResourceCodeGenerator;
 use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,14 +12,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Project extends Model
+class Lead extends Model
 {
     use HasCode, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'title',
         'customer_name',
-        'contact_person',
         'email',
         'phone',
         'status',
@@ -33,7 +33,7 @@ class Project extends Model
         'last_contacted_at',
         'assigned_to',
         'position',
-        'project_code',
+        'lead_code',
         'created_by',
     ];
 
@@ -45,19 +45,24 @@ class Project extends Model
         'last_contacted_at' => 'datetime',
     ];
 
-    protected $codeColumn = 'project_code';
+    protected $codeColumn = 'lead_code';
 
-    protected $codePrefix = 'PRJ';
+    protected $codePrefix = 'LEA';
 
     protected static function boot(): void
     {
         parent::boot();
 
-        static::creating(function (Project $project) {
-            if (is_null($project->created_by) && auth()->check()) {
-                $project->created_by = auth()->id();
+        static::creating(function (Lead $lead) {
+            if (is_null($lead->created_by) && auth()->check()) {
+                $lead->created_by = auth()->id();
             }
         });
+    }
+
+    public function generateCode(): string
+    {
+        return app(ResourceCodeGenerator::class)->generateForLead();
     }
 
     public function getAgingAttribute(): string
@@ -66,11 +71,6 @@ class Project extends Model
         $days = round($this->created_at->diffInHours($end) / 24, 1);
 
         return $days.' '.str('day')->plural($days);
-    }
-
-    public function contactPerson(): BelongsTo
-    {
-        return $this->belongsTo(Contact::class, 'contact_person');
     }
 
     public function customer(): BelongsTo
@@ -90,28 +90,28 @@ class Project extends Model
 
     public function collaborators(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'project_collaborators')
+        return $this->belongsToMany(User::class, 'lead_collaborators')
             ->withPivot('added_by')
             ->withTimestamps();
     }
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class, 'project_id');
+        return $this->hasMany(Order::class, 'lead_id');
     }
 
     public function activities(): HasMany
     {
-        return $this->hasMany(Activity::class, 'project_id')->orderBy('performed_at', 'desc');
+        return $this->hasMany(Activity::class, 'lead_id')->orderBy('performed_at', 'desc');
     }
 
     public function latestActivity(): HasOne
     {
-        return $this->hasOne(Activity::class, 'project_id')->latestOfMany('performed_at');
+        return $this->hasOne(Activity::class, 'lead_id')->latestOfMany('performed_at');
     }
 
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'project_product')->withTimestamps();
+        return $this->belongsToMany(Product::class, 'lead_product')->withTimestamps();
     }
 }

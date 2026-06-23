@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use App\Models\Lead;
 use App\Models\Position;
 use App\Models\Principal;
 use App\Models\Product;
-use App\Models\Project;
 use App\Models\SubSegment;
 use App\Models\User;
 use Filament\Forms\Components\Checkbox;
@@ -123,9 +123,6 @@ class OrderForm
                         TextInput::make('status')
                             ->default('pending')
                             ->hidden(),
-                        TextInput::make('payment_status')
-                            ->default('pending')
-                            ->hidden(),
                         TextInput::make('tahun')
                             ->default(now()->year)
                             ->hidden(),
@@ -178,10 +175,10 @@ class OrderForm
                                     ->searchable(),
                             ]),
 
-                        Select::make('project_id')
-                            ->label('Project')
-                            ->relationship('project', 'title')
-                            ->options(fn () => Project::query()
+                        Select::make('lead_id')
+                            ->label('Lead')
+                            ->relationship('lead', 'title')
+                            ->options(fn () => Lead::query()
                                 ->where(function ($query) {
                                     $userId = auth()->id();
                                     $query->where('assigned_to', $userId)
@@ -190,7 +187,7 @@ class OrderForm
                                 ->pluck('title', 'id'))
                             ->searchable()
                             ->preload()
-                            ->placeholder('Select a project'),
+                            ->placeholder('Select a lead'),
                     ]),
 
                 Section::make('Customer Details')

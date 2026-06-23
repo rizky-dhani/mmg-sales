@@ -1,8 +1,8 @@
 <?php
 
-use App\Filament\Resources\Projects\ProjectResource;
-use App\Filament\Widgets\UpcomingProjectsWidget;
-use App\Models\Project;
+use App\Filament\Resources\Leads\LeadResource;
+use App\Filament\Widgets\UpcomingLeadsWidget;
+use App\Models\Lead;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -20,33 +20,33 @@ beforeEach(function () {
     actingAs($user);
 });
 
-it('displays projects nearing completion sorted by date', function () {
-    $p1 = Project::factory()->create([
-        'title' => 'Project 1',
+it('displays leads nearing completion sorted by date', function () {
+    $p1 = Lead::factory()->create([
+        'title' => 'Lead 1',
         'estimated_completion_date' => now()->addDays(5),
     ]);
 
-    $p2 = Project::factory()->create([
-        'title' => 'Project 2',
+    $p2 = Lead::factory()->create([
+        'title' => 'Lead 2',
         'estimated_completion_date' => now()->addDays(2),
     ]);
 
-    $p3 = Project::factory()->create([
-        'title' => 'Project 3',
+    $p3 = Lead::factory()->create([
+        'title' => 'Lead 3',
         'estimated_completion_date' => now()->subDays(1), // Should be excluded by >= now()
     ]);
 
-    livewire(UpcomingProjectsWidget::class)
+    livewire(UpcomingLeadsWidget::class)
         ->assertCanSeeTableRecords([$p2, $p1])
         ->assertCanNotSeeTableRecords([$p3])
         ->assertTableActionExists('view');
 });
 
-it('can navigate to view project page from record url', function () {
-    $project = Project::factory()->create([
+it('can navigate to view lead page from record url', function () {
+    $lead = Lead::factory()->create([
         'estimated_completion_date' => now()->addDays(1),
     ]);
 
-    livewire(UpcomingProjectsWidget::class)
-        ->assertTableActionHasUrl('view', ProjectResource::getUrl('view', ['record' => $project]), $project);
+    livewire(UpcomingLeadsWidget::class)
+        ->assertTableActionHasUrl('view', LeadResource::getUrl('view', ['record' => $lead]), $lead);
 });

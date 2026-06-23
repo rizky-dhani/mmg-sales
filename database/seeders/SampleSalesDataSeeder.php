@@ -7,10 +7,10 @@ use App\Models\CustomerGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
+use App\Models\Lead;
 use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
-use App\Models\Project;
 use App\Models\Segment;
 use App\Models\SubSegment;
 use App\Models\Territory;
@@ -81,30 +81,29 @@ class SampleSalesDataSeeder extends Seeder
         }
         $customerIds = Customer::pluck('id')->toArray();
 
-        $projectStatuses = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
-        $projectSources = ['website', 'referral', 'cold_call', 'trade_show', 'partner', 'other'];
-        $projectPriorities = ['low', 'medium', 'high', 'urgent'];
+        $leadStatuses = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
+        $leadSources = ['website', 'referral', 'cold_call', 'trade_show', 'partner', 'other'];
+        $leadPriorities = ['low', 'medium', 'high', 'urgent'];
 
         for ($i = 1; $i <= 15; $i++) {
-            $project = Project::create([
+            $lead = Lead::create([
                 'customer_name' => 'Prospect '.Str::random(5),
                 'contact_person' => $customerIds ? Contact::where('customer_id', $customerIds[array_rand($customerIds)])->value('id') : null,
                 'email' => 'contact'.$i.'@prospect.com',
                 'phone' => '0812'.rand(10000000, 99999999),
-                'status' => $projectStatuses[array_rand($projectStatuses)],
-                'source' => $projectSources[array_rand($projectSources)],
-                'priority' => $projectPriorities[array_rand($projectPriorities)],
+                'status' => $leadStatuses[array_rand($leadStatuses)],
+                'source' => $leadSources[array_rand($leadSources)],
+                'priority' => $leadPriorities[array_rand($leadPriorities)],
                 'estimated_value' => rand(5000000, 100000000),
                 'customer_id' => $i % 2 == 0 ? $customerIds[array_rand($customerIds)] : null,
                 'assigned_to' => $user?->id,
                 'created_by' => $user?->id,
             ]);
 
-            $project->collaborators()->attach($user?->id, ['added_by' => $user?->id]);
+            $lead->collaborators()->attach($user?->id, ['added_by' => $user?->id]);
         }
 
         $orderStatuses = ['draft', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned'];
-        $paymentStatuses = ['pending', 'partial', 'paid', 'overdue'];
 
         for ($i = 1; $i <= 20; $i++) {
             $selectedItem = Item::find($itemIds[array_rand($itemIds)]);
@@ -139,7 +138,6 @@ class SampleSalesDataSeeder extends Seeder
                 'distributor_id' => $distributor->id,
                 'order_number' => 'MMG-ORD-2025-'.Str::padLeft($i + 5, 8, '0'),
                 'status' => $orderStatuses[array_rand($orderStatuses)],
-                'payment_status' => $paymentStatuses[array_rand($paymentStatuses)],
                 'subtotal' => $totalGross,
                 'total_amount' => $netTotal,
                 'order_date' => now()->subDays(rand(1, 60)),

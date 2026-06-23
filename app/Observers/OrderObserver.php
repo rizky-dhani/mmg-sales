@@ -11,11 +11,11 @@ class OrderObserver
      */
     public function created(Order $order): void
     {
-        if ($order->project_id) {
-            $project = $order->project;
-            $project->status = 'won';
-            $project->converted_at = now();
-            $project->save();
+        if ($order->lead_id) {
+            $lead = $order->lead;
+            $lead->status = 'won';
+            $lead->converted_at = now();
+            $lead->save();
         }
     }
 

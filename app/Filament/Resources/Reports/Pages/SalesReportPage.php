@@ -149,14 +149,6 @@ class SalesReportPage extends Page
                                         'cancelled' => 'Cancelled',
                                         'returned' => 'Returned',
                                     ]),
-                                Select::make('payment_status')
-                                    ->label('Payment Status')
-                                    ->options([
-                                        'pending' => 'Pending',
-                                        'partial' => 'Partial',
-                                        'paid' => 'Paid',
-                                        'overdue' => 'Overdue',
-                                    ]),
                                 Select::make('cd_ncd_type')
                                     ->label('CD/NCD Type')
                                     ->options([

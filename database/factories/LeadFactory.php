@@ -2,17 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Contact;
 use App\Models\Customer;
-use App\Models\Project;
+use App\Models\Lead;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Project>
+ * @extends Factory<Lead>
  */
-class ProjectFactory extends Factory
+class LeadFactory extends Factory
 {
+    protected $model = Lead::class;
+
     public function definition(): array
     {
         $opportunityTypes = [
@@ -29,7 +30,6 @@ class ProjectFactory extends Factory
         return [
             'title' => fake()->randomElement($opportunityTypes).' - '.fake()->city(),
             'customer_name' => fake('id_ID')->company(),
-            'contact_person' => Contact::factory(),
             'email' => fake()->unique()->safeEmail(),
             'phone' => fake('id_ID')->phoneNumber(),
             'status' => fake()->randomElement(['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost']),
@@ -41,7 +41,7 @@ class ProjectFactory extends Factory
             'notes' => fake()->paragraph(),
             'customer_id' => fake()->boolean(30) ? Customer::factory() : null,
             'assigned_to' => User::factory(),
-            'position' => str()->random(10), // Flowforge expects a string position
+            'position' => (string) fake()->randomFloat(2, 0, 100),
         ];
     }
 }

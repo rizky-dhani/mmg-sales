@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Filament\Resources\Projects;
+namespace App\Filament\Resources\Leads;
 
-use App\Filament\Resources\Projects\Pages\CreateProject;
-use App\Filament\Resources\Projects\Pages\EditProject;
-use App\Filament\Resources\Projects\Pages\ListProjects;
-use App\Filament\Resources\Projects\Pages\ViewProject;
-use App\Filament\Resources\Projects\Schemas\ProjectForm;
-use App\Filament\Resources\Projects\Schemas\ProjectInfolist;
-use App\Filament\Resources\Projects\Tables\ProjectsTable;
-use App\Models\Project;
+use App\Filament\Resources\Leads\Pages\CreateLead;
+use App\Filament\Resources\Leads\Pages\EditLead;
+use App\Filament\Resources\Leads\Pages\ListLeads;
+use App\Filament\Resources\Leads\Pages\ViewLead;
+use App\Filament\Resources\Leads\Schemas\LeadForm;
+use App\Filament\Resources\Leads\Schemas\LeadInfolist;
+use App\Filament\Resources\Leads\Tables\LeadsTable;
+use App\Models\Lead;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class ProjectResource extends Resource
+class LeadResource extends Resource
 {
-    protected static ?string $model = Project::class;
+    protected static ?string $model = Lead::class;
 
     protected static bool $shouldRegisterNavigation = true;
 
@@ -31,17 +31,17 @@ class ProjectResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return ProjectForm::configure($schema);
+        return LeadForm::configure($schema);
     }
 
     public static function infolist(Schema $schema): Schema
     {
-        return ProjectInfolist::configure($schema);
+        return LeadInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return ProjectsTable::configure($table);
+        return LeadsTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -55,10 +55,10 @@ class ProjectResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListProjects::route('/'),
-            'create' => CreateProject::route('/create'),
-            'view' => ViewProject::route('/{record}'),
-            'edit' => EditProject::route('/{record}/edit'),
+            'index' => ListLeads::route('/'),
+            'create' => CreateLead::route('/create'),
+            'view' => ViewLead::route('/{record}'),
+            'edit' => EditLead::route('/{record}/edit'),
         ];
     }
 }

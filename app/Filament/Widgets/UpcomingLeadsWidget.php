@@ -2,27 +2,27 @@
 
 namespace App\Filament\Widgets;
 
-use App\Filament\Resources\Projects\ProjectResource;
-use App\Models\Project;
+use App\Filament\Resources\Leads\LeadResource;
+use App\Models\Lead;
 use Carbon\Carbon;
 use Filament\Actions\ViewAction;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
-class UpcomingProjectsWidget extends BaseWidget
+class UpcomingLeadsWidget extends BaseWidget
 {
     protected static ?int $sort = 3;
 
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Projects Nearing Completion';
+    protected static ?string $heading = 'Leads Nearing Completion';
 
     public function table(Table $table): Table
     {
         return $table
             ->query(
-                Project::query()
+                Lead::query()
                     ->whereNotNull('estimated_completion_date')
                     ->where('estimated_completion_date', '>=', now()->startOfDay())
                     ->orderBy('estimated_completion_date', 'asc')
@@ -30,7 +30,7 @@ class UpcomingProjectsWidget extends BaseWidget
             )
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->label('Project Title')
+                    ->label('Lead Title')
                     ->searchable()
                     ->weight('bold'),
                 Tables\Columns\TextColumn::make('customer_name')
@@ -59,10 +59,10 @@ class UpcomingProjectsWidget extends BaseWidget
             ])
             ->actions([
                 ViewAction::make()
-                    ->url(fn (?Project $record): ?string => $record ? ProjectResource::getUrl('view', ['record' => $record]) : null),
+                    ->url(fn (?Lead $record): ?string => $record ? LeadResource::getUrl('view', ['record' => $record]) : null),
             ])
             ->recordUrl(
-                fn (?Project $record): ?string => $record ? ProjectResource::getUrl('view', ['record' => $record]) : null,
+                fn (?Lead $record): ?string => $record ? LeadResource::getUrl('view', ['record' => $record]) : null,
             );
     }
 }

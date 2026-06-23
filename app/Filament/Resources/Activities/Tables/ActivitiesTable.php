@@ -35,24 +35,24 @@ class ActivitiesTable
                 // Apply base visibility scope (user_id-based filtering)
                 self::applyVisibilityScope($query, 'user_id');
 
-                // For non-Super Admin users, also include activities on projects
+                // For non-Super Admin users, also include activities on leads
                 // where the user is the creator or a collaborator.
-                // This ensures project creators and assignees can see all activities
-                // related to their projects, even if they didn't personally perform them.
+                // This ensures lead creators and assignees can see all activities
+                // related to their leads, even if they didn't personally perform them.
                 if (! $user->hasRole('Super Admin')) {
-                    $projectIds = DB::table('project_collaborators')
+                    $leadIds = DB::table('lead_collaborators')
                         ->where('user_id', $user->id)
-                        ->pluck('project_id')
+                        ->pluck('lead_id')
                         ->merge(
-                            DB::table('projects')
+                            DB::table('leads')
                                 ->where('created_by', $user->id)
                                 ->pluck('id')
                         )
                         ->unique()
                         ->toArray();
 
-                    if (! empty($projectIds)) {
-                        $query->orWhereIn('project_id', $projectIds);
+                    if (! empty($leadIds)) {
+                        $query->orWhereIn('lead_id', $leadIds);
                     }
                 }
 
@@ -64,8 +64,8 @@ class ActivitiesTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('project.project_code')
-                    ->label('Project Code')
+                TextColumn::make('lead.lead_code')
+                    ->label('Lead Code')
                     ->searchable()
                     ->sortable(),
 
@@ -95,7 +95,7 @@ class ActivitiesTable
                     })
                     ->sortable(),
 
-                TextColumn::make('project.creator.name')
+                TextColumn::make('lead.creator.name')
                     ->label('Creator')
                     ->searchable()
                     ->sortable(),

@@ -7,10 +7,10 @@ use App\Models\CustomerGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
+use App\Models\Lead;
 use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
-use App\Models\Project;
 use App\Models\Segment;
 use App\Models\SubSegment;
 use App\Models\Territory;
@@ -56,7 +56,7 @@ class OrderFactory extends Factory
             'jual_kso' => fake()->randomElement(['Jual', 'KSO']),
             'distributor_id' => Distributor::factory(),
             'original_customer_id' => Customer::factory(),
-            'project_id' => Project::factory(),
+            'lead_id' => Lead::factory(),
             'status' => fake()->randomElement(['draft', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled', 'returned']),
             'subtotal' => $subtotal,
             'tax_amount' => $tax,
@@ -64,7 +64,6 @@ class OrderFactory extends Factory
             'total_amount' => $total,
             'order_date' => fake()->dateTimeBetween('-1 month', 'now')->format('Y-m-d'),
             'payment_method' => fake()->randomElement(['Transfer', 'Credit Card', 'Cash']),
-            'payment_status' => fake()->randomElement(['pending', 'partial', 'paid', 'overdue']),
             'created_by' => User::factory(),
         ];
     }

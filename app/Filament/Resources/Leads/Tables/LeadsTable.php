@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources\Projects\Tables;
+namespace App\Filament\Resources\Leads\Tables;
 
 use App\Filament\Traits\HasVisibilityScope;
-use App\Models\Project;
+use App\Models\Lead;
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -16,7 +16,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
-class ProjectsTable
+class LeadsTable
 {
     use HasVisibilityScope;
 
@@ -26,10 +26,10 @@ class ProjectsTable
             ->modifyQueryUsing(function (Builder $query) {
                 return self::applyVisibilityScope($query, 'created_by');
             })
-            ->defaultSort('project_code', 'desc')
+            ->defaultSort('lead_code', 'desc')
             ->columns([
-                TextColumn::make('project_code')
-                    ->label('Project Code')
+                TextColumn::make('lead_code')
+                    ->label('Lead Code')
                     ->searchable()
                     ->sortable(),
 
@@ -107,7 +107,7 @@ class ProjectsTable
                 TextColumn::make('latestActivity.performed_at')
                     ->label('Last Contact')
                     ->date('d M Y')
-                    ->description(fn (Project $record): ?string => $record->latestActivity?->subject)
+                    ->description(fn (Lead $record): ?string => $record->latestActivity?->subject)
                     ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('d M Y')) : '-')
                     ->sortable(),
 
@@ -130,7 +130,7 @@ class ProjectsTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make()
-                    ->visible(fn (Project $record) => self::canModifyRecord($record, 'created_by')),
+                    ->visible(fn (Lead $record) => self::canModifyRecord($record, 'created_by')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

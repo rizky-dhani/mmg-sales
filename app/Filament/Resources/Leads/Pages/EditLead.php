@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\Projects\Pages;
+namespace App\Filament\Resources\Leads\Pages;
 
-use App\Filament\Resources\Projects\ProjectResource;
+use App\Filament\Resources\Leads\LeadResource;
 use App\Models\Customer;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
@@ -10,9 +10,9 @@ use Filament\Actions\RestoreAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
-class EditProject extends EditRecord
+class EditLead extends EditRecord
 {
-    protected static string $resource = ProjectResource::class;
+    protected static string $resource = LeadResource::class;
 
     protected function getRedirectUrl(): string
     {

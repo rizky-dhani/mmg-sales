@@ -4,7 +4,7 @@ namespace App\Services\Reports;
 
 use App\DTOs\PipelineReportData;
 use App\DTOs\ReportFilterData;
-use App\Models\Project;
+use App\Models\Lead;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -64,8 +64,8 @@ class PipelineReportService
 
     private function buildBaseQuery(ReportFilterData $filters): Builder
     {
-        $query = Project::query()
-            ->whereBetween('projects.created_at', [$filters->startDate, $filters->endDate]);
+        $query = Lead::query()
+            ->whereBetween('leads.created_at', [$filters->startDate, $filters->endDate]);
 
         if ($filters->userId) {
             $query->whereHas('collaborators', fn ($q) => $q->where('user_id', $filters->userId));
@@ -79,16 +79,16 @@ class PipelineReportService
             $query->where('customer_id', $filters->customerId);
         }
 
-        if ($filters->projectStatus) {
-            $query->where('status', $filters->projectStatus);
+        if ($filters->leadStatus) {
+            $query->where('status', $filters->leadStatus);
         }
 
-        if ($filters->projectSource) {
-            $query->where('source', $filters->projectSource);
+        if ($filters->leadSource) {
+            $query->where('source', $filters->leadSource);
         }
 
-        if ($filters->projectPriority) {
-            $query->where('priority', $filters->projectPriority);
+        if ($filters->leadPriority) {
+            $query->where('priority', $filters->leadPriority);
         }
 
         return $query;
@@ -100,7 +100,7 @@ class PipelineReportService
             return [];
         }
 
-        $comparisonQuery = Project::query()
+        $comparisonQuery = Lead::query()
             ->whereBetween('created_at', [$filters->comparisonStartDate, $filters->comparisonEndDate]);
 
         if ($filters->userId) {
@@ -111,12 +111,12 @@ class PipelineReportService
             $comparisonQuery->whereIn('assigned_to', $filters->userIds);
         }
 
-        if ($filters->projectSource) {
-            $comparisonQuery->where('source', $filters->projectSource);
+        if ($filters->leadSource) {
+            $comparisonQuery->where('source', $filters->leadSource);
         }
 
-        if ($filters->projectPriority) {
-            $comparisonQuery->where('priority', $filters->projectPriority);
+        if ($filters->leadPriority) {
+            $comparisonQuery->where('priority', $filters->leadPriority);
         }
 
         $wonProjects = (clone $comparisonQuery)->where('status', 'won')->count();
@@ -163,14 +163,14 @@ class PipelineReportService
     private function getPipelineBySalesRep(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->join('project_collaborators', 'projects.id', '=', 'project_collaborators.project_id')
-            ->join('users as collaborators', 'project_collaborators.user_id', '=', 'collaborators.id')
-            ->leftJoin('users as adders', 'project_collaborators.added_by', '=', 'adders.id')
+            ->join('lead_collaborators', 'leads.id', '=', 'lead_collaborators.lead_id')
+            ->join('users as collaborators', 'lead_collaborators.user_id', '=', 'collaborators.id')
+            ->leftJoin('users as adders', 'lead_collaborators.added_by', '=', 'adders.id')
             ->selectRaw('
                 collaborators.id as user_id,
                 collaborators.name,
-                COUNT(DISTINCT projects.id) as count,
-                COALESCE(SUM(projects.estimated_revenue), 0) as value,
+                COUNT(DISTINCT leads.id) as count,
+                COALESCE(SUM(leads.estimated_revenue), 0) as value,
                 GROUP_CONCAT(DISTINCT adders.name SEPARATOR ", ") as creator_names
             ')
             ->groupBy('collaborators.id', 'collaborators.name')
@@ -203,13 +203,13 @@ class PipelineReportService
 
     private function getRecentWins(ReportFilterData $filters): Collection
     {
-        return Project::query()
+        return Lead::query()
             ->where('status', 'won')
             ->whereNotNull('closed_at')
             ->when($filters->userId, fn ($q) => $q->where('assigned_to', $filters->userId))
             ->when(! empty($filters->userIds), fn ($q) => $q->whereIn('assigned_to', $filters->userIds))
-            ->when($filters->projectSource, fn ($q) => $q->where('source', $filters->projectSource))
-            ->when($filters->projectPriority, fn ($q) => $q->where('priority', $filters->projectPriority))
+            ->when($filters->leadSource, fn ($q) => $q->where('source', $filters->leadSource))
+            ->when($filters->leadPriority, fn ($q) => $q->where('priority', $filters->leadPriority))
             ->with(['customer:id,name', 'assignedUser:id,name'])
             ->orderByDesc('closed_at')
             ->limit(10)
@@ -227,13 +227,13 @@ class PipelineReportService
 
     private function getRecentLosses(ReportFilterData $filters): Collection
     {
-        return Project::query()
+        return Lead::query()
             ->where('status', 'lost')
             ->whereNotNull('closed_at')
             ->when($filters->userId, fn ($q) => $q->where('assigned_to', $filters->userId))
             ->when(! empty($filters->userIds), fn ($q) => $q->whereIn('assigned_to', $filters->userIds))
-            ->when($filters->projectSource, fn ($q) => $q->where('source', $filters->projectSource))
-            ->when($filters->projectPriority, fn ($q) => $q->where('priority', $filters->projectPriority))
+            ->when($filters->leadSource, fn ($q) => $q->where('source', $filters->leadSource))
+            ->when($filters->leadPriority, fn ($q) => $q->where('priority', $filters->leadPriority))
             ->with(['customer:id,name', 'assignedUser:id,name'])
             ->orderByDesc('closed_at')
             ->limit(10)

@@ -7,6 +7,7 @@ use App\Models\CustomerGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
+use App\Models\Lead;
 use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
@@ -71,7 +72,7 @@ class OrdersImport implements ToCollection
                 $origCustomer = Customer::where('name', $row[10])->first();
                 $custGroup = CustomerGroup::where('name', $row[12])->first();
                 $subSegment = SubSegment::where('name', $row[26])->first();
-                $project = Project::where('name', $row[16])->first();
+                $lead = Lead::where('title', $row[16])->first();
 
                 Order::create([
                     'tahun' => (int) $row[1],
@@ -101,7 +102,7 @@ class OrdersImport implements ToCollection
                     'distributor_id' => $distributor->id,
                     'order_number' => $orderNumber,
                     'original_customer_id' => $origCustomer?->id ?? $endCustomer->id,
-                    'project_id' => $project?->id,
+                    'lead_id' => $lead?->id,
                     'order_date' => now(),
                     'status' => 'pending',
                 ]);

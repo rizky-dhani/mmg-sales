@@ -26,7 +26,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'customer',
             'customer_group',
             'contact',
-            'project',
+            'lead',
             'product',
             'order',
             'activity',
@@ -94,7 +94,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_any_department', 'view_department',
             'view_any_position', 'view_position',
             // CRUD Project, Activity, Order
-            'view_any_project', 'view_project', 'create_project', 'update_project', 'delete_project',
+            'view_any_lead', 'view_lead', 'create_lead', 'update_lead', 'delete_lead',
             'view_any_activity', 'view_activity', 'create_activity', 'update_activity', 'delete_activity',
             'view_any_order', 'view_order', 'create_order', 'update_order', 'delete_order',
         ];
@@ -116,7 +116,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_any_department', 'view_department',
             'view_any_position', 'view_position',
             // View-only Project, Activity, Order
-            'view_any_project', 'view_project',
+            'view_any_lead', 'view_lead',
             'view_any_activity', 'view_activity',
             'view_any_order', 'view_order',
         ];

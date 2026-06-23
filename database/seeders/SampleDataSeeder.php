@@ -9,10 +9,10 @@ use App\Models\CustomerGroup;
 use App\Models\Department;
 use App\Models\Distributor;
 use App\Models\Item;
+use App\Models\Lead;
 use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
-use App\Models\Project;
 use App\Models\Segment;
 use App\Models\SubSegment;
 use App\Models\Territory;
@@ -55,7 +55,7 @@ class SampleDataSeeder extends Seeder
             Contact::factory(rand(1, 3))->create(['customer_id' => $customer->id]);
         }
 
-        $projectTitles = [
+        $leadTitles = [
             'Procurement of Laboratory Equipment',
             'Research Lab Equipment Upgrade',
             'Diagnostic Reagent Supply Q1',
@@ -86,8 +86,8 @@ class SampleDataSeeder extends Seeder
 
             $estimatedValue = $items->random()->unit_price * rand(1, 5);
 
-            $project = Project::create([
-                'title' => fake()->randomElement($projectTitles).' - '.$customer->name,
+            $lead = Lead::create([
+                'title' => fake()->randomElement($leadTitles).' - '.$customer->name,
                 'customer_name' => $customer->name,
                 'contact_person' => $customer->contacts->first()->id ?? null,
                 'email' => $customer->email,
@@ -108,28 +108,28 @@ class SampleDataSeeder extends Seeder
                 'assigned_to' => $user->id,
             ]);
 
-            $project->collaborators()->attach($user->id, ['added_by' => $user->id]);
+            $lead->collaborators()->attach($user->id, ['added_by' => $user->id]);
 
             $activityCount = rand(2, 6);
             for ($j = 0; $j < $activityCount; $j++) {
                 Activity::factory()->create([
-                    'project_id' => $project->id,
-                    'user_id' => $project->assigned_to,
+                    'lead_id' => $lead->id,
+                    'user_id' => $lead->assigned_to,
                     'performed_at' => (clone $createdAt)->addDays(rand(0, $ageDays)),
                 ]);
             }
         }
 
-        $wonProjects = Project::where('status', 'won')->get();
-        foreach ($wonProjects as $project) {
+        $wonProjects = Lead::where('status', 'won')->get();
+        foreach ($wonProjects as $lead) {
             $item = $items->random();
             $subSegment = $subSegments->random();
-            $srUser = $users->where('id', $project->assigned_to)->first() ?? $users->random();
+            $srUser = $users->where('id', $lead->assigned_to)->first() ?? $users->random();
 
             Order::factory()->create([
-                'project_id' => $project->id,
-                'end_customer_id' => $project->customer_id,
-                'original_customer_id' => $project->customer_id,
+                'lead_id' => $lead->id,
+                'end_customer_id' => $lead->customer_id,
+                'original_customer_id' => $lead->customer_id,
                 'customer_group_id' => $customerGroups->random()->id,
                 'item_id' => $item->id,
                 'principal_id' => $item->principal_id,
@@ -144,8 +144,8 @@ class SampleDataSeeder extends Seeder
                 'rsm_asm_position_id' => $positions->where('code', 'RSM')->first()->id,
                 'head_position_id' => $positions->where('code', 'HEAD')->first()->id,
                 'created_by' => $srUser->id,
-                'order_date' => $project->converted_at ?? Carbon::now(),
-                'total_amount' => $project->estimated_value,
+                'order_date' => $lead->converted_at ?? Carbon::now(),
+                'total_amount' => $lead->estimated_value,
             ]);
         }
 

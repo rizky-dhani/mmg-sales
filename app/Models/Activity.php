@@ -13,7 +13,7 @@ class Activity extends Model
     use HasCode, HasFactory;
 
     protected $fillable = [
-        'project_id',
+        'lead_id',
         'user_id',
         'customer_id',
         'contact_id',
@@ -65,9 +65,9 @@ class Activity extends Model
 
     protected $codePrefix = 'ACT';
 
-    public function project(): BelongsTo
+    public function lead(): BelongsTo
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Lead::class, 'lead_id');
     }
 
     public function user(): BelongsTo

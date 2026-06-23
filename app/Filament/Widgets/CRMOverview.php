@@ -3,7 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Customer;
-use App\Models\Project;
+use App\Models\Lead;
 use Carbon\Carbon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -21,13 +21,13 @@ class CRMOverview extends BaseWidget
     protected function getStats(): array
     {
         $totalCompanies = Customer::count();
-        $totalProjects = Project::count();
+        $totalLeads = Lead::count();
 
-        // Pipeline Value: Sum of estimated revenue for open projects
-        $pipelineValue = Project::whereNotIn('status', ['won', 'lost'])->sum('estimated_revenue');
+        // Pipeline Value: Sum of estimated revenue for open leads
+        $pipelineValue = Lead::whereNotIn('status', ['won', 'lost'])->sum('estimated_revenue');
 
-        // Stale Projects: No contact for > 30 days
-        $staleProjectsCount = Project::whereNotIn('status', ['won', 'lost'])
+        // Stale Leads: No contact for > 30 days
+        $staleLeadsCount = Lead::whereNotIn('status', ['won', 'lost'])
             ->where(function ($query) {
                 $query->where('last_contacted_at', '<', Carbon::now()->subDays(30))
                     ->orWhereNull('last_contacted_at');
@@ -45,16 +45,16 @@ class CRMOverview extends BaseWidget
                 ->url(route('filament.admin.resources.companies.index')),
 
             Stat::make('Pipeline Value', $formatter->formatCurrency($pipelineValue, 'IDR'))
-                ->description('Potential revenue from open projects')
+                ->description('Potential revenue from open leads')
                 ->descriptionIcon('heroicon-m-presentation-chart-line')
                 ->color('success')
-                ->url(route('filament.admin.resources.projects.index')),
+                ->url(route('filament.admin.resources.leads.index')),
 
-            Stat::make('Stale Projects', $staleProjectsCount)
+            Stat::make('Stale Leads', $staleLeadsCount)
                 ->description('No contact for > 30 days')
                 ->descriptionIcon('heroicon-m-clock')
-                ->color($staleProjectsCount > 0 ? 'warning' : 'gray')
-                ->url(route('filament.admin.resources.projects.index')),
+                ->color($staleLeadsCount > 0 ? 'warning' : 'gray')
+                ->url(route('filament.admin.resources.leads.index')),
         ];
     }
 }

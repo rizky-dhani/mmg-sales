@@ -38,16 +38,16 @@ class ActivityPolicy extends BasePolicy
         return $model->user_id === $user->id;
     }
 
-    public function createForProject(User $user, $project): bool
+    public function createForLead(User $user, $lead): bool
     {
         if ($user->hasRole('Super Admin')) {
             return true;
         }
 
-        if ($project->created_by === $user->id) {
+        if ($lead->created_by === $user->id) {
             return true;
         }
 
-        return $project->collaborators()->where('user_id', $user->id)->exists();
+        return $lead->collaborators()->where('user_id', $user->id)->exists();
     }
 }

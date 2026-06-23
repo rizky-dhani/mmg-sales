@@ -63,9 +63,9 @@ class Customer extends Model
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
-    public function projects(): HasMany
+    public function leads(): HasMany
     {
-        return $this->hasMany(Project::class, 'customer_id');
+        return $this->hasMany(Lead::class, 'customer_id');
     }
 
     public function orders(): HasMany

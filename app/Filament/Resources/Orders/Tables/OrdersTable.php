@@ -86,23 +86,6 @@ class OrdersTable
                         default => 'gray',
                     }),
 
-                TextColumn::make('payment_status')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'pending' => 'Pending',
-                        'partial' => 'Partial',
-                        'paid' => 'Paid',
-                        'overdue' => 'Overdue',
-                        default => ucfirst($state),
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        'pending' => 'warning',
-                        'partial' => 'info',
-                        'paid' => 'success',
-                        'overdue' => 'danger',
-                        default => 'gray',
-                    }),
-
                 // Metadata & Toggleable columns
                 TextColumn::make('tahun')
                     ->label('Year')
@@ -171,13 +154,6 @@ class OrdersTable
                         'delivered' => 'Delivered',
                         'cancelled' => 'Cancelled',
                         'returned' => 'Returned',
-                    ]),
-                SelectFilter::make('payment_status')
-                    ->options([
-                        'pending' => 'Pending',
-                        'partial' => 'Partial',
-                        'paid' => 'Paid',
-                        'overdue' => 'Overdue',
                     ]),
             ])
             ->recordActions([

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Projects\Schemas;
+namespace App\Filament\Resources\Leads\Schemas;
 
 use Carbon\Carbon;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -9,21 +9,19 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class ProjectInfolist
+class LeadInfolist
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->components([
-                Section::make('Project Details')
+                Section::make('Lead Details')
                     ->columns(4)
                     ->columnSpanFull()
                     ->schema([
                         TextEntry::make('customer_name')
                             ->label('Customer')
                             ->weight('bold'),
-                        TextEntry::make('contactPerson.name')
-                            ->label('Contact Person'),
                         TextEntry::make('status')
                             ->badge()
                             ->formatStateUsing(fn (string $state): string => ucfirst($state))

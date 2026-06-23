@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Activities\Schemas;
 
 use App\Models\Contact;
-use App\Models\Project;
+use App\Models\Lead;
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -23,25 +23,24 @@ class ActivityForm
         return $schema
             ->components([
                 // Always visible: Project & Customer selection
-                Section::make('Project & Customer')
+                Section::make('Lead & Customer')
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
-                        Select::make('project_id')
-                            ->label('Project')
+                        Select::make('lead_id')
+                            ->label('Lead')
                             ->relationship(
-                                name: 'project',
+                                name: 'lead',
                                 titleAttribute: 'title',
-                                modifyQueryUsing: fn ($query) => $query->with('contactPerson'),
                             )
-                            ->getOptionLabelFromRecordUsing(fn (Project $record) => "{$record->project_code} - {$record->customer_name} (CP: {$record->contactPerson?->name})")
-                            ->searchable(['project_code', 'title', 'customer_name'])
+                            ->getOptionLabelFromRecordUsing(fn (Lead $record) => "{$record->lead_code} - {$record->customer_name}")
+                            ->searchable(['lead_code', 'title', 'customer_name'])
                             ->preload()
                             ->live()
                             ->afterStateUpdated(function ($state, callable $set) {
                                 $set('customer_id', null);
-                                if ($project = Project::find($state)) {
-                                    $set('customer_id', $project->customer_id);
+                                if ($lead = Lead::find($state)) {
+                                    $set('customer_id', $lead->customer_id);
                                 }
                             }),
 
@@ -56,7 +55,7 @@ class ActivityForm
 
                 // Core Information + Interaction Details (side-by-side, hidden until project selected)
                 Grid::make(2)
-                    ->visible(fn ($get) => filled($get('project_id')))
+                    ->visible(fn ($get) => filled($get('lead_id')))
                     ->columnSpanFull()
                     ->schema([
                         Section::make('Core Information')
@@ -172,7 +171,7 @@ class ActivityForm
 
                 // Follow-up & Planning + Notes & Feedback (side-by-side, hidden until project selected)
                 Grid::make(2)
-                    ->visible(fn ($get) => filled($get('project_id')))
+                    ->visible(fn ($get) => filled($get('lead_id')))
                     ->columnSpanFull()
                     ->schema([
                         Section::make('Follow-up & Planning')

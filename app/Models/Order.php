@@ -40,7 +40,7 @@ class Order extends Model
         'distributor_id',
         'order_number',
         'original_customer_id',
-        'project_id',
+        'lead_id',
         'status',
         'subtotal',
         'tax_amount',
@@ -53,7 +53,6 @@ class Order extends Model
         'billing_address',
         'notes',
         'payment_method',
-        'payment_status',
         'created_by',
     ];
 
@@ -145,9 +144,9 @@ class Order extends Model
         return $this->belongsTo(Distributor::class);
     }
 
-    public function project(): BelongsTo
+    public function lead(): BelongsTo
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Lead::class, 'lead_id');
     }
 
     public function creator(): BelongsTo
@@ -158,6 +157,11 @@ class Order extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function paymentStatuses(): HasMany
+    {
+        return $this->hasMany(PaymentStatus::class);
     }
 
     public function getRouteKeyName(): string

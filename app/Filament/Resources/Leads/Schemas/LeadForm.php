@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Filament\Resources\Projects\Schemas;
+namespace App\Filament\Resources\Leads\Schemas;
 
-use App\Models\Contact;
 use App\Models\Principal;
 use App\Models\Product;
 use App\Models\User;
@@ -14,7 +13,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class ProjectForm
+class LeadForm
 {
     public static function configure(Schema $schema): Schema
     {
@@ -23,10 +22,10 @@ class ProjectForm
                 Grid::make(2)
                     ->columnSpanFull()
                     ->schema([
-                        Section::make('Project Details')
+                        Section::make('Lead Details')
                             ->schema([
                                 TextInput::make('title')
-                                    ->label('Project Title')
+                                    ->label('Lead Title')
                                     ->required()
                                     ->maxLength(255),
                                 Select::make('customer_id')
@@ -35,14 +34,7 @@ class ProjectForm
                                     ->searchable()
                                     ->preload()
                                     ->required()
-                                    ->live()
-                                    ->afterStateUpdated(fn (callable $set) => $set('contact_person', null)),
-                                Select::make('contact_person')
-                                    ->label('Contact Person')
-                                    ->options(fn ($get) => Contact::where('customer_id', $get('customer_id'))->pluck('name', 'id'))
-                                    ->searchable()
-                                    ->preload()
-                                    ->visible(fn ($get) => $get('customer_id')),
+                                    ->live(),
                                 Select::make('assigned_users')
                                     ->label('Assign Users')
                                     ->multiple()

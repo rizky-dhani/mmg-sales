@@ -80,7 +80,7 @@ class PipelineReportPage extends Page
                             ->schema([
                                 Select::make('user_id')
                                     ->label('Sales Representative')
-                                    ->options(fn () => User::whereIn('id', fn ($q) => $q->from('project_collaborators')->select('user_id'))->pluck('name', 'id'))
+                                    ->options(fn () => User::whereIn('id', fn ($q) => $q->from('lead_collaborators')->select('user_id'))->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload(),
                                 Select::make('customer_id')
@@ -88,8 +88,8 @@ class PipelineReportPage extends Page
                                     ->options(Customer::pluck('name', 'id'))
                                     ->searchable()
                                     ->preload(),
-                                Select::make('project_status')
-                                    ->label('Project Status')
+                                Select::make('lead_status')
+                                    ->label('Lead Status')
                                     ->options([
                                         'new' => 'New',
                                         'contacted' => 'Contacted',
@@ -99,7 +99,7 @@ class PipelineReportPage extends Page
                                         'won' => 'Won',
                                         'lost' => 'Lost',
                                     ]),
-                                Select::make('project_source')
+                                Select::make('lead_source')
                                     ->label('Source')
                                     ->options([
                                         'website' => 'Website',
@@ -109,7 +109,7 @@ class PipelineReportPage extends Page
                                         'partner' => 'Partner',
                                         'other' => 'Other',
                                     ]),
-                                Select::make('project_priority')
+                                Select::make('lead_priority')
                                     ->label('Priority')
                                     ->options([
                                         'low' => 'Low',

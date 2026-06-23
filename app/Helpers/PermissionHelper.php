@@ -20,7 +20,7 @@ class PermissionHelper
         'activity',
         'contact',
         'product',
-        'project',
+        'lead',
         'segment',
         'territory',
         'position',

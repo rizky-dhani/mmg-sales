@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Filament\Resources\Projects\Pages;
+namespace App\Filament\Resources\Leads\Pages;
 
-use App\Filament\Resources\Projects\ProjectResource;
+use App\Filament\Resources\Leads\LeadResource;
 use App\Models\Customer;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateProject extends CreateRecord
+class CreateLead extends CreateRecord
 {
-    protected static string $resource = ProjectResource::class;
+    protected static string $resource = LeadResource::class;
 
     protected function getCreatedNotification(): ?Notification
     {

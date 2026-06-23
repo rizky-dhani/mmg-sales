@@ -51,15 +51,6 @@ class OrderInfolist
                                         'returned' => 'danger',
                                         default => 'gray',
                                     }),
-                                TextEntry::make('payment_status')
-                                    ->badge()
-                                    ->formatStateUsing(fn (string $state): string => ucfirst($state))
-                                    ->color(fn (string $state): string => match ($state) {
-                                        'paid' => 'success',
-                                        'pending' => 'warning',
-                                        'overdue' => 'danger',
-                                        default => 'info',
-                                    }),
                                 TextEntry::make('payment_method')
                                     ->label('Payment Method'),
                             ]),

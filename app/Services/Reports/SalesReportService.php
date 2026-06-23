@@ -103,8 +103,8 @@ class SalesReportService
             $query->where('item_id', $filters->itemId);
         }
 
-        if ($filters->projectId) {
-            $query->where('project_id', $filters->projectId);
+        if ($filters->leadId) {
+            $query->where('lead_id', $filters->leadId);
         }
 
         if ($filters->orderStatus) {

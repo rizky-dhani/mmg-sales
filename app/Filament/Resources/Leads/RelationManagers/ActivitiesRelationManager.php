@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Projects\RelationManagers;
+namespace App\Filament\Resources\Leads\RelationManagers;
 
 use Carbon\Carbon;
 use Filament\Resources\RelationManagers\RelationManager;

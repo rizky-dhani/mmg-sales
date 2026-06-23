@@ -20,7 +20,6 @@ class SalesOverview extends BaseWidget
     {
         $totalOrders = Order::count();
         $totalSales = Order::sum('net_sales_total');
-        $overdueSales = Order::where('payment_status', 'overdue')->sum('net_sales_total');
         $aov = $totalOrders > 0 ? $totalSales / $totalOrders : 0;
 
         $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
@@ -37,12 +36,6 @@ class SalesOverview extends BaseWidget
                 ->description('Average revenue per order')
                 ->descriptionIcon('heroicon-m-calculator')
                 ->color('info'),
-
-            Stat::make('Overdue Revenue', $formatter->formatCurrency($overdueSales, 'IDR'))
-                ->description('Unpaid orders past due date')
-                ->descriptionIcon('heroicon-m-exclamation-circle')
-                ->color($overdueSales > 0 ? 'danger' : 'gray')
-                ->url(route('filament.admin.resources.orders.index', ['tableFilters[payment_status][value]' => 'overdue'])),
         ];
     }
 }

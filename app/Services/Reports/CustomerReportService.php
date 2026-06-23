@@ -214,7 +214,6 @@ class CustomerReportService
                 'Order Date' => $order->order_date?->format('d M Y'),
                 'Revenue' => $order->total_amount,
                 'Net Sales' => $order->net_sales_total,
-                'Payment Status' => ucfirst($order->payment_status),
             ]);
     }
 }

@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Filament\Resources\Activities\Pages\CreateActivity;
 use App\Models\Contact;
 use App\Models\Customer;
-use App\Models\Project;
+use App\Models\Lead;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -28,13 +28,12 @@ it('can create a basic activity', function () {
 
     $customer = Customer::factory()->create(['type' => 'hospital']);
     $contact = Contact::factory()->create(['customer_id' => $customer->id]);
-    $project = Project::factory()->create([
+    $lead = Lead::factory()->create([
         'customer_id' => $customer->id,
-        'contact_person' => $contact->id,
     ]);
 
     livewire(CreateActivity::class)
-        ->set('data.project_id', $project->id)
+        ->set('data.lead_id', $lead->id)
         ->set('data.customer_id', $customer->id)
         ->set('data.type', 'Call')
         ->set('data.subject', 'Basic Call')
@@ -56,13 +55,12 @@ it('can create an activity with a contact', function () {
 
     $customer = Customer::factory()->create(['type' => 'hospital']);
     $contact = Contact::factory()->create(['customer_id' => $customer->id]);
-    $project = Project::factory()->create([
+    $lead = Lead::factory()->create([
         'customer_id' => $customer->id,
-        'contact_person' => $contact->id,
     ]);
 
     livewire(CreateActivity::class)
-        ->set('data.project_id', $project->id)
+        ->set('data.lead_id', $lead->id)
         ->set('data.customer_id', $customer->id)
         ->set('data.contact_id', $contact->id)
         ->set('data.type', 'Call')
@@ -86,15 +84,14 @@ it('can create activity with date within 3 days backdate', function () {
 
     $customer = Customer::factory()->create(['type' => 'hospital']);
     $contact = Contact::factory()->create(['customer_id' => $customer->id]);
-    $project = Project::factory()->create([
+    $lead = Lead::factory()->create([
         'customer_id' => $customer->id,
-        'contact_person' => $contact->id,
     ]);
 
     $dateWithin3Days = now()->subDays(2)->format('Y-m-d H:i:s');
 
     livewire(CreateActivity::class)
-        ->set('data.project_id', $project->id)
+        ->set('data.lead_id', $lead->id)
         ->set('data.customer_id', $customer->id)
         ->set('data.type', 'Call')
         ->set('data.subject', 'Backdate Test')
@@ -116,16 +113,15 @@ it('cannot create activity with date older than 3 days', function () {
 
     $customer = Customer::factory()->create(['type' => 'hospital']);
     $contact = Contact::factory()->create(['customer_id' => $customer->id]);
-    $project = Project::factory()->create([
+    $lead = Lead::factory()->create([
         'customer_id' => $customer->id,
-        'contact_person' => $contact->id,
     ]);
 
     $dateOlderThan3Days = now()->subDays(4)->format('Y-m-d H:i:s');
 
-    expect(function () use ($user, $project, $customer, $dateOlderThan3Days) {
+    expect(function () use ($user, $lead, $customer, $dateOlderThan3Days) {
         livewire(CreateActivity::class)
-            ->set('data.project_id', $project->id)
+            ->set('data.lead_id', $lead->id)
             ->set('data.customer_id', $customer->id)
             ->set('data.type', 'Call')
             ->set('data.subject', 'Old Activity')
@@ -142,15 +138,14 @@ it('can create activity for today', function () {
 
     $customer = Customer::factory()->create(['type' => 'hospital']);
     $contact = Contact::factory()->create(['customer_id' => $customer->id]);
-    $project = Project::factory()->create([
+    $lead = Lead::factory()->create([
         'customer_id' => $customer->id,
-        'contact_person' => $contact->id,
     ]);
 
     $today = now()->format('Y-m-d H:i:s');
 
     livewire(CreateActivity::class)
-        ->set('data.project_id', $project->id)
+        ->set('data.lead_id', $lead->id)
         ->set('data.customer_id', $customer->id)
         ->set('data.type', 'Call')
         ->set('data.subject', 'Today Activity')
@@ -172,15 +167,14 @@ it('can create activity for future date', function () {
 
     $customer = Customer::factory()->create(['type' => 'hospital']);
     $contact = Contact::factory()->create(['customer_id' => $customer->id]);
-    $project = Project::factory()->create([
+    $lead = Lead::factory()->create([
         'customer_id' => $customer->id,
-        'contact_person' => $contact->id,
     ]);
 
     $futureDate = now()->addDays(2)->format('Y-m-d H:i:s');
 
     livewire(CreateActivity::class)
-        ->set('data.project_id', $project->id)
+        ->set('data.lead_id', $lead->id)
         ->set('data.customer_id', $customer->id)
         ->set('data.type', 'Call')
         ->set('data.subject', 'Future Activity')

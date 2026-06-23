@@ -20,8 +20,8 @@ class ActivityInfolist
                         Section::make('Core Information')
                             ->columns(4)
                             ->schema([
-                                TextEntry::make('project.project_code')
-                                    ->label('Project Code'),
+                                TextEntry::make('lead.lead_code')
+                                    ->label('Lead Code'),
                                 TextEntry::make('customer.name')
                                     ->label('Customer'),
                                 TextEntry::make('contact.name')
