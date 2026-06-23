@@ -4,13 +4,16 @@ namespace App\Filament\Resources\Permissions\Tables;
 
 use App\Helpers\PermissionHelper;
 use App\Models\Department;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Spatie\Permission\Models\Role;
 
 class PermissionsTable
 {
@@ -99,6 +102,21 @@ class PermissionsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    BulkAction::make('assignToRole')
+                        ->label('Assign to Role')
+                        ->icon('heroicon-m-user-group')
+                        ->form([
+                            Select::make('role_id')
+                                ->label('Role')
+                                ->options(fn (): array => Role::pluck('name', 'id')->toArray())
+                                ->searchable()
+                                ->required(),
+                        ])
+                        ->action(function ($records, array $data): void {
+                            $role = Role::findOrFail($data['role_id']);
+                            $role->givePermissionTo($records->pluck('name')->toArray());
+                        })
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }
