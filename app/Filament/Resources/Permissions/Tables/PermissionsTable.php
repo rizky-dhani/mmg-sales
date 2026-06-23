@@ -64,11 +64,11 @@ class PermissionsTable
                     ->label('Department')
                     ->options(fn (): array => Department::pluck('name', 'id')->toArray())
                     ->query(function ($query, array $data): void {
-                        if (empty($data['value'])) {
+                        if (empty($data['values'])) {
                             return;
                         }
 
-                        $departmentIds = is_array($data['value']) ? $data['value'] : [$data['value']];
+                        $departmentIds = is_array($data['values']) ? $data['values'] : [$data['values']];
 
                         $query->whereHas('roles', function ($q) use ($departmentIds): void {
                             $q->whereIn('department_id', $departmentIds);
@@ -81,11 +81,11 @@ class PermissionsTable
                         ->mapWithKeys(fn (string $model): array => [$model => PermissionHelper::getModelLabel($model)])
                         ->toArray())
                     ->query(function ($query, array $data): void {
-                        if (empty($data['value'])) {
+                        if (empty($data['values'])) {
                             return;
                         }
 
-                        $modelSlugs = is_array($data['value']) ? $data['value'] : [$data['value']];
+                        $modelSlugs = is_array($data['values']) ? $data['values'] : [$data['values']];
 
                         $query->where(function ($q) use ($modelSlugs): void {
                             foreach ($modelSlugs as $slug) {
