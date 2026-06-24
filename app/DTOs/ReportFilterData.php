@@ -23,6 +23,7 @@ readonly class ReportFilterData
         public ?int $itemId = null,
         public ?int $leadId = null,
         public ?string $orderStatus = null,
+        public ?string $paymentStatus = null,
         public ?string $leadStatus = null,
         public ?string $leadSource = null,
         public ?string $leadPriority = null,
@@ -42,7 +43,7 @@ readonly class ReportFilterData
 
     public function getComparisonDateRangeLabel(): string
     {
-        if (! $this->hasComparison()) {
+        if (! $this->comparisonStartDate || ! $this->comparisonEndDate) {
             return '';
         }
 
@@ -51,31 +52,7 @@ readonly class ReportFilterData
 
     public function toCacheKey(): string
     {
-        $parts = [
-            $this->startDate->format('Y-m-d'),
-            $this->endDate->format('Y-m-d'),
-            $this->comparisonStartDate?->format('Y-m-d'),
-            $this->comparisonEndDate?->format('Y-m-d'),
-            $this->userId,
-            $this->territoryId,
-            $this->departmentId,
-            $this->principalId,
-            $this->distributorId,
-            $this->customerId,
-            $this->customerGroupId,
-            $this->segmentId,
-            $this->subSegmentId,
-            $this->itemId,
-            $this->leadId,
-            $this->orderStatus,
-            $this->leadStatus,
-            $this->leadSource,
-            $this->leadPriority,
-            $this->cdNcdType,
-            implode('-', $this->userIds),
-        ];
-
-        return md5(implode('|', $parts));
+        return md5(serialize($this));
     }
 
     public static function fromArray(array $data): self
@@ -107,6 +84,7 @@ readonly class ReportFilterData
             itemId: $data['item_id'] ?? null,
             leadId: $data['lead_id'] ?? null,
             orderStatus: $data['order_status'] ?? null,
+            paymentStatus: $data['payment_status'] ?? null,
             leadStatus: $data['lead_status'] ?? null,
             leadSource: $data['lead_source'] ?? null,
             leadPriority: $data['lead_priority'] ?? null,
