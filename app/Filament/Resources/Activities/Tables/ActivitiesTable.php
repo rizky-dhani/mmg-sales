@@ -119,7 +119,7 @@ class ActivitiesTable
             ->filters([
                 SelectFilter::make('customer')
                     ->label('Customer')
-                    ->relationship('customer', 'name', fn ($q) => $q->orderBy('name'))
+                    ->relationship('customer', 'name', fn ($query) => $query->orderBy('name'))
                     ->searchable()
                     ->preload(),
             ])
