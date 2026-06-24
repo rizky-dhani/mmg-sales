@@ -53,6 +53,15 @@ class ProductReportPage extends Page
         ];
     }
 
+    public function getFooterWidgetsColumns(): array
+    {
+        return [
+            'default' => 1,
+            'md' => 2,
+            'lg' => 4,
+        ];
+    }
+
     public function filtersForm(Schema $schema): Schema
     {
         return $schema

@@ -23,9 +23,6 @@ return new class extends Migration
         Schema::table('principals', function (Blueprint $table) {
             $table->string('principal_acc_code', 50)->nullable()->after('principal_code');
         });
-        Schema::table('products', function (Blueprint $table) {
-            $table->string('product_acc_code', 50)->nullable()->after('product_code');
-        });
     }
 
     /**
@@ -44,9 +41,6 @@ return new class extends Migration
         });
         Schema::table('principals', function (Blueprint $table) {
             $table->dropColumn('principal_acc_code');
-        });
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('product_acc_code');
         });
     }
 };

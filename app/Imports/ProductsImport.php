@@ -29,7 +29,7 @@ class ProductsImport implements ToCollection, WithHeadingRow
                     'name' => $row['name'],
                     'category' => $row['category'] ?? null,
                     'description' => $row['description'] ?? null,
-                    'product_acc_code' => $row['product_acc_code'] ?? null,
+                    'internal_code' => $row['internal_code'] ?? null,
                     'unit_price' => $row['unit_price'] ?? 0,
                     'ecatalog_price' => $row['ecatalog_price'] ?? null,
                     'unit_of_measure' => $row['unit_of_measure'] ?? 'pcs',

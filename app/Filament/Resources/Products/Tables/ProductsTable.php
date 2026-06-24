@@ -24,8 +24,8 @@ class ProductsTable
     {
         return $table
             ->columns([
-                TextColumn::make('product_code')
-                    ->label('Product Code')
+                TextColumn::make('internal_code')
+                    ->label('Internal Code')
                     ->searchable()
                     ->sortable(),
 
@@ -66,7 +66,7 @@ class ProductsTable
             ->filters([
                 SelectFilter::make('principal')
                     ->label('Principal')
-                ->relationship('principal', 'name', fn ($query) => $query->orderBy('name'))
+                    ->relationship('principal', 'name', fn ($query) => $query->orderBy('name'))
                     ->searchable()
                     ->preload(),
                 TrashedFilter::make(),

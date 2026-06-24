@@ -17,7 +17,7 @@ class Product extends Model
         'name',
         'category',
         'description',
-        'product_acc_code',
+        'internal_code',
         'unit_price',
         'ecatalog_price',
         'unit_of_measure',
@@ -25,7 +25,7 @@ class Product extends Model
         'principal_id',
     ];
 
-    protected $codeColumn = 'product_code';
+    protected $codeColumn = 'internal_code';
 
     protected function casts(): array
     {
