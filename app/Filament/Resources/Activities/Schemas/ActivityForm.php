@@ -3,8 +3,10 @@
 namespace App\Filament\Resources\Activities\Schemas;
 
 use App\Models\Contact;
+use App\Models\Customer;
 use App\Models\Lead;
 use Carbon\Carbon;
+use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
@@ -49,13 +51,56 @@ class ActivityForm
                             ->relationship('customer', 'name')
                             ->searchable()
                             ->preload()
-                            ->disabled()
+                            ->required()
+                            ->live()
                             ->dehydrated(),
+                        Action::make('createLead')
+                            ->label('Create Lead')
+                            ->icon('heroicon-m-plus')
+                            ->color('primary')
+                            ->visible(fn ($get): bool => filled($get('customer_id')) && blank($get('lead_id')))
+                            ->form([
+                                TextInput::make('title')
+                                    ->required()
+                                    ->maxLength(255),
+                                Select::make('status')
+                                    ->options([
+                                        'new' => 'New',
+                                        'contacted' => 'Contacted',
+                                        'qualified' => 'Qualified',
+                                        'proposal' => 'Proposal',
+                                        'negotiation' => 'Negotiation',
+                                        'won' => 'Won',
+                                        'lost' => 'Lost',
+                                    ])
+                                    ->default('new'),
+                                Select::make('priority')
+                                    ->options([
+                                        'low' => 'Low',
+                                        'medium' => 'Medium',
+                                        'high' => 'High',
+                                    ])
+                                    ->default('medium'),
+                            ])
+                            ->action(function (array $data, callable $get, callable $set): void {
+                                $customerId = $get('customer_id');
+                                $customer = Customer::find($customerId);
+
+                                $lead = Lead::create([
+                                    'title' => $data['title'],
+                                    'status' => $data['status'],
+                                    'priority' => $data['priority'],
+                                    'customer_id' => $customerId,
+                                    'customer_name' => $customer?->name,
+                                    'created_by' => auth()->id(),
+                                ]);
+
+                                $set('lead_id', $lead->id);
+                            }),
                     ]),
 
-                // Core Information + Interaction Details (side-by-side, hidden until project selected)
+                // Core Information + Interaction Details (side-by-side)
                 Grid::make(2)
-                    ->visible(fn ($get) => filled($get('lead_id')))
                     ->columnSpanFull()
                     ->schema([
                         Section::make('Core Information')
@@ -169,9 +214,8 @@ class ActivityForm
                             ]),
                     ]),
 
-                // Follow-up & Planning + Notes & Feedback (side-by-side, hidden until project selected)
+                // Follow-up & Planning + Notes & Feedback (side-by-side)
                 Grid::make(2)
-                    ->visible(fn ($get) => filled($get('lead_id')))
                     ->columnSpanFull()
                     ->schema([
                         Section::make('Follow-up & Planning')

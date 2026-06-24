@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Filament\Resources\Activities\Pages\CreateActivity;
+use App\Filament\Resources\Activities\Pages\EditActivity;
+use App\Models\Activity;
 use App\Models\Contact;
 use App\Models\Customer;
 use App\Models\Lead;
@@ -186,5 +188,59 @@ it('can create activity for future date', function () {
     assertDatabaseHas('activities', [
         'type' => 'Call',
         'subject' => 'Future Activity',
+    ]);
+});
+it('can create activity without a lead', function () {
+    $user = User::factory()->create();
+    $user->assignRole('Super Admin');
+    actingAs($user);
+
+    $customer = Customer::factory()->create(['type' => 'hospital']);
+
+    livewire(CreateActivity::class)
+        ->set('data.customer_id', $customer->id)
+        ->set('data.type', 'Call')
+        ->set('data.subject', 'Activity Without Lead')
+        ->set('data.performed_at', now()->format('Y-m-d H:i:s'))
+        ->set('data.user_id', $user->id)
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    assertDatabaseHas('activities', [
+        'type' => 'Call',
+        'subject' => 'Activity Without Lead',
+        'customer_id' => $customer->id,
+        'lead_id' => null,
+    ]);
+});
+
+it('can create activity then link to existing lead', function () {
+    $user = User::factory()->create();
+    $user->assignRole('Super Admin');
+    actingAs($user);
+
+    $customer = Customer::factory()->create(['type' => 'hospital']);
+    $lead = Lead::factory()->create([
+        'customer_id' => $customer->id,
+    ]);
+
+    // Create activity without lead
+    $activity = Activity::factory()->create([
+        'customer_id' => $customer->id,
+        'user_id' => $user->id,
+        'lead_id' => null,
+        'type' => 'Call',
+        'performed_at' => now(),
+    ]);
+
+    // Edit activity to add lead
+    livewire(EditActivity::class, ['record' => $activity->id])
+        ->set('data.lead_id', $lead->id)
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    assertDatabaseHas('activities', [
+        'id' => $activity->id,
+        'lead_id' => $lead->id,
     ]);
 });

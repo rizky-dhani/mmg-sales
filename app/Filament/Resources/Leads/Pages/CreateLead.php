@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Leads\Pages;
 
 use App\Filament\Resources\Leads\LeadResource;
+use App\Models\Activity;
 use App\Models\Customer;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
@@ -48,6 +49,13 @@ class CreateLead extends CreateRecord
             $this->getRecord()->collaborators()
                 ->syncWithPivotValues($assignedUsers, ['added_by' => auth()->id()]);
             session()->forget('pending_collaborators');
+        }
+
+        $lead = $this->getRecord();
+        if ($lead->customer_id) {
+            Activity::where('customer_id', $lead->customer_id)
+                ->whereNull('lead_id')
+                ->update(['lead_id' => $lead->id]);
         }
     }
 }

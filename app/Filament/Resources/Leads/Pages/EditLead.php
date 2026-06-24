@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Leads\Pages;
 
 use App\Filament\Resources\Leads\LeadResource;
+use App\Models\Activity;
 use App\Models\Customer;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
@@ -56,5 +57,15 @@ class EditLead extends EditRecord
         }
 
         return $data;
+    }
+
+    protected function afterSave(): void
+    {
+        $lead = $this->getRecord();
+        if ($lead->customer_id) {
+            Activity::where('customer_id', $lead->customer_id)
+                ->whereNull('lead_id')
+                ->update(['lead_id' => $lead->id]);
+        }
     }
 }

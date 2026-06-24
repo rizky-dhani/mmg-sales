@@ -21,7 +21,8 @@ class ActivityInfolist
                             ->columns(4)
                             ->schema([
                                 TextEntry::make('lead.lead_code')
-                                    ->label('Lead Code'),
+                                    ->label('Lead Code')
+                                    ->placeholder('Unlinked'),
                                 TextEntry::make('customer.name')
                                     ->label('Customer'),
                                 TextEntry::make('contact.name')
