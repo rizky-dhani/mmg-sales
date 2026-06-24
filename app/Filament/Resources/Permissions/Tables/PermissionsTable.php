@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Permissions\Tables;
 
 use App\Helpers\PermissionHelper;
 use App\Models\Department;
+use App\Models\Role;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -13,7 +14,7 @@ use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class PermissionsTable
 {
@@ -123,11 +124,39 @@ class PermissionsTable
                                     return $grouped;
                                 })
                                 ->searchable()
-                                ->required(),
+                                ->multiple()
+                                ->default(function () use ($table): ?array {
+                                    $selectedIds = $table->getLivewire()->selectedTableRecords ?? [];
+
+                                    if (empty($selectedIds)) {
+                                        return null;
+                                    }
+
+                                    $permissions = Permission::with('roles')
+                                        ->whereIn('id', $selectedIds)
+                                        ->get();
+
+                                    if ($permissions->isEmpty()) {
+                                        return null;
+                                    }
+
+                                    $firstRoleIds = $permissions->first()
+                                        ->roles->pluck('id')->sort()->values();
+
+                                    $allSame = $permissions->every(
+                                        fn ($p) => $p->roles->pluck('id')
+                                            ->sort()->values()->toArray() === $firstRoleIds->toArray()
+                                    );
+
+                                    return $allSame && $firstRoleIds->isNotEmpty()
+                                        ? $firstRoleIds->toArray()
+                                        : null;
+                                }),
                         ])
                         ->action(function ($records, array $data): void {
-                            $role = Role::findOrFail($data['role_id']);
-                            $role->givePermissionTo($records->pluck('name')->toArray());
+                            foreach ($records as $permission) {
+                                $permission->roles()->sync($data['role_id']);
+                            }
                         })
                         ->deselectRecordsAfterCompletion(),
                 ]),
