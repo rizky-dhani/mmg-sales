@@ -23,7 +23,6 @@ class ProductsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('product_code')
                     ->label('Product Code')
@@ -67,7 +66,7 @@ class ProductsTable
             ->filters([
                 SelectFilter::make('principal')
                     ->label('Principal')
-                    ->relationship('principal', 'name', fn ($q) => $q->orderBy('name'))
+                ->relationship('principal', 'name', fn ($query) => $query->orderBy('name'))
                     ->searchable()
                     ->preload(),
                 TrashedFilter::make(),
