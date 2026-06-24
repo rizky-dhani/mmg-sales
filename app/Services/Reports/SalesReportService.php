@@ -30,7 +30,7 @@ class SalesReportService
         $totalGrossSales = (clone $primaryQuery)->sum('total_hna_gross_sales');
         $totalOrders = (clone $primaryQuery)->count();
         $averageOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
-        $overdueRevenue = (clone $primaryQuery)->where('payment_status', 'overdue')->sum('net_sales_total');
+        $overdueRevenue = 0;
 
         $comparisonData = $this->getComparisonData($filters);
 
@@ -109,10 +109,6 @@ class SalesReportService
 
         if ($filters->orderStatus) {
             $query->where('status', $filters->orderStatus);
-        }
-
-        if ($filters->paymentStatus) {
-            $query->where('payment_status', $filters->paymentStatus);
         }
 
         if ($filters->cdNcdType) {
