@@ -13,7 +13,7 @@ class TopSalesRepresentativesWidget extends TableWidget
 {
     use InteractsWithPageFiltersTrait;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 1;
 
     public function table(Table $table): Table
     {

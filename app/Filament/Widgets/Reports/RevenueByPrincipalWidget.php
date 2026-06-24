@@ -13,7 +13,7 @@ class RevenueByPrincipalWidget extends TableWidget
 {
     use InteractsWithPageFilters;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 1;
 
     public function table(Table $table): Table
     {

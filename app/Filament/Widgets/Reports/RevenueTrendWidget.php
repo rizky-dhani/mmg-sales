@@ -13,6 +13,8 @@ class RevenueTrendWidget extends ChartWidget
 
     protected ?string $heading = 'Revenue Trend';
 
+    protected int|string|array $columnSpan = 1;
+
     public function getData(): array
     {
         $filters = $this->pageFilters ?? [];

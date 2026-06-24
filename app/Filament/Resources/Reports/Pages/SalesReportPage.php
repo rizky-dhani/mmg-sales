@@ -9,7 +9,6 @@ use App\Filament\Widgets\Reports\RevenueByCustomerGroupWidget;
 use App\Filament\Widgets\Reports\RevenueByPrincipalWidget;
 use App\Filament\Widgets\Reports\RevenueTrendWidget;
 use App\Filament\Widgets\Reports\SalesReportStatsWidget;
-use App\Filament\Widgets\Reports\SalesRevenueBySegmentWidget;
 use App\Filament\Widgets\Reports\TopSalesRepresentativesWidget;
 use App\Filament\Widgets\Reports\TopTerritoriesWidget;
 use App\Models\Customer;
@@ -52,15 +51,18 @@ class SalesReportPage extends Page
     {
         return [
             SalesReportStatsWidget::class,
-            RevenueTrendWidget::class,
-            SalesRevenueBySegmentWidget::class,
             TopSalesRepresentativesWidget::class,
             TopTerritoriesWidget::class,
+            RevenueTrendWidget::class,
             RevenueByPrincipalWidget::class,
             RevenueByCustomerGroupWidget::class,
         ];
     }
 
+    public function getFooterWidgetsColumns(): int | array
+    {
+        return 3;
+    }
     public function filtersForm(Schema $schema): Schema
     {
         return $schema
