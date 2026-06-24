@@ -65,12 +65,12 @@ class ProductsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                TrashedFilter::make(),
                 SelectFilter::make('principal')
                     ->label('Principal')
-                    ->relationship('principal', 'name')
+                    ->relationship('principal', 'name', fn ($q) => $q->orderBy('name'))
                     ->searchable()
                     ->preload(),
+                TrashedFilter::make(),
             ])
             ->recordActions([
                 ViewAction::make(),

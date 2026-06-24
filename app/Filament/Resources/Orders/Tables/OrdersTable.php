@@ -146,14 +146,14 @@ class OrdersTable
             ->filters([
                 SelectFilter::make('status')
                     ->options([
+                        'cancelled' => 'Cancelled',
+                        'confirmed' => 'Confirmed',
+                        'delivered' => 'Delivered',
                         'draft' => 'Draft',
                         'pending' => 'Pending',
-                        'confirmed' => 'Confirmed',
                         'processing' => 'Processing',
-                        'shipped' => 'Shipped',
-                        'delivered' => 'Delivered',
-                        'cancelled' => 'Cancelled',
                         'returned' => 'Returned',
+                        'shipped' => 'Shipped',
                     ]),
             ])
             ->recordActions([

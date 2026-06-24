@@ -56,14 +56,9 @@ class PermissionsTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('roles')
-                    ->label('Role')
-                    ->relationship('roles', 'name')
-                    ->multiple()
-                    ->preload(),
                 SelectFilter::make('department')
                     ->label('Department')
-                    ->options(fn (): array => Department::pluck('name', 'id')->toArray())
+                    ->options(fn (): array => Department::orderBy('name')->pluck('name', 'id')->toArray())
                     ->query(function ($query, array $data): void {
                         if (empty($data['values'])) {
                             return;
@@ -80,6 +75,7 @@ class PermissionsTable
                     ->label('Model')
                     ->options(fn (): array => collect(PermissionHelper::getModels())
                         ->mapWithKeys(fn (string $model): array => [$model => PermissionHelper::getModelLabel($model)])
+                        ->sort()
                         ->toArray())
                     ->query(function ($query, array $data): void {
                         if (empty($data['values'])) {
@@ -95,6 +91,11 @@ class PermissionsTable
                         });
                     })
                     ->multiple(),
+                SelectFilter::make('roles')
+                    ->label('Role')
+                    ->relationship('roles', 'name', fn ($q) => $q->orderBy('name'))
+                    ->multiple()
+                    ->preload(),
             ])
             ->recordActions([
                 EditAction::make(),
