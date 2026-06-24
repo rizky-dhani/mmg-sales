@@ -347,7 +347,7 @@ class OrderForm
                                             ->prefix('IDR')
                                             ->live()
                                             ->readOnly(fn ($get) => ! $get('principal_id') || ! $get('product_id'))
-                                            ->afterStateUpdated(fn ($set, $get) => self::updateLineTotal($set, $get))
+                                            ->afterStateUpdated(fn ($set, $get) => $set('subtotal', (int) $get('quantity') * (float) $get('unit_price')))
                                             ->columnSpan(1),
                                     ]),
                                 Grid::make(1)
