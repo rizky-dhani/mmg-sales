@@ -100,6 +100,13 @@ class TargetResource extends Resource
             ->filters([
                 //
             ])
+            ->modifyQueryUsing(function ($query): void {
+                $user = auth()->user();
+
+                if (! $user->hasRole('Super Admin')) {
+                    $query->where('user_id', $user->id);
+                }
+            })
             ->actions([
                 EditAction::make(),
                 DeleteAction::make(),

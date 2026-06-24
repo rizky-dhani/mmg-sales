@@ -46,12 +46,73 @@ class OrderForm
                     ->schema([
                         Grid::make(4)
                             ->schema([
+                                Select::make('order_source')
+                                    ->label('Order Source')
+                                    ->options([
+                                        'leads' => 'Leads',
+                                        'manual' => 'Input Manually',
+                                    ])
+                                    ->required()
+                                    ->live()
+                                    ->default('manual')
+                                    ->dehydrated(false)
+                                    ->columnSpan(2),
                                 DatePicker::make('order_date')
                                     ->label('Order Date')
                                     ->default(now())
                                     ->required()
                                     ->readOnly()
                                     ->columnSpan(2),
+                            ]),
+
+                        Grid::make(4)
+                            ->schema([
+                                Select::make('lead_id')
+                                    ->label('Lead')
+                                    ->relationship('lead', 'title')
+                                    ->options(fn () => Lead::query()
+                                        ->where(function ($query) {
+                                            $userId = auth()->id();
+                                            $query->where('assigned_to', $userId)
+                                                ->orWhere('created_by', $userId);
+                                        })
+                                        ->pluck('title', 'id'))
+                                    ->searchable()
+                                    ->preload()
+                                    ->placeholder('Select a lead')
+                                    ->visible(fn ($get) => $get('order_source') === 'leads')
+                                    ->required(fn ($get) => $get('order_source') === 'leads')
+                                    ->live()
+                                    ->columnSpan(2)
+                                    ->afterStateUpdated(function ($set, $get, ?string $state) {
+                                        if (! $state) {
+                                            $set('end_customer_id', null);
+                                            $set('notes', null);
+                                            $set('orderItems', []);
+
+                                            return;
+                                        }
+
+                                        $lead = Lead::with(['customer', 'products.principal'])->find($state);
+                                        if (! $lead) {
+                                            return;
+                                        }
+
+                                        $set('end_customer_id', $lead->customer_id);
+                                        $set('notes', $lead->notes);
+
+                                        $orderItems = $lead->products->map(fn ($product) => [
+                                            'principal_id' => $product->principal_id,
+                                            'product_id' => $product->id,
+                                            'quantity' => 1,
+                                            'price_type' => 'unit_price',
+                                            'unit_price' => $product->unit_price ?? 0,
+                                            'current_price' => $product->unit_price ?? 0,
+                                            'subtotal' => $product->unit_price ?? 0,
+                                        ])->toArray();
+
+                                        $set('orderItems', $orderItems);
+                                    }),
                                 TextInput::make('payment_method')
                                     ->label('Payment Method')
                                     ->placeholder('e.g. Bank Transfer, Credit Card')
@@ -174,20 +235,6 @@ class OrderForm
                                     ->preload()
                                     ->searchable(),
                             ]),
-
-                        Select::make('lead_id')
-                            ->label('Lead')
-                            ->relationship('lead', 'title')
-                            ->options(fn () => Lead::query()
-                                ->where(function ($query) {
-                                    $userId = auth()->id();
-                                    $query->where('assigned_to', $userId)
-                                        ->orWhere('created_by', $userId);
-                                })
-                                ->pluck('title', 'id'))
-                            ->searchable()
-                            ->preload()
-                            ->placeholder('Select a lead'),
                     ]),
 
                 Section::make('Customer Details')

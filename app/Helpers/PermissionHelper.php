@@ -28,6 +28,7 @@ class PermissionHelper
         'milestone',
         'item',
         'order',
+        'target',
         'user',
     ];
 

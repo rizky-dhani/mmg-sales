@@ -2,13 +2,10 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
-use App\Helpers\PermissionHelper;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Spatie\Permission\Models\Permission;
 
 class UserForm
 {
@@ -36,19 +33,29 @@ class UserForm
                             ->relationship('department', 'name')
                             ->default(null)
                             ->preload()
+                            ->searchable()
                             ->live(),
                         Select::make('position_id')
                             ->relationship('position', 'name')
                             ->default(null)
-                            ->preload(),
+                            ->preload()
+                            ->searchable(),
                         Select::make('territory_id')
                             ->relationship('territory', 'name')
                             ->default(null)
-                            ->preload(),
+                            ->preload()
+                            ->searchable(),
                         Select::make('manager_id')
-                            ->relationship('manager', 'name')
+                            ->relationship('manager', 'name', function ($query) {
+                                $query->whereHas('roles', function ($q) {
+                                    $q->where('name', 'like', '%Supervisor%')
+                                        ->orWhere('name', 'like', '%Manager%')
+                                        ->orWhere('name', 'like', '%Director%');
+                                });
+                            })
                             ->default(null)
-                            ->preload(),
+                            ->preload()
+                            ->searchable(),
 
                         // Department-filtered role assignment
                         Select::make('roles')
@@ -65,25 +72,6 @@ class UserForm
                             ->preload()
                             ->columnSpanFull()
                             ->helperText('Only global roles and roles matching the user\'s department are shown.'),
-
-                        // Direct permission overrides
-                        CheckboxList::make('permissions')
-                            ->relationship('permissions', 'name')
-                            ->getOptionLabelFromRecordUsing(function (Permission $record): string {
-                                $parsed = PermissionHelper::parsePermissionName($record->name);
-
-                                if ($parsed === null) {
-                                    return $record->name;
-                                }
-
-                                return PermissionHelper::getActionLabel($parsed['action'])
-                                    .' '
-                                    .PermissionHelper::getModelLabel($parsed['model']);
-                            })
-                            ->columns(3)
-                            ->gridDirection('row')
-                            ->label('Direct Permissions')
-                            ->helperText('Grant additional permissions beyond what roles provide.'),
                     ]),
             ]);
     }

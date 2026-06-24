@@ -17,25 +17,12 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create permissions
+        // ── Generate all model permissions ───────────────────────────────
         $models = [
-            'user',
-            'department',
-            'position',
-            'territory',
-            'customer',
-            'customer_group',
-            'contact',
-            'lead',
-            'product',
-            'order',
-            'activity',
-            'segment',
-            'sub_segment',
-            'distributor',
-            'principal',
-            'sales_type',
-            'item',
+            'customer_group', 'sub_segment', 'sales_type', 'customer', 'department',
+            'distributor', 'activity', 'contact', 'product', 'lead', 'segment',
+            'territory', 'position', 'principal', 'milestone', 'item', 'order',
+            'target', 'user',
         ];
 
         $actions = ['view', 'view_any', 'create', 'update', 'delete', 'restore', 'force_delete'];
@@ -46,103 +33,123 @@ class RolesAndPermissionsSeeder extends Seeder
             }
         }
 
-        // Create roles and assign permissions
+        // ── Report permissions ───────────────────────────────────────────
+        $reportPermissions = [
+            'view_sales_reports',
+            'view_customer_reports',
+            'view_product_reports',
+            'view_project_reports',
+            'view_lead_reports',
+        ];
 
-        // Super Admin - bypasses all permissions via Gate::before in AppServiceProvider
+        foreach ($reportPermissions as $permission) {
+            Permission::findOrCreate($permission);
+        }
+
+        // ── Reference data view permissions (shared by many roles) ───────
+        $viewReference = [
+            'view_any_customer', 'view_customer',
+            'view_any_customer_group', 'view_customer_group',
+            'view_any_contact', 'view_contact',
+            'view_any_segment', 'view_segment',
+            'view_any_sub_segment', 'view_sub_segment',
+            'view_any_territory', 'view_territory',
+            'view_any_distributor', 'view_distributor',
+            'view_any_principal', 'view_principal',
+            'view_any_product', 'view_product',
+            'view_any_sales_type', 'view_sales_type',
+            'view_any_item', 'view_item',
+            'view_any_department', 'view_department',
+            'view_any_position', 'view_position',
+        ];
+
+        // ── 1. Super Admin ──────────────────────────────────────────────
+        // Bypasses all permissions via Gate::before in AppServiceProvider
         Role::findOrCreate('Super Admin');
 
-        // Admin - CRUD permissions based on department
-        // Sales dept: CRUD Customer
-        // Import & Purchasing dept: CRUD Product and Principal
-        $admin = Role::findOrCreate('Admin');
-        $admin->givePermissionTo([
-            // View permissions for reference data
-            'view_any_user', 'view_user',
-            'view_any_department', 'view_department',
-            'view_any_position', 'view_position',
-            'view_any_territory', 'view_territory',
-            'view_any_customer_group', 'view_customer_group',
-            'view_any_segment', 'view_segment',
-            'view_any_sub_segment', 'view_sub_segment',
-            'view_any_distributor', 'view_distributor',
-            'view_any_sales_type', 'view_sales_type',
-            'view_any_item', 'view_item',
-            'view_any_contact', 'view_contact',
-            'view_any_principal', 'view_principal',
-            'view_any_product', 'view_product',
-            // Admin can CRUD Customer (Sales dept)
-            'view_any_customer', 'view_customer', 'create_customer', 'update_customer', 'delete_customer',
-            // Admin can CRUD Product and Principal (Import & Purchasing dept)
-            'create_product', 'update_product', 'delete_product',
-            'create_principal', 'update_principal', 'delete_principal',
-        ]);
+        // ── 2. Admin - Sales ─────────────────────────────────────────────
+        // CRUD: Customer, Customer Group, Contact, Segment, Sub Segment
+        $adminSalesPermissions = array_merge([
+            'view_any_customer', 'view_customer', 'create_customer', 'update_customer', 'delete_customer', 'restore_customer', 'force_delete_customer',
+            'view_any_customer_group', 'view_customer_group', 'create_customer_group', 'update_customer_group', 'delete_customer_group', 'restore_customer_group', 'force_delete_customer_group',
+            'view_any_contact', 'view_contact', 'create_contact', 'update_contact', 'delete_contact', 'restore_contact', 'force_delete_contact',
+            'view_any_segment', 'view_segment', 'create_segment', 'update_segment', 'delete_segment', 'restore_segment', 'force_delete_segment',
+            'view_any_sub_segment', 'view_sub_segment', 'create_sub_segment', 'update_sub_segment', 'delete_sub_segment', 'restore_sub_segment', 'force_delete_sub_segment',
+        ], $viewReference);
 
-        // Define Sales CRUD permissions (Project, Activity, Order)
-        $salesCrudPermissions = [
-            // View permissions for reference data
-            'view_any_customer', 'view_customer',
-            'view_any_customer_group', 'view_customer_group',
-            'view_any_contact', 'view_contact',
-            'view_any_territory', 'view_territory',
-            'view_any_distributor', 'view_distributor',
-            'view_any_principal', 'view_principal',
-            'view_any_product', 'view_product',
-            'view_any_sales_type', 'view_sales_type',
-            'view_any_item', 'view_item',
-            'view_any_segment', 'view_segment',
-            'view_any_sub_segment', 'view_sub_segment',
-            'view_any_department', 'view_department',
-            'view_any_position', 'view_position',
-            // CRUD Project, Activity, Order
+        Role::findOrCreate('Admin - Sales')->syncPermissions($adminSalesPermissions);
+
+        // ── 3. Supervisor - Import & Purchasing ──────────────────────────
+        // CRUD: Principal, Product, Distributor
+        $supervisorIpPermissions = array_merge([
+            'view_any_principal', 'view_principal', 'create_principal', 'update_principal', 'delete_principal', 'restore_principal', 'force_delete_principal',
+            'view_any_product', 'view_product', 'create_product', 'update_product', 'delete_product', 'restore_product', 'force_delete_product',
+            'view_any_distributor', 'view_distributor', 'create_distributor', 'update_distributor', 'delete_distributor', 'restore_distributor', 'force_delete_distributor',
+        ], $viewReference);
+
+        Role::findOrCreate('Supervisor - Import & Purchasing')->syncPermissions($supervisorIpPermissions);
+
+        // ── 4. Sales & Marketing department roles ────────────────────────
+        // CRUD: Lead, Activity, Order, Target
+        $smPermissions = array_merge([
+            // Lead
             'view_any_lead', 'view_lead', 'create_lead', 'update_lead', 'delete_lead',
+            // Activity
             'view_any_activity', 'view_activity', 'create_activity', 'update_activity', 'delete_activity',
+            // Order
             'view_any_order', 'view_order', 'create_order', 'update_order', 'delete_order',
+            // Target
+            'view_any_target', 'view_target', 'create_target', 'update_target', 'delete_target',
+        ], $viewReference);
+
+        $smRoles = [
+            'Staff - Sales',
+            'Supervisor - Sales',
+            'Area Sales Manager - Sales',
+            'Regional Sales Manager - Sales',
+            'Staff - Marketing',
+            'Manager - Marketing',
+            'Manager - Sales',
         ];
 
-        // Define view-only permissions for oversight roles (Director)
-        $oversightViewPermissions = [
-            // View permissions for reference data
-            'view_any_customer', 'view_customer',
-            'view_any_customer_group', 'view_customer_group',
-            'view_any_contact', 'view_contact',
-            'view_any_territory', 'view_territory',
-            'view_any_distributor', 'view_distributor',
-            'view_any_principal', 'view_principal',
-            'view_any_product', 'view_product',
-            'view_any_sales_type', 'view_sales_type',
-            'view_any_item', 'view_item',
-            'view_any_segment', 'view_segment',
-            'view_any_sub_segment', 'view_sub_segment',
-            'view_any_department', 'view_department',
-            'view_any_position', 'view_position',
-            // View-only Project, Activity, Order
-            'view_any_lead', 'view_lead',
-            'view_any_activity', 'view_activity',
-            'view_any_order', 'view_order',
+        foreach ($smRoles as $roleName) {
+            Role::findOrCreate($roleName)->syncPermissions($smPermissions);
+        }
+
+        // ── 5. Director - Management ─────────────────────────────────────
+        // Reports access + view reference data
+        $directorPermissions = array_merge($reportPermissions, $viewReference);
+
+        Role::findOrCreate('Director - Management')->syncPermissions($directorPermissions);
+
+        // ── 6. Report access (add report permissions to specific roles) ──
+        $reportRoles = [
+            'Regional Sales Manager - Sales',
+            'Area Sales Manager - Sales',
+            'Manager - Marketing',
+            'Manager - Sales',
         ];
 
-        // Director - View-only oversight of Project, Activity, Order from Manager and below
-        $director = Role::findOrCreate('Director');
-        $director->givePermissionTo($oversightViewPermissions);
+        foreach ($reportRoles as $roleName) {
+            Role::where('name', $roleName)->first()?->givePermissionTo($reportPermissions);
+        }
 
-        // Staff (Sales dept) - CRUD Project, Activity, Order
-        $staff = Role::findOrCreate('Staff');
-        $staff->givePermissionTo($salesCrudPermissions);
+        // ── Clean up: strip permissions from old generic roles ───────────
+        $oldGenericRoles = ['Admin', 'Director', 'Staff', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager', 'Manager'];
 
-        // Supervisor - Same permissions as Staff
-        $supervisor = Role::findOrCreate('Supervisor');
-        $supervisor->givePermissionTo($salesCrudPermissions);
+        foreach ($oldGenericRoles as $roleName) {
+            Role::where('name', $roleName)->first()?->syncPermissions([]);
+        }
 
-        // Regional Sales Manager - Same permissions as Supervisor
-        $rsm = Role::findOrCreate('Regional Sales Manager');
-        $rsm->givePermissionTo($salesCrudPermissions);
+        // ── Clean up: strip permissions from non-S&M dept roles ─────────
+        $otherDeptRoles = [
+            'Staff - TSS', 'Staff - Finance & Accounting', 'Staff - Logistics', 'Staff - RQA',
+            'Supervisor - Finance & Accounting', 'Supervisor - TSS',
+            'Manager - TSS',
+        ];
 
-        // Area Sales Manager - Same permissions as RSM
-        $asm = Role::findOrCreate('Area Sales Manager');
-        $asm->givePermissionTo($salesCrudPermissions);
-
-        // Manager - Same permissions as RSM/ASM
-        $manager = Role::findOrCreate('Manager');
-        $manager->givePermissionTo($salesCrudPermissions);
+        foreach ($otherDeptRoles as $roleName) {
+            Role::where('name', $roleName)->first()?->syncPermissions([]);
+        }
     }
 }
