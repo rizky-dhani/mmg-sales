@@ -24,11 +24,6 @@ class ProductsTable
     {
         return $table
             ->columns([
-                TextColumn::make('product_code')
-                    ->label('Product Code')
-                    ->searchable()
-                    ->sortable(),
-
                 TextColumn::make('internal_code')
                     ->label('Internal Code')
                     ->searchable()
