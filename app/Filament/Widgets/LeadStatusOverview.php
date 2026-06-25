@@ -19,12 +19,19 @@ class LeadStatusOverview extends BaseWidget
 
     protected function getStats(): array
     {
+        $totalCount = Lead::count();
         $wonCount = Lead::where('status', 'won')->count();
         $lostCount = Lead::where('status', 'lost')->count();
         $inProgressCount = Lead::whereNotIn('status', ['new', 'won', 'lost'])->count();
 
         return [
-            Stat::make('Won Leads', $wonCount)
+            Stat::make('Total', $totalCount)
+                ->description('All leads')
+                ->descriptionIcon('heroicon-m-users')
+                ->color('primary')
+                ->url(route('filament.admin.resources.leads.index')),
+
+            Stat::make('Won', $wonCount)
                 ->description('Converted to customers')
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('success')
@@ -36,7 +43,7 @@ class LeadStatusOverview extends BaseWidget
                 ->color('info')
                 ->url(route('filament.admin.resources.leads.index')),
 
-            Stat::make('Lost Leads', $lostCount)
+            Stat::make('Lost', $lostCount)
                 ->description('Dropped opportunities')
                 ->descriptionIcon('heroicon-m-x-circle')
                 ->color('danger')
