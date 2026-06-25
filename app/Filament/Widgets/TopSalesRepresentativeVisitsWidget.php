@@ -8,6 +8,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
 class TopSalesRepresentativeVisitsWidget extends TableWidget
@@ -17,6 +18,11 @@ class TopSalesRepresentativeVisitsWidget extends TableWidget
     protected int|string|array $columnSpan = 'full';
 
     protected static ?string $heading = 'Top Sales Representatives by Customer Visits';
+
+    public function getTableRecordKey(Model|array $record): string
+    {
+        return $record->user_id.'-'.$record->customer_id;
+    }
 
     public function table(Table $table): Table
     {
