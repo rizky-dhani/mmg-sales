@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\TopSalesRepresentativeVisitsWidget;
+use App\Filament\Widgets\TopVisitedCustomersWidget;
 use Filament\Pages\Dashboard as BaseDashboard;
 
 class Dashboard extends BaseDashboard
@@ -15,7 +17,8 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
-            // Custom dashboard widgets will be registered here
+            TopVisitedCustomersWidget::class,
+            TopSalesRepresentativeVisitsWidget::class,
         ];
     }
 }
