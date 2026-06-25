@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->string('product_code', 30)->unique()->nullable()->after('id');
-            $table->string('internal_code', 50)->nullable()->after('product_code');
+            if (! Schema::hasColumn('products', 'product_code')) {
+                $table->string('product_code', 30)->unique()->nullable()->after('id');
+            }
+            if (! Schema::hasColumn('products', 'internal_code')) {
+                $table->string('internal_code', 50)->nullable()->after('product_code');
+            }
         });
     }
 
