@@ -15,7 +15,7 @@ class TopVisitedCustomersWidget extends TableWidget
 {
     protected static ?int $sort = 4;
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 2;
 
     protected static ?string $heading = 'Top Visited Customers';
 
