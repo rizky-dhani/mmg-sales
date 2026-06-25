@@ -2,14 +2,16 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Lead;
 use App\Models\Order;
+use App\Models\Principal;
+use App\Models\Product;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use NumberFormatter;
 
 class SalesOverview extends BaseWidget
 {
-    protected ?string $heading = 'Sales Performance';
+    protected int|string|array $columnSpan = 'full';
 
     public static function canView(): bool
     {
@@ -18,24 +20,30 @@ class SalesOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        $totalOrders = Order::count();
-        $totalSales = Order::sum('net_sales_total');
-        $aov = $totalOrders > 0 ? $totalSales / $totalOrders : 0;
-
-        $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
-        $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
-
         return [
-            Stat::make('Total Net Sales', $formatter->formatCurrency($totalSales, 'IDR'))
-                ->description('Sum of all net sales')
-                ->descriptionIcon('heroicon-m-banknotes')
-                ->color('success')
+            Stat::make('Total Orders', Order::count())
+                ->description('All orders placed')
+                ->descriptionIcon('heroicon-m-shopping-cart')
+                ->color('primary')
                 ->url(route('filament.admin.resources.orders.index')),
 
-            Stat::make('Avg Order Value (AOV)', $formatter->formatCurrency($aov, 'IDR'))
-                ->description('Average revenue per order')
-                ->descriptionIcon('heroicon-m-calculator')
-                ->color('info'),
+            Stat::make('Total Leads', Lead::count())
+                ->description('All leads in pipeline')
+                ->descriptionIcon('heroicon-m-users')
+                ->color('info')
+                ->url(route('filament.admin.resources.leads.index')),
+
+            Stat::make('Total Products', Product::count())
+                ->description('Products in catalog')
+                ->descriptionIcon('heroicon-m-cube')
+                ->color('success')
+                ->url(route('filament.admin.resources.products.index')),
+
+            Stat::make('Total Principals', Principal::count())
+                ->description('Active principals')
+                ->descriptionIcon('heroicon-m-building-office')
+                ->color('warning')
+                ->url(route('filament.admin.resources.principals.index')),
         ];
     }
 }
