@@ -8,9 +8,7 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class LeadStatusOverview extends BaseWidget
 {
-    protected ?string $heading = 'Lead Pipeline Status';
-
-    protected int|string|array $columnSpan = 3;
+    protected int|string|array $columnSpan = 'full';
 
     public static function canView(): bool
     {
