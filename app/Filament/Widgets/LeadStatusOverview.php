@@ -10,6 +10,8 @@ class LeadStatusOverview extends BaseWidget
 {
     protected ?string $heading = 'Lead Pipeline Status';
 
+    protected int|string|array $columnSpan = 3;
+
     public static function canView(): bool
     {
         return true;

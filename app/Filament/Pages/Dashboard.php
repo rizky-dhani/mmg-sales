@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\LeadStatusOverview;
+use App\Filament\Widgets\Reports\SalesReportStatsWidget;
 use App\Filament\Widgets\TopSalesRepresentativeVisitsWidget;
 use App\Filament\Widgets\TopVisitedCustomersWidget;
 use Filament\Pages\Dashboard as BaseDashboard;
@@ -17,6 +19,8 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         return [
+            SalesReportStatsWidget::class,
+            LeadStatusOverview::class,
             TopVisitedCustomersWidget::class,
             TopSalesRepresentativeVisitsWidget::class,
         ];
