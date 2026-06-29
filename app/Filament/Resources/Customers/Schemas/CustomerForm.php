@@ -40,7 +40,7 @@ class CustomerForm
                             ]),
 
                         Section::make('Contact Information')
-                            ->columns(3)
+                            ->columns(2)
                             ->schema([
                                 TextInput::make('email')
                                     ->label('Email address')
@@ -77,31 +77,28 @@ class CustomerForm
                             ]),
 
                         Section::make('Classification')
+                            ->columns(3)
                             ->schema([
-                                Grid::make(3)
-                                    ->columnSpanFull()
-                                    ->schema([
-                                        Select::make('cd_ncd_type')
-                                            ->label('CD / NCD Type')
-                                            ->options([
-                                                'CD' => 'CD',
-                                                'N-CD' => 'N-CD (Life Science)',
-                                            ])
-                                            ->live(),
-                                        Select::make('segment_id')
-                                            ->label('Segment')
-                                            ->relationship('segment', 'name')
-                                            ->live()
-                                            ->preload()
-                                            ->searchable(),
-                                        Select::make('sub_segment_id')
-                                            ->label('Sub Segment')
-                                            ->options(fn ($get) => SubSegment::query()
-                                                ->where('segment_id', $get('segment_id'))
-                                                ->pluck('name', 'id'))
-                                            ->preload()
-                                            ->searchable(),
-                                    ]),
+                                Select::make('cd_ncd_type')
+                                    ->label('CD / NCD Type')
+                                    ->options([
+                                        'CD' => 'CD',
+                                        'N-CD' => 'N-CD (Life Science)',
+                                    ])
+                                    ->live(),
+                                Select::make('segment_id')
+                                    ->label('Segment')
+                                    ->relationship('segment', 'name')
+                                    ->live()
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('sub_segment_id')
+                                    ->label('Sub Segment')
+                                    ->options(fn ($get) => SubSegment::query()
+                                        ->where('segment_id', $get('segment_id'))
+                                        ->pluck('name', 'id'))
+                                    ->preload()
+                                    ->searchable(),
                             ]),
                     ]),
 
