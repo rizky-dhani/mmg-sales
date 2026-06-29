@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Orders\Schemas;
 
+use App\Models\Customer;
 use App\Models\Lead;
 use App\Models\Position;
 use App\Models\Principal;
@@ -244,11 +245,28 @@ class OrderForm
                                     ->relationship(
                                         name: 'customer',
                                         titleAttribute: 'name',
-                                        modifyQueryUsing: fn (Builder $query) => $query->where('status', 'active'),
+                                        modifyQueryUsing: fn (Builder $query) => $query->where('status', 'active')->latest('created_at'),
                                     )
                                     ->searchable()
                                     ->required()
-                                    ->preload(),
+                                    ->preload()
+                                    ->live()
+                                    ->afterStateUpdated(function ($set, $state) {
+                                        if (! $state) {
+                                            $set('billing_address', null);
+                                            $set('customer_group_id', null);
+
+                                            return;
+                                        }
+
+                                        $customer = Customer::find($state);
+                                        if (! $customer) {
+                                            return;
+                                        }
+
+                                        $set('billing_address', $customer->address);
+                                        $set('customer_group_id', $customer->customer_group_id);
+                                    }),
                                 Select::make('area_city_id')
                                     ->label('Area / City')
                                     ->relationship('territory', 'name')
