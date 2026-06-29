@@ -34,6 +34,8 @@ class Customer extends Model
         'is_active',
         'status',
         'cd_ncd_type',
+        'segment_id',
+        'sub_segment_id',
         'customer_group_id',
         'customer_code',
         'customer_acc_code',
@@ -77,6 +79,16 @@ class Customer extends Model
     public function activities(): HasMany
     {
         return $this->hasMany(Activity::class, 'customer_id');
+    }
+
+    public function segment(): BelongsTo
+    {
+        return $this->belongsTo(Segment::class);
+    }
+
+    public function subSegment(): BelongsTo
+    {
+        return $this->belongsTo(SubSegment::class);
     }
 
     protected static function boot(): void
