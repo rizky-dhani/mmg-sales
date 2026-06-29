@@ -85,20 +85,23 @@ class CustomerForm
                                         'CD' => 'CD',
                                         'N-CD' => 'N-CD (Life Science)',
                                     ])
-                                    ->live(),
+                                    ->live()
+                                    ->columnSpanFull(),
                                 Select::make('segment_id')
                                     ->label('Segment')
                                     ->relationship('segment', 'name')
                                     ->live()
                                     ->preload()
-                                    ->searchable(),
+                                    ->searchable()
+                                    ->columnSpanFull(),
                                 Select::make('sub_segment_id')
                                     ->label('Sub Segment')
                                     ->options(fn ($get) => SubSegment::query()
                                         ->where('segment_id', $get('segment_id'))
                                         ->pluck('name', 'id'))
                                     ->preload()
-                                    ->searchable(),
+                                    ->searchable()
+                                    ->columnSpanFull(),
                             ]),
                     ]),
 
