@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Roles\Schemas;
 
 use App\Helpers\PermissionHelper;
+use App\Models\Department;
+use App\Models\Position;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -15,7 +17,30 @@ class RoleForm
     {
         return $schema
             ->components([
+                Select::make('department_id')
+                    ->label('Department')
+                    ->options(fn () => Department::pluck('name', 'id'))
+                    ->nullable()
+                    ->default(null)
+                    ->placeholder('Global (all departments)')
+                    ->preload()
+                    ->reactive()
+                    ->afterStateUpdated(fn ($set, $get) => self::updateName($set, $get))
+                    ->helperText('Leave empty for global roles. Scoped roles only grant permissions to users in the selected department.'),
+                Select::make('position_id')
+                    ->label('Position')
+                    ->options(fn () => Position::pluck('name', 'id'))
+                    ->nullable()
+                    ->default(null)
+                    ->placeholder('Select a position')
+                    ->preload()
+                    ->searchable()
+                    ->reactive()
+                    ->afterStateUpdated(fn ($set, $get) => self::updateName($set, $get)),
                 TextInput::make('name')
+                    ->label('Role Name')
+                    ->disabled()
+                    ->dehydrated()
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true, modifyRuleUsing: function (Unique $rule, $get) {
@@ -33,13 +58,6 @@ class RoleForm
                     ])
                     ->default('web')
                     ->required(),
-                Select::make('department_id')
-                    ->relationship('department', 'name')
-                    ->nullable()
-                    ->default(null)
-                    ->placeholder('Global (all departments)')
-                    ->preload()
-                    ->helperText('Leave empty for global roles. Scoped roles only grant permissions to users in the selected department.'),
                 Select::make('permissions')
                     ->multiple()
                     ->relationship('permissions', 'name')
@@ -59,5 +77,27 @@ class RoleForm
                     ->preload()
                     ->columnSpanFull(),
             ]);
+    }
+
+    protected static function updateName(callable $set, callable $get): void
+    {
+        $positionId = $get('position_id');
+        $departmentId = $get('department_id');
+
+        if (! $positionId) {
+            $set('name', null);
+
+            return;
+        }
+
+        $position = Position::find($positionId);
+        $department = $departmentId ? Department::find($departmentId) : null;
+
+        $name = $position->name;
+        if ($department) {
+            $name .= ' - '.$department->name;
+        }
+
+        $set('name', $name);
     }
 }
