@@ -51,7 +51,7 @@ class LeadsTable
                 TextColumn::make('assignedCollaborators')
                     ->label('Assigned To')
                     ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('collaborators', fn ($q) => $q->where('name', 'like', "%{$search}%")))
-                    ->formatStateUsing(fn ($state, $record) => $record->collaborators->pluck('name')->join("\n")),
+                    ->getStateUsing(fn ($record) => $record->collaborators->pluck('name')->join("\n")),
 
                 TextColumn::make('priority')
                     ->badge()
