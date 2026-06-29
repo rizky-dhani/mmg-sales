@@ -59,10 +59,11 @@ class SalesReportPage extends Page
         ];
     }
 
-    public function getFooterWidgetsColumns(): int | array
+    public function getFooterWidgetsColumns(): int|array
     {
         return 3;
     }
+
     public function filtersForm(Schema $schema): Schema
     {
         return $schema

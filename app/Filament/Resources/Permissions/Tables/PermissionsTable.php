@@ -93,7 +93,7 @@ class PermissionsTable
                     ->multiple(),
                 SelectFilter::make('roles')
                     ->label('Role')
-                ->relationship('roles', 'name', fn ($query) => $query->orderBy('name'))
+                    ->relationship('roles', 'name', fn ($query) => $query->orderBy('name'))
                     ->multiple()
                     ->preload(),
             ])
