@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Customers\Schemas;
 
+use App\Models\SubSegment;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -70,6 +71,34 @@ class CustomerForm
                                 TextInput::make('country')
                                     ->required()
                                     ->default('Indonesia'),
+                            ]),
+                    ]),
+
+                Section::make('Classification')
+                    ->columnSpanFull()
+                    ->schema([
+                        Grid::make(3)
+                            ->schema([
+                                Select::make('cd_ncd_type')
+                                    ->label('CD / NCD Type')
+                                    ->options([
+                                        'CD' => 'CD',
+                                        'N-CD' => 'N-CD',
+                                    ])
+                                    ->live(),
+                                Select::make('segment_id')
+                                    ->label('Segment')
+                                    ->relationship('segment', 'name')
+                                    ->live()
+                                    ->preload()
+                                    ->searchable(),
+                                Select::make('sub_segment_id')
+                                    ->label('Sub Segment')
+                                    ->options(fn ($get) => SubSegment::query()
+                                        ->where('segment_id', $get('segment_id'))
+                                        ->pluck('name', 'id'))
+                                    ->preload()
+                                    ->searchable(),
                             ]),
                     ]),
 
