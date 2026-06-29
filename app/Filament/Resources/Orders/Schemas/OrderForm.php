@@ -127,12 +127,10 @@ class OrderForm
                                         'CD' => 'CD',
                                         'N-CD' => 'N-CD (Life Science)',
                                     ])
-                                    ->required()
                                     ->live(),
                                 Select::make('segment_id')
                                     ->label('Segment')
                                     ->relationship('segment', 'name')
-                                    ->required()
                                     ->live()
                                     ->preload()
                                     ->searchable(),
@@ -141,7 +139,6 @@ class OrderForm
                                     ->options(fn ($get) => SubSegment::query()
                                         ->where('segment_id', $get('segment_id'))
                                         ->pluck('name', 'id'))
-                                    ->required()
                                     ->preload()
                                     ->searchable(),
                                 Select::make('reg_inst')
@@ -159,7 +156,6 @@ class OrderForm
                                         'INAPROC' => 'INAPROC',
                                         'non-INAPROC' => 'non-INAPROC',
                                     ])
-                                    ->required()
                                     ->searchable(),
                             ]),
 
