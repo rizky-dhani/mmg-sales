@@ -51,7 +51,8 @@ class CustomerForm
                                     ->default(null),
                                 TextInput::make('website')
                                     ->url()
-                                    ->default(null),
+                                    ->default(null)
+                                    ->columnSpanFull(),
                             ]),
                     ]),
 
@@ -78,6 +79,7 @@ class CustomerForm
                         Section::make('Classification')
                             ->schema([
                                 Grid::make(3)
+                                    ->columnSpanFull()
                                     ->schema([
                                         Select::make('cd_ncd_type')
                                             ->label('CD / NCD Type')
