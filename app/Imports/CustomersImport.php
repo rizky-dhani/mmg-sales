@@ -130,7 +130,7 @@ class CustomersImport implements ToCollection, WithHeadingRow
     }
 
     /**
-     * Normalize the status value to match the ENUM column ('active', 'passive').
+     * Normalize the status value to match the ENUM column ('active', 'inactive').
      * Handles common variations from imports.
      */
     protected function normalizeStatus(?string $value): string
@@ -145,17 +145,17 @@ class CustomersImport implements ToCollection, WithHeadingRow
         $passiveStates = ['passive', 'inactive', '0', 'no', 'false', 'n', 'tidak'];
 
         if (in_array($normalized, $passiveStates, true)) {
-            return 'passive';
+            return 'inactive';
         }
 
         if (in_array($normalized, $activeStates, true)) {
             return 'active';
         }
 
-        // Try to parse as integer (truthy = active, falsy = passive)
+        // Try to parse as integer (truthy = active, falsy = inactive)
         $intValue = filter_var($normalized, FILTER_VALIDATE_INT);
         if ($intValue !== false) {
-            return $intValue ? 'active' : 'passive';
+            return $intValue ? 'active' : 'inactive';
         }
 
         return 'active';

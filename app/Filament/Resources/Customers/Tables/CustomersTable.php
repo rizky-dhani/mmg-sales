@@ -70,7 +70,7 @@ class CustomersTable
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'active' => 'success',
-                        'passive' => 'danger',
+                        'inactive' => 'danger',
                     })
                     ->formatStateUsing(fn (string $state): string => ucfirst($state)),
 
