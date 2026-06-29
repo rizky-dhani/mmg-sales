@@ -24,8 +24,6 @@ class RoleForm
                     ->default(null)
                     ->placeholder('Global (all departments)')
                     ->preload()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($set, $get) => self::updateName($set, $get))
                     ->helperText('Leave empty for global roles. Scoped roles only grant permissions to users in the selected department.'),
                 Select::make('position_id')
                     ->label('Position')
@@ -34,9 +32,7 @@ class RoleForm
                     ->default(null)
                     ->placeholder('Select a position')
                     ->preload()
-                    ->searchable()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($set, $get) => self::updateName($set, $get)),
+                    ->searchable(),
                 TextInput::make('name')
                     ->label('Role Name')
                     ->disabled()
@@ -77,27 +73,5 @@ class RoleForm
                     ->preload()
                     ->columnSpanFull(),
             ]);
-    }
-
-    protected static function updateName(callable $set, callable $get): void
-    {
-        $positionId = $get('position_id');
-        $departmentId = $get('department_id');
-
-        if (! $positionId) {
-            $set('name', null);
-
-            return;
-        }
-
-        $position = Position::find($positionId);
-        $department = $departmentId ? Department::find($departmentId) : null;
-
-        $name = $position->name;
-        if ($department) {
-            $name .= ' - '.$department->name;
-        }
-
-        $set('name', $name);
     }
 }
