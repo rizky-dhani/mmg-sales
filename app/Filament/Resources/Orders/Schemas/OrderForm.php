@@ -271,7 +271,6 @@ class OrderForm
                                     ->label('Area / City')
                                     ->relationship('territory', 'name')
                                     ->searchable()
-                                    ->required()
                                     ->preload(),
                                 Select::make('customer_group_id')
                                     ->label('Customer Group')
