@@ -61,7 +61,6 @@ class OrderForm
                                     ->label('Order Date')
                                     ->default(now())
                                     ->required()
-                                    ->readOnly()
                                     ->columnSpan(2),
                             ]),
 
