@@ -16,33 +16,31 @@ class CustomerForm
     {
         return $schema
             ->components([
-                Section::make('Customer Information')
-                    ->columnSpanFull()
-                    ->columns(2)
-                    ->schema([
-                        TextInput::make('customer_acc_code')
-                            ->label('Internal Code')
-                            ->default(null)
-                            ->columnSpanFull(),
-                        TextInput::make('name')
-                            ->required()
-                            ->columnSpanFull(),
-                        Select::make('type')
-                            ->options([
-                                'hospital_clinic' => 'Hospital/Apothecary/Clinic',
-                                'pt_cv' => 'PT/CV',
-                                'other' => 'Other',
-                            ])
-                            ->default('other')
-                            ->required(),
-                        TextInput::make('tax_number')
-                            ->default(null),
-                    ]),
-
                 Grid::make(2)
                     ->columnSpanFull()
                     ->schema([
+                        Section::make('Customer Information')
+                            ->columns(2)
+                            ->schema([
+                                TextInput::make('customer_acc_code')
+                                    ->label('Internal Code')
+                                    ->default(null),
+                                TextInput::make('name')
+                                    ->required(),
+                                Select::make('type')
+                                    ->options([
+                                        'hospital_clinic' => 'Hospital/Apothecary/Clinic',
+                                        'pt_cv' => 'PT/CV',
+                                        'other' => 'Other',
+                                    ])
+                                    ->default('other')
+                                    ->required(),
+                                TextInput::make('tax_number')
+                                    ->default(null),
+                            ]),
+
                         Section::make('Contact Information')
+                            ->columns(3)
                             ->schema([
                                 TextInput::make('email')
                                     ->label('Email address')
@@ -55,7 +53,11 @@ class CustomerForm
                                     ->url()
                                     ->default(null),
                             ]),
+                    ]),
 
+                Grid::make(2)
+                    ->columnSpanFull()
+                    ->schema([
                         Section::make('Address')
                             ->columns(2)
                             ->schema([
@@ -72,33 +74,32 @@ class CustomerForm
                                     ->required()
                                     ->default('Indonesia'),
                             ]),
-                    ]),
 
-                Section::make('Classification')
-                    ->columnSpanFull()
-                    ->schema([
-                        Grid::make(3)
+                        Section::make('Classification')
                             ->schema([
-                                Select::make('cd_ncd_type')
-                                    ->label('CD / NCD Type')
-                                    ->options([
-                                        'CD' => 'CD',
-                                        'N-CD' => 'N-CD (Life Science)',
-                                    ])
-                                    ->live(),
-                                Select::make('segment_id')
-                                    ->label('Segment')
-                                    ->relationship('segment', 'name')
-                                    ->live()
-                                    ->preload()
-                                    ->searchable(),
-                                Select::make('sub_segment_id')
-                                    ->label('Sub Segment')
-                                    ->options(fn ($get) => SubSegment::query()
-                                        ->where('segment_id', $get('segment_id'))
-                                        ->pluck('name', 'id'))
-                                    ->preload()
-                                    ->searchable(),
+                                Grid::make(3)
+                                    ->schema([
+                                        Select::make('cd_ncd_type')
+                                            ->label('CD / NCD Type')
+                                            ->options([
+                                                'CD' => 'CD',
+                                                'N-CD' => 'N-CD (Life Science)',
+                                            ])
+                                            ->live(),
+                                        Select::make('segment_id')
+                                            ->label('Segment')
+                                            ->relationship('segment', 'name')
+                                            ->live()
+                                            ->preload()
+                                            ->searchable(),
+                                        Select::make('sub_segment_id')
+                                            ->label('Sub Segment')
+                                            ->options(fn ($get) => SubSegment::query()
+                                                ->where('segment_id', $get('segment_id'))
+                                                ->pluck('name', 'id'))
+                                            ->preload()
+                                            ->searchable(),
+                                    ]),
                             ]),
                     ]),
 
