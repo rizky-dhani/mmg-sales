@@ -37,6 +37,7 @@ class Customer extends Model
         'customer_group_id',
         'customer_code',
         'customer_acc_code',
+        'max_contact_persons',
     ];
 
     protected $codeColumn = 'customer_code';
@@ -76,5 +77,14 @@ class Customer extends Model
     public function activities(): HasMany
     {
         return $this->hasMany(Activity::class, 'customer_id');
+    }
+
+    protected static function boot(): void
+    {
+        static::updated(function (Customer $customer) {
+            if ($customer->isDirty('status') && $customer->status === 'inactive') {
+                $customer->contacts()->where('status', 'active')->update(['status' => 'inactive']);
+            }
+        });
     }
 }

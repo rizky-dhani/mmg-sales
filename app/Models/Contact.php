@@ -16,6 +16,7 @@ class Contact extends Model
     protected $fillable = [
         'customer_id',
         'name',
+        'status',
         'position',
         'department',
         'email',
@@ -31,6 +32,24 @@ class Contact extends Model
 
     protected $codePrefix = 'CON';
 
+    protected static function boot(): void
+    {
+        static::creating(function (Contact $contact) {
+            $customer = $contact->customer;
+
+            if ($customer->status === 'inactive') {
+                abort(403, 'Cannot create contact for inactive customer.');
+            }
+
+            if ($customer->max_contact_persons !== null) {
+                $activeCount = $customer->contacts()->count();
+                if ($activeCount >= $customer->max_contact_persons) {
+                    abort(403, 'Maximum contact person limit reached.');
+                }
+            }
+        });
+    }
+
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
@@ -39,5 +58,15 @@ class Contact extends Model
     public function phones(): HasMany
     {
         return $this->hasMany(ContactPhone::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    public function scopeInactive($query)
+    {
+        return $query->where('status', 'inactive');
     }
 }
