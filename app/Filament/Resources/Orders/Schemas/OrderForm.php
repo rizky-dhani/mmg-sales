@@ -245,7 +245,7 @@ class OrderForm
                                     ->relationship(
                                         name: 'customer',
                                         titleAttribute: 'name',
-                                        modifyQueryUsing: fn (Builder $query) => $query->where('status', 'active')->latest('created_at'),
+                                        modifyQueryUsing: fn (Builder $query) => $query->where('status', 'active'),
                                     )
                                     ->searchable()
                                     ->required()
