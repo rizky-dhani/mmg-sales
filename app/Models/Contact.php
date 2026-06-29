@@ -34,6 +34,8 @@ class Contact extends Model
 
     protected static function boot(): void
     {
+        parent::boot();
+
         static::creating(function (Contact $contact) {
             $customer = $contact->customer;
 

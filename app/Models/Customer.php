@@ -81,6 +81,8 @@ class Customer extends Model
 
     protected static function boot(): void
     {
+        parent::boot();
+
         static::updated(function (Customer $customer) {
             if ($customer->isDirty('status') && $customer->status === 'inactive') {
                 $customer->contacts()->where('status', 'active')->update(['status' => 'inactive']);
