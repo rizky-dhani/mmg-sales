@@ -104,6 +104,7 @@ class CustomerForm
 
                 Section::make('Settings')
                     ->columnSpanFull()
+                    ->columns(4)
                     ->schema([
                         Select::make('status')
                             ->options([
