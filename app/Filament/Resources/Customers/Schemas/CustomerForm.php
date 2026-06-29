@@ -76,6 +76,19 @@ class CustomerForm
                 Section::make('Settings')
                     ->columnSpanFull()
                     ->schema([
+                        Select::make('status')
+                            ->options([
+                                'active' => 'Active',
+                                'inactive' => 'Inactive',
+                            ])
+                            ->default('active')
+                            ->required(),
+                        TextInput::make('max_contact_persons')
+                            ->label('Max Contact Persons')
+                            ->numeric()
+                            ->minValue(1)
+                            ->default(null)
+                            ->helperText('Leave empty for unlimited'),
                         TextInput::make('payment_terms_days')
                             ->label('Payment Terms (Days)')
                             ->numeric()

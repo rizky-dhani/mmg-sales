@@ -30,6 +30,13 @@ class ContactInfolist
                         IconEntry::make('is_primary')
                             ->label('Primary Contact')
                             ->boolean(),
+                        TextEntry::make('status')
+                            ->label('Status')
+                            ->badge()
+                            ->color(fn (string $state): string => match ($state) {
+                                'active' => 'success',
+                                'inactive' => 'danger',
+                            }),
                         TextEntry::make('notes')
                             ->columnSpanFull(),
                     ]),

@@ -57,6 +57,14 @@ class ContactsTable
                     ->boolean()
                     ->sortable(),
 
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'active' => 'success',
+                        'inactive' => 'danger',
+                    }),
+
                 TextColumn::make('created_at')
                     ->label('Added')
                     ->date('d M Y')

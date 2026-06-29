@@ -33,6 +33,16 @@ class CustomerInfolist
                         TextEntry::make('payment_terms_days')
                             ->label('Payment Terms')
                             ->suffix(' Days'),
+                        TextEntry::make('status')
+                            ->label('Status')
+                            ->badge()
+                            ->color(fn (string $state): string => match ($state) {
+                                'active' => 'success',
+                                'inactive' => 'danger',
+                            }),
+                        TextEntry::make('max_contact_persons')
+                            ->label('Max Contacts')
+                            ->formatStateUsing(fn ($state): string => $state === null ? 'Unlimited' : $state),
                     ]),
 
                 Section::make('Location & Contact')

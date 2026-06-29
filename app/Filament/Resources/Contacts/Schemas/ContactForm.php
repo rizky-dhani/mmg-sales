@@ -23,11 +23,19 @@ class ContactForm
                     ->schema([
                         Select::make('customer_id')
                             ->relationship('customer', 'name')
+                            ->query(fn ($query) => $query->where('status', 'active'))
                             ->required()
                             ->preload()
                             ->searchable()
                             ->columnSpanFull(),
                         Toggle::make('is_primary')
+                            ->required(),
+                        Select::make('status')
+                            ->options([
+                                'active' => 'Active',
+                                'inactive' => 'Inactive',
+                            ])
+                            ->default('active')
                             ->required(),
                     ]),
 
