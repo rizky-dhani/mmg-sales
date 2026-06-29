@@ -16,8 +16,6 @@ class PositionForm
             ->components([
                 TextInput::make('name')
                     ->required(),
-                TextInput::make('code')
-                    ->required(),
                 TextInput::make('level')
                     ->required()
                     ->numeric()
