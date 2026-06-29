@@ -125,7 +125,7 @@ class OrderForm
                                     ->label('CD / NCD Type')
                                     ->options([
                                         'CD' => 'CD',
-                                        'N-CD' => 'N-CD',
+                                        'N-CD' => 'N-CD (Life Science)',
                                     ])
                                     ->required()
                                     ->live(),

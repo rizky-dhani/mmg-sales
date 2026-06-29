@@ -83,7 +83,7 @@ class CustomerForm
                                     ->label('CD / NCD Type')
                                     ->options([
                                         'CD' => 'CD',
-                                        'N-CD' => 'N-CD',
+                                        'N-CD' => 'N-CD (Life Science)',
                                     ])
                                     ->live(),
                                 Select::make('segment_id')
