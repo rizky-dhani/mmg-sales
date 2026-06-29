@@ -90,7 +90,7 @@ class OrdersImport implements ToCollection
                     'ncd_subtype' => $row[14] ?? null,
                     'segment_id' => $segment->id,
                     'principal_id' => $principal->id,
-                    'reg_inst' => $row[16],
+                    'reg_inst' => $row[16] ? [$row[16]] : [],
                     'sales_type_id' => $row[17],
                     'item_id' => $item->id,
                     'qty_hna' => (int) $row[21],

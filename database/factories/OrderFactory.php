@@ -45,7 +45,7 @@ class OrderFactory extends Factory
             'ncd_subtype' => fake()->randomElement(['A', 'B', 'C', null]),
             'segment_id' => Segment::factory(),
             'principal_id' => Principal::factory(),
-            'reg_inst' => fake()->randomElement(['REG', 'INST']),
+            'reg_inst' => fake()->randomElements(['REG', 'INST', 'Consumable'], random_int(1, 2)),
             'sales_type_id' => fake()->randomElement(['INAPROC', 'non-INAPROC']),
             'item_id' => Item::factory(),
             'qty_hna' => fake()->numberBetween(1, 100),

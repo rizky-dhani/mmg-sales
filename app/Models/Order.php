@@ -56,6 +56,13 @@ class Order extends Model
         'created_by',
     ];
 
+    protected function casts(): array
+    {
+        return [
+            'reg_inst' => 'array',
+        ];
+    }
+
     protected static function boot(): void
     {
         parent::boot();

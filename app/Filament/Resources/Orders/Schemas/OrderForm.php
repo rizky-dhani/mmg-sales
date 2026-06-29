@@ -145,12 +145,13 @@ class OrderForm
                                     ->preload()
                                     ->searchable(),
                                 Select::make('reg_inst')
-                                    ->label('Reg / Inst')
+                                    ->label('Type')
+                                    ->multiple()
                                     ->options([
-                                        'REG' => 'REG',
-                                        'INST' => 'INST',
+                                        'REG' => 'Reagent',
+                                        'INST' => 'Instrument',
+                                        'Consumable' => 'Consumable',
                                     ])
-                                    ->required()
                                     ->searchable(),
                                 Select::make('sales_type_id')
                                     ->label('Purchase Type')

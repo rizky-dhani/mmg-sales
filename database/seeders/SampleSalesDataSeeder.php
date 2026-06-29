@@ -126,7 +126,7 @@ class SampleSalesDataSeeder extends Seeder
                 'cd_ncd_type' => rand(0, 1) ? 'CD' : 'NCD',
                 'segment_id' => rand(0, 1) ? $pharmaSegment->id : $medEquipSegment->id,
                 'principal_id' => $selectedItem->principal_id,
-                'reg_inst' => rand(0, 1) ? 'REG' : 'INST',
+                'reg_inst' => collect(['REG', 'INST', 'Consumable'])->random(rand(1, 2))->values()->all(),
                 'sales_type_id' => rand(0, 1) ? 'INAPROC' : 'non-INAPROC',
                 'item_id' => $selectedItem->id,
                 'qty_hna' => $qty,

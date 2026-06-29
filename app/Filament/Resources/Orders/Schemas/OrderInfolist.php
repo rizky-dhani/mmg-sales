@@ -64,7 +64,14 @@ class OrderInfolist
                                 TextEntry::make('subSegment.name')
                                     ->label('Sub-Segment'),
                                 TextEntry::make('reg_inst')
-                                    ->label('Reg/Inst'),
+                                    ->label('Type')
+                                    ->badge()
+                                    ->color(fn (string $state): string => match ($state) {
+                                        'REG' => 'info',
+                                        'INST' => 'warning',
+                                        'Consumable' => 'success',
+                                        default => 'gray',
+                                    }),
                             ]),
 
                         Grid::make(3)
