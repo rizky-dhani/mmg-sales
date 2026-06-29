@@ -11,6 +11,7 @@ use Filament\Actions\DissociateAction;
 use Filament\Actions\DissociateBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
@@ -37,12 +38,33 @@ class ContactsRelationManager extends RelationManager
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
+                TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'active' => 'success',
+                        'inactive' => 'danger',
+                    }),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()
+                    ->mutateFormDataUsing(function (array $data, $relatedManager): array {
+                        $customer = $relatedManager->getRecord();
+                        if ($customer->max_contact_persons !== null) {
+                            $activeCount = $customer->contacts()->count();
+                            if ($activeCount >= $customer->max_contact_persons) {
+                                Notification::make()
+                                    ->title('Maximum contact limit reached')
+                                    ->danger()
+                                    ->send();
+                                abort();
+                            }
+                        }
+
+                        return $data;
+                    }),
                 AssociateAction::make(),
             ])
             ->recordActions([

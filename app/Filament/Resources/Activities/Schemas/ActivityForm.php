@@ -49,6 +49,7 @@ class ActivityForm
                         Select::make('customer_id')
                             ->label('Customer')
                             ->relationship('customer', 'name')
+                            ->query(fn ($query) => $query->where('status', 'active'))
                             ->searchable()
                             ->preload()
                             ->required()
@@ -149,7 +150,7 @@ class ActivityForm
 
                                 Select::make('contact_id')
                                     ->label('Contact Person')
-                                    ->options(fn ($get) => Contact::where('customer_id', $get('customer_id'))->pluck('name', 'id'))
+                                    ->options(fn ($get) => Contact::where('customer_id', $get('customer_id'))->where('status', 'active')->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
                                     ->visible(fn ($get) => $get('customer_id')),
