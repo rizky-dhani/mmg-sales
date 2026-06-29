@@ -48,9 +48,9 @@ class LeadsTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('collaborators.name')
+                TextColumn::make('assignedCollaborators')
                     ->label('Assigned To')
-                    ->searchable()
+                    ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('collaborators', fn ($q) => $q->where('name', 'like', "%{$search}%")))
                     ->formatStateUsing(fn ($state, $record) => $record->collaborators->pluck('name')->join("\n")),
 
                 TextColumn::make('priority')
