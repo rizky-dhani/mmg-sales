@@ -17,6 +17,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Database\Eloquent\Builder;
 
 class OrderForm
 {
@@ -243,8 +244,11 @@ class OrderForm
                             ->schema([
                                 Select::make('end_customer_id')
                                     ->label('End Customer')
-                                    ->relationship('customer', 'name')
-                                    ->query(fn ($query) => $query->where('status', 'active'))
+                                    ->relationship(
+                                        name: 'customer',
+                                        titleAttribute: 'name',
+                                        modifyQueryUsing: fn (Builder $query) => $query->where('status', 'active'),
+                                    )
                                     ->searchable()
                                     ->required()
                                     ->preload(),
