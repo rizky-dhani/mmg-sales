@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $fksToDrop = ['area_city_id', 'item_id', 'original_customer_id', 'sub_segment_id'];
+        $fksToDrop = ['area_city_id', 'customer_group_id', 'segment_id', 'item_id', 'original_customer_id', 'sub_segment_id'];
         foreach ($fksToDrop as $column) {
             $fkName = "orders_{$column}_foreign";
             try {
