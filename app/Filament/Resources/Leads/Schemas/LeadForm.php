@@ -31,7 +31,7 @@ class LeadForm
                                 Select::make('customer_id')
                                     ->label('Customer Name')
                                     ->relationship('customer', 'name')
-                                    ->query(fn ($query) => $query->where('status', 'active'))
+                                    ->modifyQueryUsing(fn ($query) => $query->where('status', 'active'))
                                     ->searchable()
                                     ->preload()
                                     ->required()
