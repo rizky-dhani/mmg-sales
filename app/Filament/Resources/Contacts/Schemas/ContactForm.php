@@ -22,8 +22,7 @@ class ContactForm
                     ->columns(2)
                     ->schema([
                         Select::make('customer_id')
-                            ->relationship('customer', 'name')
-                            ->modifyQueryUsing(fn ($query) => $query->where('status', 'active'))
+                            ->relationship('customer', 'name', fn ($query) => $query->where('status', 'active'))
                             ->required()
                             ->preload()
                             ->searchable()

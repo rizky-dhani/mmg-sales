@@ -30,8 +30,7 @@ class LeadForm
                                     ->maxLength(255),
                                 Select::make('customer_id')
                                     ->label('Customer Name')
-                                    ->relationship('customer', 'name')
-                                    ->modifyQueryUsing(fn ($query) => $query->where('status', 'active'))
+                                    ->relationship('customer', 'name', fn ($query) => $query->where('status', 'active'))
                                     ->searchable()
                                     ->preload()
                                     ->required()

@@ -48,8 +48,7 @@ class ActivityForm
 
                         Select::make('customer_id')
                             ->label('Customer')
-                            ->relationship('customer', 'name')
-                            ->modifyQueryUsing(fn ($query) => $query->where('status', 'active'))
+                            ->relationship('customer', 'name', fn ($query) => $query->where('status', 'active'))
                             ->searchable()
                             ->preload()
                             ->required()
