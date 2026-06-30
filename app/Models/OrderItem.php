@@ -10,6 +10,17 @@ class OrderItem extends Model
 {
     use HasFactory;
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::saving(function (self $model): void {
+            if ($model->product_id && ! $model->item_id) {
+                $model->item_id = $model->product_id;
+            }
+        });
+    }
+
     protected $fillable = [
         'order_id',
         'principal_id',
