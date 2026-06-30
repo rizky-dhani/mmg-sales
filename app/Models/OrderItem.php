@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderItem extends Model
 {
-    use HasCode, HasFactory;
+    use HasFactory;
 
     protected $fillable = [
-        'code',
         'order_id',
         'principal_id',
         'product_id',
@@ -25,10 +23,6 @@ class OrderItem extends Model
         'subtotal',
         'notes',
     ];
-
-    protected $codeColumn = 'code';
-
-    protected $codePrefix = 'ORI';
 
     protected function casts(): array
     {
