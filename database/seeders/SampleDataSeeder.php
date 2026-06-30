@@ -129,13 +129,7 @@ class SampleDataSeeder extends Seeder
             Order::factory()->create([
                 'lead_id' => $lead->id,
                 'end_customer_id' => $lead->customer_id,
-                'original_customer_id' => $lead->customer_id,
-                'customer_group_id' => $customerGroups->random()->id,
-                'item_id' => $item->id,
                 'principal_id' => $item->principal_id,
-                'segment_id' => $subSegment->segment_id,
-                'sub_segment_id' => $subSegment->id,
-                'area_city_id' => $territories->random()->id,
                 'sales_type_id' => $salesTypes[array_rand($salesTypes)],
                 'distributor_id' => $distributors->random()->id,
                 'department_id' => $srUser->department_id ?? $departments->random()->id,

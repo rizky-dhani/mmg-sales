@@ -42,19 +42,9 @@ class OrdersTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('territory.name')
-                    ->label('Area/City')
-                    ->searchable()
-                    ->sortable(),
-
                 TextColumn::make('item.name')
                     ->label('Product Item')
                     ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('qty_hna')
-                    ->label('Qty')
-                    ->numeric()
                     ->sortable(),
 
                 TextColumn::make('net_sales_total')

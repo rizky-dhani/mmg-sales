@@ -61,8 +61,6 @@ test('orders import parses valid data correctly', function () {
     expect($order->tahun)->toBe(2025);
     expect($order->bulan)->toBe(8);
     expect($order->department_id)->toBe($dept->id);
-    expect($order->qty_hna)->toBe(2);
-    expect((int) $order->total_hna_gross_sales)->toBe(20000000);
 });
 
 test('orders import fails atomically if master data is missing', function () {

@@ -7,7 +7,6 @@ use App\Models\Lead;
 use App\Models\Position;
 use App\Models\Principal;
 use App\Models\Product;
-use App\Models\SubSegment;
 use App\Models\User;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
@@ -120,28 +119,8 @@ class OrderForm
                                     ->columnSpan(2),
                             ]),
 
-                        Grid::make(5)
+                        Grid::make(3)
                             ->schema([
-                                Select::make('cd_ncd_type')
-                                    ->label('CD / NCD Type')
-                                    ->options([
-                                        'CD' => 'CD',
-                                        'N-CD' => 'N-CD (Life Science)',
-                                    ])
-                                    ->live(),
-                                Select::make('segment_id')
-                                    ->label('Segment')
-                                    ->relationship('segment', 'name')
-                                    ->live()
-                                    ->preload()
-                                    ->searchable(),
-                                Select::make('sub_segment_id')
-                                    ->label('Sub Segment')
-                                    ->options(fn ($get) => SubSegment::query()
-                                        ->where('segment_id', $get('segment_id'))
-                                        ->pluck('name', 'id'))
-                                    ->preload()
-                                    ->searchable(),
                                 Select::make('reg_inst')
                                     ->label('Type')
                                     ->multiple()
@@ -238,7 +217,7 @@ class OrderForm
                 Section::make('Customer Details')
                     ->columnSpanFull()
                     ->schema([
-                        Grid::make(3)
+                        Grid::make(2)
                             ->schema([
                                 Select::make('end_customer_id')
                                     ->label('End Customer')
@@ -254,7 +233,6 @@ class OrderForm
                                     ->afterStateUpdated(function ($set, $state) {
                                         if (! $state) {
                                             $set('billing_address', null);
-                                            $set('customer_group_id', null);
 
                                             return;
                                         }
@@ -265,20 +243,7 @@ class OrderForm
                                         }
 
                                         $set('billing_address', $customer->address);
-                                        $set('customer_group_id', $customer->customer_group_id);
                                     }),
-                                Select::make('area_city_id')
-                                    ->label('Area / City')
-                                    ->relationship('territory', 'name')
-                                    ->searchable()
-                                    ->nullable()
-                                    ->preload(),
-                                Select::make('customer_group_id')
-                                    ->label('Customer Group')
-                                    ->relationship('customerGroup', 'name')
-                                    ->default(null)
-                                    ->preload()
-                                    ->searchable(),
                             ]),
 
                         Grid::make(2)

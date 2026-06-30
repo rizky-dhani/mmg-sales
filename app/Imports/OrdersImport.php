@@ -3,17 +3,12 @@
 namespace App\Imports;
 
 use App\Models\Customer;
-use App\Models\CustomerGroup;
 use App\Models\Department;
 use App\Models\Distributor;
-use App\Models\Item;
 use App\Models\Lead;
 use App\Models\Order;
 use App\Models\Position;
 use App\Models\Principal;
-use App\Models\Segment;
-use App\Models\SubSegment;
-use App\Models\Territory;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -59,19 +54,13 @@ class OrdersImport implements ToCollection
                 $spv = Position::where('name', $row[7])->first() ?? throw new Exception("SPV Position not found: {$row[7]}");
                 $sr = Position::where('name', $row[8])->first() ?? throw new Exception("SR Position not found: {$row[8]}");
 
-                $area = Territory::where('name', $row[9])->first() ?? throw new Exception("Area/City not found: {$row[9]}");
                 $endCustomer = Customer::where('name', $row[11])->first() ?? throw new Exception("End Customer not found: {$row[11]}");
 
-                $segment = Segment::where('name', $row[14])->first() ?? throw new Exception("Segment not found: {$row[14]}");
                 $principal = Principal::where('name', $row[15])->first() ?? throw new Exception("Principal not found: {$row[15]}");
                 // sales_type_id is stored as string directly (e.g. INAPROC, non-INAPROC)
-                $item = Item::where('name', $row[20])->first() ?? throw new Exception("Item not found: {$row[20]}");
                 $distributor = Distributor::where('name', $row[28])->first() ?? throw new Exception("Distributor not found: {$row[28]}");
 
                 // Optional Lookups
-                $origCustomer = Customer::where('name', $row[10])->first();
-                $custGroup = CustomerGroup::where('name', $row[12])->first();
-                $subSegment = SubSegment::where('name', $row[26])->first();
                 $lead = Lead::where('title', $row[16])->first();
 
                 Order::create([
@@ -83,25 +72,15 @@ class OrdersImport implements ToCollection
                     'rsm_asm_position_id' => $rsm->id,
                     'spv_position_id' => $spv->id,
                     'sr_position_id' => $sr->id,
-                    'area_city_id' => $area->id,
                     'end_customer_id' => $endCustomer->id,
-                    'customer_group_id' => $custGroup?->id,
-                    'cd_ncd_type' => $row[13],
-                    'ncd_subtype' => $row[14] ?? null,
-                    'segment_id' => $segment->id,
                     'principal_id' => $principal->id,
                     'reg_inst' => $row[16] ? [$row[16]] : [],
                     'sales_type_id' => $row[17],
-                    'item_id' => $item->id,
-                    'qty_hna' => (int) $row[21],
-                    'total_hna_gross_sales' => (float) $row[23],
                     'discount_on' => (float) $row[24],
                     'net_sales_total' => (float) $row[25],
-                    'sub_segment_id' => $subSegment?->id,
                     'jual_kso' => $row[27],
                     'distributor_id' => $distributor->id,
                     'order_number' => $orderNumber,
-                    'original_customer_id' => $origCustomer?->id ?? $endCustomer->id,
                     'lead_id' => $lead?->id,
                     'order_date' => now(),
                     'status' => 'pending',

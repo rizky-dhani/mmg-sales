@@ -57,12 +57,6 @@ class OrderInfolist
 
                         Grid::make(4)
                             ->schema([
-                                TextEntry::make('cd_ncd_type')
-                                    ->label('CD/NCD'),
-                                TextEntry::make('segment.name')
-                                    ->label('Segment'),
-                                TextEntry::make('subSegment.name')
-                                    ->label('Sub-Segment'),
                                 TextEntry::make('reg_inst')
                                     ->label('Type')
                                     ->badge()
@@ -113,10 +107,6 @@ class OrderInfolist
                                 TextEntry::make('customer.name')
                                     ->label('End Customer')
                                     ->weight('bold'),
-                                TextEntry::make('territory.name')
-                                    ->label('Area/City'),
-                                TextEntry::make('customerGroup.name')
-                                    ->label('Customer Group'),
                             ]),
 
                         TextEntry::make('billing_address')
