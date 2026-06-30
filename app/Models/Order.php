@@ -60,6 +60,9 @@ class Order extends Model
     {
         return [
             'reg_inst' => 'array',
+            'order_date' => 'date',
+            'expected_delivery_date' => 'date',
+            'actual_delivery_date' => 'date',
         ];
     }
 
