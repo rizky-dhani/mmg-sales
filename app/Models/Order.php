@@ -68,10 +68,17 @@ class Order extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            // ponytail: derive tahun/bulan from order_date, hidden TextInput defaults unreliable via Livewire
+            if (empty($model->tahun)) {
+                $model->tahun = $model->order_date ? (int) $model->order_date->format('Y') : now()->year;
+            }
+            if (empty($model->bulan)) {
+                $model->bulan = $model->order_date ? (int) $model->order_date->format('m') : now()->month;
+            }
+
             if (empty($model->order_number)) {
                 $generator = app(ResourceCodeGenerator::class);
-                $year = $model->tahun ?? now()->year;
-                $model->order_number = $generator->generateForOrder($year);
+                $model->order_number = $generator->generateForOrder($model->tahun);
             }
         });
     }
