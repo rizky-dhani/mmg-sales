@@ -143,7 +143,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // ── Clean up: strip permissions from non-S&M dept roles ─────────
         $otherDeptRoles = [
-            'Staff - TSS', 'Staff - Finance & Accounting', 'Staff - Logistics', 'Staff - RQA',
+            'Staff - TSS', 'Staff - Finance & Accounting', 'Staff - RQA',
             'Supervisor - Finance & Accounting', 'Supervisor - TSS',
             'Manager - TSS',
         ];
@@ -151,5 +151,12 @@ class RolesAndPermissionsSeeder extends Seeder
         foreach ($otherDeptRoles as $roleName) {
             Role::where('name', $roleName)->first()?->syncPermissions([]);
         }
+
+        // ── 7. Staff - Logistics ──────────────────────────────────────────
+        // Full order visibility + shipping status updates
+        Role::findOrCreate('Staff - Logistics')
+            ->syncPermissions([
+                'view_any_order', 'view_order', 'update_order',
+            ]);
     }
 }

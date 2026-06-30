@@ -8,6 +8,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 
 class CustomerForm
@@ -96,7 +97,7 @@ class CustomerForm
                                     ->columnSpanFull(),
                                 Select::make('sub_segment_id')
                                     ->label('Sub Segment')
-                                    ->options(fn ($get) => SubSegment::query()
+                                    ->options(fn (Get $get) => SubSegment::query()
                                         ->where('segment_id', $get('segment_id'))
                                         ->pluck('name', 'id'))
                                     ->preload()

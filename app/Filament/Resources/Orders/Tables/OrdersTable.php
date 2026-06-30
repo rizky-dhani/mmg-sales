@@ -22,7 +22,21 @@ class OrdersTable
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-                return self::applyVisibilityScope($query, 'created_by');
+                $user = auth()->user();
+
+                // Logistics sees all orders (needs to update shipping status)
+                if ($user?->hasRole('Staff - Logistics')) {
+                    return $query;
+                }
+
+                $query = self::applyVisibilityScope($query, 'created_by');
+
+                // Also show orders where user is the assigned SR
+                if ($user?->position_id) {
+                    $query->orWhere('sr_position_id', $user->position_id);
+                }
+
+                return $query;
             })
             ->columns([
                 TextColumn::make('order_number')
@@ -150,7 +164,7 @@ class OrdersTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make()
-                    ->visible(fn (Order $record) => self::canModifyRecord($record, 'created_by')),
+                    ->visible(fn (Order $record) => auth()->user()?->hasRole('Staff - Logistics') || self::canModifyRecord($record, 'created_by')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

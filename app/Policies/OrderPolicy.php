@@ -15,11 +15,17 @@ class OrderPolicy extends BasePolicy
      */
     public function update(User $user, $model): bool
     {
-        // Must have update permission AND be the creator
+        // Must have update permission
         if (! $user->hasPermissionTo("update_{$this->model}")) {
             return false;
         }
 
+        // Logistics can update any order (shipping status)
+        if ($user->hasRole('Staff - Logistics')) {
+            return true;
+        }
+
+        // Others can only update their own orders
         return $model->created_by === $user->id;
     }
 
