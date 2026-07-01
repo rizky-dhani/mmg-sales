@@ -97,9 +97,11 @@ class CustomerForm
                                     ->columnSpanFull(),
                                 Select::make('sub_segment_id')
                                     ->label('Sub Segment')
-                                    ->options(fn (Get $get) => SubSegment::query()
-                                        ->where('segment_id', $get('segment_id'))
-                                        ->pluck('name', 'id'))
+                                    ->options(fn (Get $get) => $get('segment_id')
+                                        ? SubSegment::query()
+                                            ->where('segment_id', $get('segment_id'))
+                                            ->pluck('name', 'id')
+                                        : [])
                                     ->preload()
                                     ->searchable()
                                     ->columnSpanFull(),
