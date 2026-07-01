@@ -56,7 +56,7 @@ class ActivitiesTable
                     }
                 }
 
-                return $query;
+                return $query->orderBy('performed_at', 'desc');
             })
             ->columns([
                 TextColumn::make('activity_code')
