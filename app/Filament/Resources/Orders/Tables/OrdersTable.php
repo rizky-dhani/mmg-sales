@@ -21,7 +21,6 @@ class OrdersTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'desc')
             ->modifyQueryUsing(function (Builder $query) {
                 $user = auth()->user();
 
@@ -37,7 +36,7 @@ class OrdersTable
                     $query->orWhere('sr_position_id', $user->position_id);
                 }
 
-                return $query;
+                return $query->orderBy('created_at', 'desc');
             })
             ->columns([
                 TextColumn::make('order_number')

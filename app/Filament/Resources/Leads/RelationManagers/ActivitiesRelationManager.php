@@ -59,6 +59,6 @@ class ActivitiesRelationManager extends RelationManager
                         default => 'gray',
                     }),
             ])
-            ->defaultSort('performed_at', 'desc');
+            ->modifyQueryUsing(fn ($query) => $query->orderBy('performed_at', 'desc'));
     }
 }

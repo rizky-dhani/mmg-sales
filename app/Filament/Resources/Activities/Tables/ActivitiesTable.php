@@ -25,12 +25,11 @@ class ActivitiesTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'desc')
             ->modifyQueryUsing(function (Builder $query) {
                 $user = auth()->user();
 
                 if (! $user) {
-                    return $query;
+                    return $query->orderBy('performed_at', 'desc');
                 }
 
                 // Apply base visibility scope (user_id-based filtering)

@@ -24,9 +24,10 @@ class LeadsTable
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-                return self::applyVisibilityScope($query, 'created_by');
+                self::applyVisibilityScope($query, 'created_by');
+
+                return $query->orderBy('created_at', 'desc');
             })
-            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('lead_code')
                     ->label('Lead Code')

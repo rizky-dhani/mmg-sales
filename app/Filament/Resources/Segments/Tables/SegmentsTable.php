@@ -14,7 +14,7 @@ class SegmentsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'desc')
+            ->modifyQueryUsing(fn ($query) => $query->orderBy('created_at', 'desc'))
             ->columns([
                 TextColumn::make('segment_code')
                     ->label('Segment Code')

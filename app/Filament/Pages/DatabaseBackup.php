@@ -171,8 +171,7 @@ class DatabaseBackup extends Page implements HasTable
     public function table(Table $table): Table
     {
         return $table
-            ->query(Backup::query()->with('creator'))
-            ->defaultSort('created_at', 'desc')
+            ->query(Backup::query()->with('creator')->orderBy('created_at', 'desc'))
             ->columns([
                 TextColumn::make('filename')
                     ->label('Filename')
