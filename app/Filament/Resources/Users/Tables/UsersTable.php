@@ -15,6 +15,7 @@ class UsersTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->modifyQueryUsing(fn ($query) => $query->where('id', '!=', auth()->user()->id)->where('id', '!=', 1))
             ->columns([
                 TextColumn::make('name')
