@@ -145,6 +145,16 @@ class Order extends Model
         return $this->hasMany(PaymentStatus::class);
     }
 
+    public function getLatestDeliveryStatusAttribute(): ?DeliveryStatus
+    {
+        return $this->deliveryStatuses()->latest()->first();
+    }
+
+    public function getLatestPaymentStatusAttribute(): ?PaymentStatus
+    {
+        return $this->paymentStatuses()->latest()->first();
+    }
+
     public function getRouteKeyName(): string
     {
         return 'order_number';
