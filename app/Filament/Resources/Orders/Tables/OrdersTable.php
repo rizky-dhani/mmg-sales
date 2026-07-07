@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Orders\Tables;
 
+use App\Filament\Actions\UpdateDeliveryAction;
+use App\Filament\Actions\UpdatePaymentAction;
 use App\Filament\Traits\HasVisibilityScope;
 use App\Models\Order;
 use Carbon\Carbon;
@@ -65,6 +67,38 @@ class OrdersTable
                     ->money('IDR')
                     ->sortable(),
 
+                TextColumn::make('latestDeliveryStatus.carrier')
+                    ->label('Delivery Status')
+                    ->badge()
+                    ->formatStateUsing(fn ($state, Order $record): string => match (true) {
+                        $record->latestDeliveryStatus?->delivered_date => 'Delivered',
+                        $record->latestDeliveryStatus?->shipped_date => 'Shipped',
+                        $record->latestDeliveryStatus?->carrier => 'In Transit',
+                        default => 'Pending',
+                    })
+                    ->color(fn ($state, Order $record): string => match (true) {
+                        $record->latestDeliveryStatus?->delivered_date => 'success',
+                        $record->latestDeliveryStatus?->shipped_date => 'primary',
+                        $record->latestDeliveryStatus?->carrier => 'info',
+                        default => 'gray',
+                    }),
+
+                TextColumn::make('latestPaymentStatus.status')
+                    ->label('Payment Status')
+                    ->badge()
+                    ->formatStateUsing(fn ($state): string => match ($state) {
+                        'full' => 'Paid',
+                        'partial' => 'Partial',
+                        'pending' => 'Pending',
+                        default => ucfirst($state ?? 'Pending'),
+                    })
+                    ->color(fn ($state): string => match ($state) {
+                        'full' => 'success',
+                        'partial' => 'warning',
+                        'pending' => 'gray',
+                        default => 'gray',
+                    }),
+
                 // Metadata & Toggleable columns
                 TextColumn::make('tahun')
                     ->label('Year')
@@ -127,6 +161,8 @@ class OrdersTable
                 ViewAction::make(),
                 EditAction::make()
                     ->visible(fn (Order $record) => auth()->user()?->hasRole('Staff - Logistics') || self::canModifyRecord($record, 'created_by')),
+                UpdateDeliveryAction::make(),
+                UpdatePaymentAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
