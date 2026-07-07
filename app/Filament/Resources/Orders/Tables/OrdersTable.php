@@ -10,7 +10,6 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -65,31 +64,6 @@ class OrdersTable
                     ->label('Net Sales')
                     ->money('IDR')
                     ->sortable(),
-
-                TextColumn::make('status')
-                    ->badge()
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
-                        'draft' => 'Draft',
-                        'pending' => 'Pending',
-                        'confirmed' => 'Confirmed',
-                        'processing' => 'Processing',
-                        'shipped' => 'Shipped',
-                        'delivered' => 'Delivered',
-                        'cancelled' => 'Cancelled',
-                        'returned' => 'Returned',
-                        default => ucfirst($state),
-                    })
-                    ->color(fn (string $state): string => match ($state) {
-                        'draft' => 'gray',
-                        'pending' => 'warning',
-                        'confirmed' => 'info',
-                        'processing' => 'info',
-                        'shipped' => 'primary',
-                        'delivered' => 'success',
-                        'cancelled' => 'danger',
-                        'returned' => 'danger',
-                        default => 'gray',
-                    }),
 
                 // Metadata & Toggleable columns
                 TextColumn::make('tahun')
@@ -148,19 +122,7 @@ class OrdersTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                SelectFilter::make('status')
-                    ->options([
-                        'cancelled' => 'Cancelled',
-                        'confirmed' => 'Confirmed',
-                        'delivered' => 'Delivered',
-                        'draft' => 'Draft',
-                        'pending' => 'Pending',
-                        'processing' => 'Processing',
-                        'returned' => 'Returned',
-                        'shipped' => 'Shipped',
-                    ]),
-            ])
+            ->filters([])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make()

@@ -22,7 +22,7 @@ class SalesAchievementWidget extends BaseWidget
 
         $shippedOrders = Order::query()
             ->where('created_by', $user->id)
-            ->where('status', 'shipped')
+            ->whereHas('deliveryStatuses', fn ($q) => $q->whereNotNull('shipped_date'))
             ->whereYear('order_date', now()->year);
 
         $shippedCount = $shippedOrders->count();

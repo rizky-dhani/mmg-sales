@@ -83,7 +83,6 @@ class OrdersImport implements ToCollection
                     'order_number' => $orderNumber,
                     'lead_id' => $lead?->id,
                     'order_date' => now(),
-                    'status' => 'pending',
                 ]);
             }
         });

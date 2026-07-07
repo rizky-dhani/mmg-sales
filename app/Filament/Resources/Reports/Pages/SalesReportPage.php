@@ -140,18 +140,6 @@ class SalesReportPage extends Page
                                     ->searchable()
                                     ->preload()
                                     ->visible(fn ($get) => $get('segment_id') !== null),
-                                Select::make('order_status')
-                                    ->label('Order Status')
-                                    ->options([
-                                        'draft' => 'Draft',
-                                        'pending' => 'Pending',
-                                        'confirmed' => 'Confirmed',
-                                        'processing' => 'Processing',
-                                        'shipped' => 'Shipped',
-                                        'delivered' => 'Delivered',
-                                        'cancelled' => 'Cancelled',
-                                        'returned' => 'Returned',
-                                    ]),
                                 Select::make('cd_ncd_type')
                                     ->label('CD/NCD Type')
                                     ->options([

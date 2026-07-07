@@ -158,9 +158,6 @@ class OrderForm
                                     ->searchable(),
                             ]),
 
-                        TextInput::make('status')
-                            ->default('pending')
-                            ->hidden(),
                         TextInput::make('tahun')
                             ->default(now()->year)
                             ->hidden(),

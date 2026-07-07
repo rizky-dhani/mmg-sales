@@ -30,7 +30,6 @@ class Order extends Model
         'distributor_id',
         'order_number',
         'lead_id',
-        'status',
         'subtotal',
         'tax_amount',
         'discount_on',
@@ -134,6 +133,11 @@ class Order extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function deliveryStatuses(): HasMany
+    {
+        return $this->hasMany(DeliveryStatus::class);
     }
 
     public function paymentStatuses(): HasMany

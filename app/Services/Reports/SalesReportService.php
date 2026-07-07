@@ -107,10 +107,6 @@ class SalesReportService
             $query->where('lead_id', $filters->leadId);
         }
 
-        if ($filters->orderStatus) {
-            $query->where('status', $filters->orderStatus);
-        }
-
         if ($filters->cdNcdType) {
             $query->where('cd_ncd_type', $filters->cdNcdType);
         }
@@ -287,7 +283,6 @@ class SalesReportService
                 'Discount' => $order->discount_amount,
                 'Net Sales' => $order->net_sales_total,
                 'Total Amount' => $order->total_amount,
-                'Status' => ucfirst($order->status),
                 'Payment Status' => ucfirst($order->payment_status),
                 'Sales Rep' => $order->creator?->name,
             ]);
