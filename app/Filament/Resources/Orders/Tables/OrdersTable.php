@@ -57,11 +57,6 @@ class OrdersTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('item.name')
-                    ->label('Product Item')
-                    ->searchable()
-                    ->sortable(),
-
                 TextColumn::make('net_sales_total')
                     ->label('Net Sales')
                     ->money('IDR')

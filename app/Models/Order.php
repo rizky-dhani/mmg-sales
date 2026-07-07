@@ -145,6 +145,11 @@ class Order extends Model
         return $this->hasMany(PaymentStatus::class);
     }
 
+    public function getNetSalesTotalAttribute(): float
+    {
+        return (float) $this->orderItems()->sum('subtotal');
+    }
+
     public function getLatestDeliveryStatusAttribute(): ?DeliveryStatus
     {
         return $this->deliveryStatuses()->latest()->first();

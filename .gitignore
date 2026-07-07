@@ -39,3 +39,5 @@ openspec
 /bugs
 /mjg-vm.sql
 /.commandcode
+# Graphify outputs
+graphify-out/
