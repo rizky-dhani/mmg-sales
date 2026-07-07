@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Models\User;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
@@ -45,7 +46,7 @@ class UserInfolist
                                 TextEntry::make('subject'),
                             ])
                             ->columns(4)
-                            ->limit(5),
+                            ->state(fn (User $record) => $record->activities()->latest()->limit(5)->get()),
                     ]),
             ]);
     }
