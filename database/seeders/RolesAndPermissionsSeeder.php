@@ -33,6 +33,10 @@ class RolesAndPermissionsSeeder extends Seeder
             }
         }
 
+        // ── Custom order permissions ─────────────────────────────────────
+        Permission::findOrCreate('update_delivery_order');
+        Permission::findOrCreate('update_payment_order');
+
         // ── Report permissions ───────────────────────────────────────────
         $reportPermissions = [
             'view_sales_reports',
@@ -157,6 +161,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Role::findOrCreate('Staff - Logistics')
             ->syncPermissions([
                 'view_any_order', 'view_order', 'update_order',
-            ]);
+            ])
+            ->givePermissionTo('update_delivery_order');
+
+        // ── 8. Staff - Finance & Accounting ──────────────────────────────
+        Role::findOrCreate('Staff - Finance & Accounting')
+            ->givePermissionTo('update_payment_order');
     }
 }
