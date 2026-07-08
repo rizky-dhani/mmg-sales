@@ -20,7 +20,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // ── Generate all model permissions ───────────────────────────────
         $models = [
             'customer_group', 'sub_segment', 'sales_type', 'customer', 'department',
-            'distributor', 'activity', 'contact', 'product', 'lead', 'segment',
+            'distributor', 'activity', 'activity_comment', 'contact', 'product', 'lead', 'segment',
             'territory', 'position', 'principal', 'milestone', 'item', 'order',
             'target', 'user',
         ];
@@ -100,6 +100,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_any_lead', 'view_lead', 'create_lead', 'update_lead', 'delete_lead',
             // Activity
             'view_any_activity', 'view_activity', 'create_activity', 'update_activity', 'delete_activity',
+            // Activity Comment
+            'view_any_activity_comment', 'view_activity_comment', 'create_activity_comment', 'update_activity_comment', 'delete_activity_comment',
             // Order
             'view_any_order', 'view_order', 'create_order', 'update_order', 'delete_order',
             // Target
@@ -121,8 +123,10 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
         // ── 5. Director - Management ─────────────────────────────────────
-        // Reports access + view reference data
-        $directorPermissions = array_merge($reportPermissions, $viewReference);
+        // Reports access + view reference data + view comments
+        $directorPermissions = array_merge($reportPermissions, $viewReference, [
+            'view_any_activity_comment', 'view_activity_comment',
+        ]);
 
         Role::findOrCreate('Director - Management')->syncPermissions($directorPermissions);
 

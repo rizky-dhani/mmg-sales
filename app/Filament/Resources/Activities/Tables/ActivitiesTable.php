@@ -11,6 +11,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -115,6 +116,13 @@ class ActivitiesTable
                         'Need more info' => 'info',
                         default => 'gray',
                     }),
+
+                TextColumn::make('comments_count')
+                    ->label('Comments')
+                    ->counts('comments')
+                    ->badge()
+                    ->color('info')
+                    ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('customer')
@@ -139,6 +147,24 @@ class ActivitiesTable
                 ViewAction::make(),
                 EditAction::make()
                     ->visible(fn (Activity $record) => self::canModifyRecord($record, 'user_id')),
+                Action::make('addComment')
+                    ->label('Add Comment')
+                    ->icon('heroicon-m-chat-bubble-left')
+                    ->color('info')
+                    ->form([
+                        Textarea::make('comment')
+                            ->label('Comment')
+                            ->required()
+                            ->rows(3)
+                            ->maxLength(5000),
+                    ])
+                    ->action(function (Activity $record, array $data): void {
+                        $record->comments()->create([
+                            'user_id' => auth()->id(),
+                            'comment' => $data['comment'],
+                        ]);
+                    })
+                    ->visible(fn () => auth()->user()?->can('create_activity_comment')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
