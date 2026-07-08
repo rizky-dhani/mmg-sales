@@ -27,7 +27,12 @@ class SalesReportService
 
         $totalRevenue = (clone $primaryQuery)->sum('total_amount');
         $totalNetSales = (clone $primaryQuery)->sum('net_sales_total');
-        $totalGrossSales = (clone $primaryQuery)->sum('total_hna_gross_sales');
+
+        // Derive gross sales from order_items since total_hna_gross_sales was dropped
+        $totalGrossSales = (clone $primaryQuery)
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->sum('order_items.subtotal');
+
         $totalOrders = (clone $primaryQuery)->count();
         $averageOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
         $overdueRevenue = 0;
@@ -67,8 +72,18 @@ class SalesReportService
             $query->whereIn('created_by', $filters->userIds);
         }
 
+        $needsCustomerJoin = $filters->customerGroupId
+            || $filters->segmentId
+            || $filters->subSegmentId
+            || $filters->cdNcdType;
+
+        if ($needsCustomerJoin) {
+            $query->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id');
+        }
+
         if ($filters->territoryId) {
-            $query->where('area_city_id', $filters->territoryId);
+            $query->leftJoin('users', 'orders.created_by', '=', 'users.id')
+                ->where('users.territory_id', $filters->territoryId);
         }
 
         if ($filters->departmentId) {
@@ -88,19 +103,20 @@ class SalesReportService
         }
 
         if ($filters->customerGroupId) {
-            $query->where('customer_group_id', $filters->customerGroupId);
+            $query->where('customers.customer_group_id', $filters->customerGroupId);
         }
 
         if ($filters->segmentId) {
-            $query->where('segment_id', $filters->segmentId);
+            $query->where('customers.segment_id', $filters->segmentId);
         }
 
         if ($filters->subSegmentId) {
-            $query->where('sub_segment_id', $filters->subSegmentId);
+            $query->where('customers.sub_segment_id', $filters->subSegmentId);
         }
 
         if ($filters->itemId) {
-            $query->where('item_id', $filters->itemId);
+            $query->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
+                ->where('order_items.item_id', $filters->itemId);
         }
 
         if ($filters->leadId) {
@@ -108,7 +124,7 @@ class SalesReportService
         }
 
         if ($filters->cdNcdType) {
-            $query->where('cd_ncd_type', $filters->cdNcdType);
+            $query->where('customers.cd_ncd_type', $filters->cdNcdType);
         }
 
         return $query;
@@ -131,8 +147,18 @@ class SalesReportService
             $comparisonQuery->whereIn('created_by', $filters->userIds);
         }
 
+        $needsCustomerJoin = $filters->customerGroupId
+            || $filters->segmentId
+            || $filters->subSegmentId
+            || $filters->cdNcdType;
+
+        if ($needsCustomerJoin) {
+            $comparisonQuery->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id');
+        }
+
         if ($filters->territoryId) {
-            $comparisonQuery->where('area_city_id', $filters->territoryId);
+            $comparisonQuery->leftJoin('users', 'orders.created_by', '=', 'users.id')
+                ->where('users.territory_id', $filters->territoryId);
         }
 
         if ($filters->departmentId) {
@@ -148,11 +174,19 @@ class SalesReportService
         }
 
         if ($filters->customerGroupId) {
-            $comparisonQuery->where('customer_group_id', $filters->customerGroupId);
+            $comparisonQuery->where('customers.customer_group_id', $filters->customerGroupId);
         }
 
         if ($filters->segmentId) {
-            $comparisonQuery->where('segment_id', $filters->segmentId);
+            $comparisonQuery->where('customers.segment_id', $filters->segmentId);
+        }
+
+        if ($filters->subSegmentId) {
+            $comparisonQuery->where('customers.sub_segment_id', $filters->subSegmentId);
+        }
+
+        if ($filters->cdNcdType) {
+            $comparisonQuery->where('customers.cd_ncd_type', $filters->cdNcdType);
         }
 
         $totalRevenue = (clone $comparisonQuery)->sum('total_amount');
@@ -184,15 +218,15 @@ class SalesReportService
     private function getRevenueBySalesRep(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->selectRaw('created_by, SUM(total_amount) as revenue, COUNT(*) as orders')
-            ->with('creator:id,name')
-            ->groupBy('created_by')
+            ->leftJoin('users', 'orders.created_by', '=', 'users.id')
+            ->selectRaw('orders.created_by, users.name as user_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->groupBy('orders.created_by', 'users.name')
             ->orderByDesc('revenue')
             ->limit(10)
             ->get()
             ->map(fn ($row) => [
                 'user_id' => $row->created_by,
-                'name' => $row->creator?->name ?? 'Unknown',
+                'name' => $row->user_name ?? 'Unknown',
                 'revenue' => (float) $row->revenue,
                 'orders' => $row->orders,
             ]);
@@ -201,15 +235,16 @@ class SalesReportService
     private function getRevenueByTerritory(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->selectRaw('area_city_id, SUM(total_amount) as revenue, COUNT(*) as orders')
-            ->with('territory:id,name')
-            ->groupBy('area_city_id')
+            ->leftJoin('users', 'orders.created_by', '=', 'users.id')
+            ->leftJoin('territories', 'users.territory_id', '=', 'territories.id')
+            ->selectRaw('users.territory_id, territories.name as territory_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->groupBy('users.territory_id', 'territories.name')
             ->orderByDesc('revenue')
             ->limit(10)
             ->get()
             ->map(fn ($row) => [
-                'territory_id' => $row->area_city_id,
-                'name' => $row->territory?->name ?? 'Unknown',
+                'territory_id' => $row->territory_id,
+                'name' => $row->territory_name ?? 'Unknown',
                 'revenue' => (float) $row->revenue,
                 'orders' => $row->orders,
             ]);
@@ -218,15 +253,15 @@ class SalesReportService
     private function getRevenueByPrincipal(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->selectRaw('principal_id, SUM(total_amount) as revenue, COUNT(*) as orders')
-            ->with('principal:id,name')
-            ->groupBy('principal_id')
+            ->leftJoin('principals', 'orders.principal_id', '=', 'principals.id')
+            ->selectRaw('orders.principal_id, principals.name as principal_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->groupBy('orders.principal_id', 'principals.name')
             ->orderByDesc('revenue')
             ->limit(10)
             ->get()
             ->map(fn ($row) => [
                 'principal_id' => $row->principal_id,
-                'name' => $row->principal?->name ?? 'Unknown',
+                'name' => $row->principal_name ?? 'Unknown',
                 'revenue' => (float) $row->revenue,
                 'orders' => $row->orders,
             ]);
@@ -235,14 +270,16 @@ class SalesReportService
     private function getRevenueBySegment(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->selectRaw('segment_id, SUM(total_amount) as revenue, COUNT(*) as orders')
-            ->with('segment:id,name')
-            ->groupBy('segment_id')
+            ->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id')
+            ->leftJoin('segments', 'customers.segment_id', '=', 'segments.id')
+            ->selectRaw('customers.segment_id, segments.name as segment_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->whereNotNull('customers.segment_id')
+            ->groupBy('customers.segment_id', 'segments.name')
             ->orderByDesc('revenue')
             ->get()
             ->map(fn ($row) => [
                 'segment_id' => $row->segment_id,
-                'name' => $row->segment?->name ?? 'Unknown',
+                'name' => $row->segment_name ?? 'Unknown',
                 'revenue' => (float) $row->revenue,
                 'orders' => $row->orders,
             ]);
@@ -251,14 +288,16 @@ class SalesReportService
     private function getRevenueByCustomerGroup(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->selectRaw('customer_group_id, SUM(total_amount) as revenue, COUNT(*) as orders')
-            ->with('customerGroup:id,name')
-            ->groupBy('customer_group_id')
+            ->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id')
+            ->leftJoin('customer_groups', 'customers.customer_group_id', '=', 'customer_groups.id')
+            ->selectRaw('customers.customer_group_id, customer_groups.name as group_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->whereNotNull('customers.customer_group_id')
+            ->groupBy('customers.customer_group_id', 'customer_groups.name')
             ->orderByDesc('revenue')
             ->get()
             ->map(fn ($row) => [
                 'customer_group_id' => $row->customer_group_id,
-                'name' => $row->customerGroup?->name ?? 'Unknown',
+                'name' => $row->group_name ?? 'Unknown',
                 'revenue' => (float) $row->revenue,
                 'orders' => $row->orders,
             ]);
@@ -267,24 +306,30 @@ class SalesReportService
     public function getExportData(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->with(['customer:id,name', 'territory:id,name', 'principal:id,name', 'segment:id,name', 'creator:id,name'])
+            ->with(['customer:id,name', 'customer.segment:id,name', 'principal:id,name', 'creator:id,name', 'creator.territory:id,name', 'orderItems.item:id,name'])
             ->orderBy('order_date', 'desc')
             ->get()
-            ->map(fn ($order) => [
-                'Order Number' => $order->order_number,
-                'Order Date' => $order->order_date?->format('d M Y'),
-                'Customer' => $order->customer?->name,
-                'Territory' => $order->territory?->name,
-                'Principal' => $order->principal?->name,
-                'Segment' => $order->segment?->name,
-                'Item' => $order->item?->name,
-                'Quantity' => $order->qty_hna,
-                'Gross Sales' => $order->total_hna_gross_sales,
-                'Discount' => $order->discount_amount,
-                'Net Sales' => $order->net_sales_total,
-                'Total Amount' => $order->total_amount,
-                'Payment Status' => ucfirst($order->payment_status),
-                'Sales Rep' => $order->creator?->name,
-            ]);
+            ->map(function ($order) {
+                $totalQuantity = $order->orderItems->sum('quantity');
+                $totalGrossSales = $order->orderItems->sum('subtotal');
+                $itemName = $order->orderItems->first()?->item?->name;
+
+                return [
+                    'Order Number' => $order->order_number,
+                    'Order Date' => $order->order_date?->format('d M Y'),
+                    'Customer' => $order->customer?->name,
+                    'Territory' => $order->creator?->territory?->name,
+                    'Principal' => $order->principal?->name,
+                    'Segment' => $order->customer?->segment?->name,
+                    'Item' => $itemName,
+                    'Quantity' => $totalQuantity,
+                    'Gross Sales' => $totalGrossSales,
+                    'Discount' => $order->discount_amount,
+                    'Net Sales' => $order->net_sales_total,
+                    'Total Amount' => $order->total_amount,
+                    'Payment Status' => null,
+                    'Sales Rep' => $order->creator?->name,
+                ];
+            });
     }
 }

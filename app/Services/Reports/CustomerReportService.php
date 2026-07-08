@@ -65,24 +65,31 @@ class CustomerReportService
             $query->whereIn('created_by', $filters->userIds);
         }
 
+        // Territory filter: join through users table (leftJoin — not every user has a territory)
         if ($filters->territoryId) {
-            $query->where('area_city_id', $filters->territoryId);
+            $query->leftJoin('users', 'orders.created_by', '=', 'users.id')
+                ->where('users.territory_id', $filters->territoryId);
         }
 
         if ($filters->customerId) {
             $query->where('end_customer_id', $filters->customerId);
         }
 
+        // Customer filters: join customers ONCE if any are active
+        if ($filters->customerGroupId || $filters->segmentId || $filters->cdNcdType) {
+            $query->join('customers', 'orders.end_customer_id', '=', 'customers.id');
+        }
+
         if ($filters->customerGroupId) {
-            $query->where('customer_group_id', $filters->customerGroupId);
+            $query->where('customers.customer_group_id', $filters->customerGroupId);
         }
 
         if ($filters->segmentId) {
-            $query->where('segment_id', $filters->segmentId);
+            $query->where('customers.segment_id', $filters->segmentId);
         }
 
         if ($filters->cdNcdType) {
-            $query->where('cd_ncd_type', $filters->cdNcdType);
+            $query->where('customers.cd_ncd_type', $filters->cdNcdType);
         }
 
         return $query;
@@ -120,7 +127,8 @@ class CustomerReportService
         }
 
         if ($filters->customerGroupId) {
-            $comparisonQuery->where('customer_group_id', $filters->customerGroupId);
+            $comparisonQuery->join('customers', 'orders.end_customer_id', '=', 'customers.id')
+                ->where('customers.customer_group_id', $filters->customerGroupId);
         }
 
         $customerIds = (clone $comparisonQuery)->distinct()->pluck('end_customer_id')->filter();
@@ -153,15 +161,16 @@ class CustomerReportService
     private function getRevenueByCustomerGroup(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->selectRaw('customer_group_id, SUM(total_amount) as revenue, COUNT(*) as orders')
-            ->with('customerGroup:id,name')
-            ->whereNotNull('customer_group_id')
-            ->groupBy('customer_group_id')
+            ->join('customers', 'orders.end_customer_id', '=', 'customers.id')
+            ->leftJoin('customer_groups', 'customers.customer_group_id', '=', 'customer_groups.id')
+            ->selectRaw('customers.customer_group_id, customer_groups.name as group_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->whereNotNull('customers.customer_group_id')
+            ->groupBy('customers.customer_group_id', 'customer_groups.name')
             ->orderByDesc('revenue')
             ->get()
             ->map(fn ($row) => [
                 'customer_group_id' => $row->customer_group_id,
-                'name' => $row->customerGroup?->name ?? 'Unknown',
+                'name' => $row->group_name ?? 'Unknown',
                 'revenue' => (float) $row->revenue,
                 'orders' => $row->orders,
             ]);
@@ -170,15 +179,16 @@ class CustomerReportService
     private function getRevenueBySegment(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->selectRaw('segment_id, SUM(total_amount) as revenue, COUNT(*) as orders')
-            ->with('segment:id,name')
-            ->whereNotNull('segment_id')
-            ->groupBy('segment_id')
+            ->join('customers', 'orders.end_customer_id', '=', 'customers.id')
+            ->leftJoin('segments', 'customers.segment_id', '=', 'segments.id')
+            ->selectRaw('customers.segment_id, segments.name as segment_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->whereNotNull('customers.segment_id')
+            ->groupBy('customers.segment_id', 'segments.name')
             ->orderByDesc('revenue')
             ->get()
             ->map(fn ($row) => [
                 'segment_id' => $row->segment_id,
-                'name' => $row->segment?->name ?? 'Unknown',
+                'name' => $row->segment_name ?? 'Unknown',
                 'revenue' => (float) $row->revenue,
                 'orders' => $row->orders,
             ]);
@@ -202,13 +212,13 @@ class CustomerReportService
     public function getExportData(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
-            ->with(['customer:id,name,cd_ncd_type', 'customerGroup:id,name', 'segment:id,name'])
+            ->with(['customer:id,name,segment_id,customer_group_id', 'customer.segment:id,name', 'customer.customerGroup:id,name'])
             ->orderBy('order_date', 'desc')
             ->get()
             ->map(fn ($order) => [
                 'Customer' => $order->customer?->name,
-                'Customer Group' => $order->customerGroup?->name,
-                'Segment' => $order->segment?->name,
+                'Customer Group' => $order->customer?->customerGroup?->name,
+                'Segment' => $order->customer?->segment?->name,
                 'CD/NCD Type' => $order->customer?->cd_ncd_type,
                 'Order Number' => $order->order_number,
                 'Order Date' => $order->order_date?->format('d M Y'),

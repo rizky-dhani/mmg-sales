@@ -25,9 +25,13 @@ class ProductReportService
     {
         $primaryQuery = $this->buildBaseQuery($filters);
 
-        $totalQuantity = (clone $primaryQuery)->sum('qty_hna');
         $totalRevenue = (clone $primaryQuery)->sum('total_amount');
         $totalDiscount = (clone $primaryQuery)->sum('discount_amount');
+
+        $totalQuantity = Order::query()
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->whereBetween('orders.order_date', [$filters->startDate, $filters->endDate])
+            ->sum('order_items.quantity');
 
         $comparisonData = $this->getComparisonData($filters);
 
@@ -45,11 +49,21 @@ class ProductReportService
         );
     }
 
+    /**
+     * Base query with date range and simple WHERE filters only (no joins).
+     */
     private function buildBaseQuery(ReportFilterData $filters): Builder
     {
         $query = Order::query()
             ->whereBetween('order_date', [$filters->startDate, $filters->endDate]);
 
+        $this->applyFilters($query, $filters);
+
+        return $query;
+    }
+
+    private function applyFilters(Builder $query, ReportFilterData $filters): void
+    {
         if ($filters->userId) {
             $query->where('created_by', $filters->userId);
         }
@@ -58,27 +72,13 @@ class ProductReportService
             $query->whereIn('created_by', $filters->userIds);
         }
 
-        if ($filters->territoryId) {
-            $query->where('area_city_id', $filters->territoryId);
-        }
-
         if ($filters->principalId) {
             $query->where('principal_id', $filters->principalId);
-        }
-
-        if ($filters->itemId) {
-            $query->where('item_id', $filters->itemId);
-        }
-
-        if ($filters->segmentId) {
-            $query->where('segment_id', $filters->segmentId);
         }
 
         if ($filters->customerId) {
             $query->where('end_customer_id', $filters->customerId);
         }
-
-        return $query;
     }
 
     private function getComparisonData(ReportFilterData $filters): array
@@ -102,29 +102,51 @@ class ProductReportService
             $comparisonQuery->where('principal_id', $filters->principalId);
         }
 
+        $quantityQuery = clone $comparisonQuery;
+        $quantityQuery->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->selectRaw('SUM(order_items.quantity) as qty');
+
         if ($filters->itemId) {
-            $comparisonQuery->where('item_id', $filters->itemId);
+            $quantityQuery->where('order_items.item_id', $filters->itemId);
         }
 
         return [
             'totalRevenue' => (clone $comparisonQuery)->sum('total_amount'),
-            'totalQuantity' => (clone $comparisonQuery)->sum('qty_hna'),
+            'totalQuantity' => $quantityQuery->first()->qty ?? 0,
         ];
     }
 
     private function getTopItems(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
-            ->selectRaw('item_id, SUM(total_amount) as revenue, SUM(qty_hna) as quantity, COUNT(*) as orders')
-            ->with('item:id,name')
-            ->whereNotNull('item_id')
-            ->groupBy('item_id')
+        $query = $this->buildBaseQuery($filters);
+
+        if ($filters->territoryId) {
+            $query->leftJoin('users', 'orders.created_by', '=', 'users.id')
+                ->where('users.territory_id', $filters->territoryId);
+        }
+
+        if ($filters->segmentId) {
+            $query->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id')
+                ->where('customers.segment_id', $filters->segmentId);
+        }
+
+        $query->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id');
+
+        if ($filters->itemId) {
+            $query->where('order_items.item_id', $filters->itemId);
+        }
+
+        return $query
+            ->leftJoin('items', 'order_items.item_id', '=', 'items.id')
+            ->selectRaw('order_items.item_id, items.name as item_name, SUM(order_items.subtotal) as revenue, SUM(order_items.quantity) as quantity, COUNT(DISTINCT orders.id) as orders')
+            ->whereNotNull('order_items.item_id')
+            ->groupBy('order_items.item_id', 'items.name')
             ->orderByDesc('revenue')
             ->limit(15)
             ->get()
             ->map(fn ($row) => [
                 'item_id' => $row->item_id,
-                'name' => $row->item?->name ?? 'Unknown',
+                'name' => $row->item_name ?? 'Unknown',
                 'revenue' => (float) $row->revenue,
                 'quantity' => (int) $row->quantity,
                 'orders' => $row->orders,
@@ -133,16 +155,34 @@ class ProductReportService
 
     private function getRevenueByPrincipal(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
-            ->selectRaw('principal_id, SUM(total_amount) as revenue, SUM(qty_hna) as quantity, COUNT(*) as orders')
-            ->with('principal:id,name')
-            ->whereNotNull('principal_id')
-            ->groupBy('principal_id')
+        $query = $this->buildBaseQuery($filters);
+
+        if ($filters->territoryId) {
+            $query->leftJoin('users', 'orders.created_by', '=', 'users.id')
+                ->where('users.territory_id', $filters->territoryId);
+        }
+
+        if ($filters->segmentId) {
+            $query->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id')
+                ->where('customers.segment_id', $filters->segmentId);
+        }
+
+        $query->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id');
+
+        if ($filters->itemId) {
+            $query->where('order_items.item_id', $filters->itemId);
+        }
+
+        return $query
+            ->leftJoin('principals', 'orders.principal_id', '=', 'principals.id')
+            ->selectRaw('orders.principal_id, principals.name as principal_name, SUM(order_items.subtotal) as revenue, SUM(order_items.quantity) as quantity, COUNT(DISTINCT orders.id) as orders')
+            ->whereNotNull('orders.principal_id')
+            ->groupBy('orders.principal_id', 'principals.name')
             ->orderByDesc('revenue')
             ->get()
             ->map(fn ($row) => [
                 'principal_id' => $row->principal_id,
-                'name' => $row->principal?->name ?? 'Unknown',
+                'name' => $row->principal_name ?? 'Unknown',
                 'revenue' => (float) $row->revenue,
                 'quantity' => (int) $row->quantity,
                 'orders' => $row->orders,
@@ -151,33 +191,69 @@ class ProductReportService
 
     private function getQuantityByItem(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
-            ->selectRaw('item_id, SUM(qty_hna) as quantity')
-            ->with('item:id,name')
-            ->whereNotNull('item_id')
-            ->groupBy('item_id')
+        $query = $this->buildBaseQuery($filters);
+
+        if ($filters->territoryId) {
+            $query->leftJoin('users', 'orders.created_by', '=', 'users.id')
+                ->where('users.territory_id', $filters->territoryId);
+        }
+
+        if ($filters->segmentId) {
+            $query->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id')
+                ->where('customers.segment_id', $filters->segmentId);
+        }
+
+        $query->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id');
+
+        if ($filters->itemId) {
+            $query->where('order_items.item_id', $filters->itemId);
+        }
+
+        return $query
+            ->leftJoin('items', 'order_items.item_id', '=', 'items.id')
+            ->selectRaw('order_items.item_id, items.name as item_name, SUM(order_items.quantity) as quantity')
+            ->whereNotNull('order_items.item_id')
+            ->groupBy('order_items.item_id', 'items.name')
             ->orderByDesc('quantity')
             ->limit(15)
             ->get()
             ->map(fn ($row) => [
                 'item_id' => $row->item_id,
-                'name' => $row->item?->name ?? 'Unknown',
+                'name' => $row->item_name ?? 'Unknown',
                 'quantity' => (int) $row->quantity,
             ]);
     }
 
     private function getRevenueBySegment(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
-            ->selectRaw('segment_id, SUM(total_amount) as revenue, COUNT(*) as orders')
-            ->with('segment:id,name')
-            ->whereNotNull('segment_id')
-            ->groupBy('segment_id')
+        $query = $this->buildBaseQuery($filters);
+
+        if ($filters->itemId) {
+            $query->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
+                ->where('order_items.item_id', $filters->itemId);
+        }
+
+        if ($filters->territoryId) {
+            $query->leftJoin('users', 'orders.created_by', '=', 'users.id')
+                ->where('users.territory_id', $filters->territoryId);
+        }
+
+        $query->join('customers', 'orders.end_customer_id', '=', 'customers.id');
+
+        if ($filters->segmentId) {
+            $query->where('customers.segment_id', $filters->segmentId);
+        }
+
+        return $query
+            ->leftJoin('segments', 'customers.segment_id', '=', 'segments.id')
+            ->selectRaw('customers.segment_id, segments.name as segment_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->whereNotNull('customers.segment_id')
+            ->groupBy('customers.segment_id', 'segments.name')
             ->orderByDesc('revenue')
             ->get()
             ->map(fn ($row) => [
                 'segment_id' => $row->segment_id,
-                'name' => $row->segment?->name ?? 'Unknown',
+                'name' => $row->segment_name ?? 'Unknown',
                 'revenue' => (float) $row->revenue,
                 'orders' => $row->orders,
             ]);
@@ -185,8 +261,26 @@ class ProductReportService
 
     private function getMonthlyTrend(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
-            ->selectRaw('YEAR(order_date) as year, MONTH(order_date) as month, SUM(total_amount) as revenue, SUM(qty_hna) as quantity')
+        $query = $this->buildBaseQuery($filters);
+
+        if ($filters->territoryId) {
+            $query->leftJoin('users', 'orders.created_by', '=', 'users.id')
+                ->where('users.territory_id', $filters->territoryId);
+        }
+
+        if ($filters->segmentId) {
+            $query->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id')
+                ->where('customers.segment_id', $filters->segmentId);
+        }
+
+        $query->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id');
+
+        if ($filters->itemId) {
+            $query->where('order_items.item_id', $filters->itemId);
+        }
+
+        return $query
+            ->selectRaw('YEAR(orders.order_date) as year, MONTH(orders.order_date) as month, SUM(order_items.subtotal) as revenue, SUM(order_items.quantity) as quantity')
             ->groupBy('year', 'month')
             ->orderBy('year')
             ->orderBy('month')
@@ -200,19 +294,40 @@ class ProductReportService
 
     public function getExportData(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
-            ->with(['item:id,name', 'principal:id,name', 'segment:id,name'])
+        $query = $this->buildBaseQuery($filters);
+
+        if ($filters->itemId) {
+            $query->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
+                ->where('order_items.item_id', $filters->itemId);
+        }
+
+        if ($filters->territoryId) {
+            $query->leftJoin('users', 'orders.created_by', '=', 'users.id')
+                ->where('users.territory_id', $filters->territoryId);
+        }
+
+        if ($filters->segmentId) {
+            $query->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id')
+                ->where('customers.segment_id', $filters->segmentId);
+        }
+
+        return $query
+            ->with([
+                'principal:id,name',
+                'orderItems.item:id,name',
+                'customer.segment:id,name',
+            ])
             ->orderBy('order_date', 'desc')
             ->get()
             ->map(fn ($order) => [
-                'Item' => $order->item?->name,
+                'Item' => $order->orderItems->first()?->item?->name,
                 'Principal' => $order->principal?->name,
-                'Segment' => $order->segment?->name,
+                'Segment' => $order->customer?->segment?->name,
                 'Order Number' => $order->order_number,
                 'Order Date' => $order->order_date?->format('d M Y'),
-                'Quantity' => $order->qty_hna,
-                'Unit Price' => $order->item?->price ?? 0,
-                'Gross Sales' => $order->total_hna_gross_sales,
+                'Quantity' => $order->orderItems->sum('quantity'),
+                'Unit Price' => $order->orderItems->first()?->unit_price ?? 0,
+                'Gross Sales' => $order->orderItems->sum('subtotal'),
                 'Discount' => $order->discount_amount,
                 'Net Sales' => $order->net_sales_total,
                 'Total Amount' => $order->total_amount,

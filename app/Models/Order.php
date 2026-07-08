@@ -32,7 +32,6 @@ class Order extends Model
         'lead_id',
         'subtotal',
         'tax_amount',
-        'discount_on',
         'discount_amount',
         'total_amount',
         'order_date',
