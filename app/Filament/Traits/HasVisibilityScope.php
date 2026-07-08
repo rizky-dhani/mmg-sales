@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Builder;
 trait HasVisibilityScope
 {
     /**
-     * Apply visibility scope based on position hierarchy (AND) and territory hierarchy (AND),
+     * Apply visibility scope based on position hierarchy (OR) and territory hierarchy (OR),
      * with direct reports (OR) included via manager_id.
      *
      * - Super Admin: sees everything
      * - Director: sees all sales team records (view-only)
      * - Staff: own records only
-     * - Others: own records + subordinates resolved via position AND territory intersection
+     * - Others: own records + subordinates (position OR territory union) + direct reports
      */
     public static function applyVisibilityScope(Builder $query, string $userColumn = 'user_id'): Builder
     {
@@ -41,7 +41,8 @@ trait HasVisibilityScope
             return $query->where($userColumn, $user->id);
         }
 
-        // Other users: resolve subordinates via position + territory AND logic
+        // Other users: resolve subordinates via position OR territory union,
+        // plus direct reports via manager_id
         $subordinateIds = self::getSubordinateUserIds($user);
 
         if (! empty($subordinateIds)) {
@@ -85,19 +86,17 @@ trait HasVisibilityScope
     }
 
     /**
-     * Get IDs of all subordinate users based on position AND territory hierarchy,
+     * Get IDs of all subordinate users based on position OR territory hierarchy,
      * plus direct reports (manager_id).
      *
      * Logic:
-     *   subordinateIds = (positionDescendants ∩ territoryDescendants) ∪ directReports
+     *   subordinateIds = (positionDescendants ∪ territoryDescendants) ∪ directReports
      *
-     * If either position or territory chain is empty for the user, the other is used alone
-     * (so users with only a position or only a territory still get appropriate scoping).
+     * Users in descendant positions OR descendant territories are both visible.
      */
     private static function getSubordinateUserIds($user): array
     {
-        $positionUserIds = [];
-        $territoryUserIds = [];
+        $userIds = [];
 
         // Users in descendant positions (full tree via parent_id hierarchy)
         if ($user->position) {
@@ -107,6 +106,8 @@ trait HasVisibilityScope
                 ->where('id', '!=', $user->id)
                 ->pluck('id')
                 ->toArray();
+
+            $userIds = array_merge($userIds, $positionUserIds);
         }
 
         // Users in descendant territories (full tree via parent_id hierarchy)
@@ -117,28 +118,16 @@ trait HasVisibilityScope
                 ->where('id', '!=', $user->id)
                 ->pluck('id')
                 ->toArray();
+
+            $userIds = array_merge($userIds, $territoryUserIds);
         }
 
-        // AND: intersection when BOTH position and territory chains exist
-        $hasPositionSubordinates = ! empty($positionUserIds);
-        $hasTerritorySubordinates = ! empty($territoryUserIds);
-
-        if ($hasPositionSubordinates && $hasTerritorySubordinates) {
-            $subordinateIds = array_intersect($positionUserIds, $territoryUserIds);
-        } elseif ($hasPositionSubordinates) {
-            $subordinateIds = $positionUserIds;
-        } elseif ($hasTerritorySubordinates) {
-            $subordinateIds = $territoryUserIds;
-        } else {
-            $subordinateIds = [];
-        }
-
-        // OR: add direct reports (users who have this user as manager)
+        // Direct reports (users who have this user as manager)
         $directReportIds = User::where('manager_id', $user->id)
             ->pluck('id')
             ->toArray();
 
-        return array_unique(array_merge($subordinateIds, $directReportIds));
+        return array_unique(array_merge($userIds, $directReportIds));
     }
 
     /**
