@@ -12,6 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('territories', function (Blueprint $table) {
+            $table->dropForeign('territories_parent_id_foreign');
+            $table->dropForeign('territories_manager_id_foreign');
             $table->dropColumn([
                 'wilayah_code',
                 'type',
