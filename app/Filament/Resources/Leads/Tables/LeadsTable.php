@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Leads\Tables;
 
 use App\Filament\Traits\HasVisibilityScope;
 use App\Models\Lead;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -24,7 +25,19 @@ class LeadsTable
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-                self::applyVisibilityScope($query, 'created_by');
+                $user = auth()->user();
+
+                // Territory-based scope: if user has territory, scope to territory hierarchy
+                if ($user && ! $user->hasRole('Super Admin') && $user->territory_id) {
+                    $territoryIds = $user->territory->getAllDescendantIds();
+                    $territoryUserIds = User::whereIn('territory_id', $territoryIds)
+                        ->pluck('id')
+                        ->toArray();
+
+                    $query->whereIn('created_by', array_merge($territoryUserIds, [$user->id]));
+                } else {
+                    self::applyVisibilityScope($query, 'created_by');
+                }
 
                 return $query->orderBy('created_at', 'desc');
             })
