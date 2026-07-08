@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Builder;
 trait HasVisibilityScope
 {
     /**
-     * Apply visibility scope based on position hierarchy (OR) and direct reports (OR).
+     * Apply visibility scope based on position hierarchy (OR) and territory hierarchy (OR),
+     * with direct reports (OR) included via manager_id.
      *
      * - Super Admin: sees everything
      * - Director: sees all sales team records (view-only)
      * - Staff: own records only
-     * - Others: own records + subordinates (position hierarchy) + direct reports
+     * - Others: own records + subordinates (position OR territory union) + direct reports
      */
     public static function applyVisibilityScope(Builder $query, string $userColumn = 'user_id'): Builder
     {
@@ -85,12 +86,11 @@ trait HasVisibilityScope
     }
 
     /**
-     * Get IDs of all subordinate users based on position hierarchy and direct reports.
+     * Get IDs of all subordinate users based on position OR territory hierarchy,
+     * plus direct reports (manager_id).
      *
      * Logic:
-     *   subordinateIds = positionDescendants ∪ directReports
-     *
-     * Users in descendant positions are visible.
+     *   subordinateIds = (positionDescendants ∪ territoryDescendants) ∪ directReports
      */
     private static function getSubordinateUserIds($user): array
     {
@@ -106,6 +106,18 @@ trait HasVisibilityScope
                 ->toArray();
 
             $userIds = array_merge($userIds, $positionUserIds);
+        }
+
+        // Users in descendant territories (full tree via parent_id hierarchy)
+        if ($user->territory) {
+            $descendantTerritoryIds = $user->territory->getAllDescendantIds();
+
+            $territoryUserIds = User::whereIn('territory_id', $descendantTerritoryIds)
+                ->where('id', '!=', $user->id)
+                ->pluck('id')
+                ->toArray();
+
+            $userIds = array_merge($userIds, $territoryUserIds);
         }
 
         // Direct reports (users who have this user as manager)
