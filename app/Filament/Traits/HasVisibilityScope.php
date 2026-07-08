@@ -108,11 +108,9 @@ trait HasVisibilityScope
             $userIds = array_merge($userIds, $positionUserIds);
         }
 
-        // Users in descendant territories (full tree via parent_id hierarchy)
-        if ($user->territory) {
-            $descendantTerritoryIds = $user->territory->getAllDescendantIds();
-
-            $territoryUserIds = User::whereIn('territory_id', $descendantTerritoryIds)
+        // Users in same territory
+        if ($user->territory_id) {
+            $territoryUserIds = User::where('territory_id', $user->territory_id)
                 ->where('id', '!=', $user->id)
                 ->pluck('id')
                 ->toArray();

@@ -29,8 +29,7 @@ class LeadsTable
 
                 // Territory-based scope: if user has territory, scope to territory hierarchy
                 if ($user && ! $user->hasRole('Super Admin') && $user->territory_id) {
-                    $territoryIds = $user->territory->getAllDescendantIds();
-                    $territoryUserIds = User::whereIn('territory_id', $territoryIds)
+                    $territoryUserIds = User::where('territory_id', $user->territory_id)
                         ->pluck('id')
                         ->toArray();
 
