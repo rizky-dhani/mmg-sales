@@ -29,8 +29,7 @@ class SalesReportService
         $totalNetSales = (clone $primaryQuery)->sum('net_sales_total');
 
         // Derive gross sales from order_items since total_hna_gross_sales was dropped
-        $totalGrossSales = (clone $primaryQuery)
-            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+        $totalGrossSales = (clone $this->buildBaseQueryWithItems($filters))
             ->sum('order_items.subtotal');
 
         $totalOrders = (clone $primaryQuery)->count();
@@ -115,8 +114,7 @@ class SalesReportService
         }
 
         if ($filters->itemId) {
-            $query->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
-                ->where('order_items.item_id', $filters->itemId);
+            $query->where('order_items.item_id', $filters->itemId);
         }
 
         if ($filters->leadId) {
@@ -128,6 +126,21 @@ class SalesReportService
         }
 
         return $query;
+    }
+
+    private function buildBaseQueryWithItems(ReportFilterData $filters): Builder
+    {
+        $query = $this->buildBaseQuery($filters);
+
+        // Avoid duplicate join if itemId filter already added it
+        $alreadyJoined = collect($query->getQuery()->joins ?? [])
+            ->contains(fn ($join) => str_contains($join->table, 'order_items'));
+
+        if ($alreadyJoined) {
+            return $query;
+        }
+
+        return $query->join('order_items', 'orders.id', '=', 'order_items.order_id');
     }
 
     private function getComparisonData(ReportFilterData $filters): array
@@ -217,9 +230,9 @@ class SalesReportService
 
     private function getRevenueBySalesRep(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
+        return $this->buildBaseQueryWithItems($filters)
             ->leftJoin('users', 'orders.created_by', '=', 'users.id')
-            ->selectRaw('orders.created_by, users.name as user_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->selectRaw('orders.created_by, users.name as user_name, SUM(order_items.subtotal) as revenue, COUNT(DISTINCT orders.id) as orders')
             ->groupBy('orders.created_by', 'users.name')
             ->orderByDesc('revenue')
             ->limit(10)
@@ -234,10 +247,10 @@ class SalesReportService
 
     private function getRevenueByTerritory(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
+        return $this->buildBaseQueryWithItems($filters)
             ->leftJoin('users', 'orders.created_by', '=', 'users.id')
             ->leftJoin('territories', 'users.territory_id', '=', 'territories.id')
-            ->selectRaw('users.territory_id, territories.name as territory_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->selectRaw('users.territory_id, territories.name as territory_name, SUM(order_items.subtotal) as revenue, COUNT(DISTINCT orders.id) as orders')
             ->groupBy('users.territory_id', 'territories.name')
             ->orderByDesc('revenue')
             ->limit(10)
@@ -252,10 +265,10 @@ class SalesReportService
 
     private function getRevenueByPrincipal(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
-            ->leftJoin('principals', 'orders.principal_id', '=', 'principals.id')
-            ->selectRaw('orders.principal_id, principals.name as principal_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
-            ->groupBy('orders.principal_id', 'principals.name')
+        return $this->buildBaseQueryWithItems($filters)
+            ->leftJoin('principals', 'order_items.principal_id', '=', 'principals.id')
+            ->selectRaw('order_items.principal_id, principals.name as principal_name, SUM(order_items.subtotal) as revenue, COUNT(DISTINCT orders.id) as orders')
+            ->groupBy('order_items.principal_id', 'principals.name')
             ->orderByDesc('revenue')
             ->limit(10)
             ->get()
@@ -269,10 +282,10 @@ class SalesReportService
 
     private function getRevenueBySegment(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
+        return $this->buildBaseQueryWithItems($filters)
             ->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id')
             ->leftJoin('segments', 'customers.segment_id', '=', 'segments.id')
-            ->selectRaw('customers.segment_id, segments.name as segment_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->selectRaw('customers.segment_id, segments.name as segment_name, SUM(order_items.subtotal) as revenue, COUNT(DISTINCT orders.id) as orders')
             ->whereNotNull('customers.segment_id')
             ->groupBy('customers.segment_id', 'segments.name')
             ->orderByDesc('revenue')
@@ -287,10 +300,10 @@ class SalesReportService
 
     private function getRevenueByCustomerGroup(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
+        return $this->buildBaseQueryWithItems($filters)
             ->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id')
             ->leftJoin('customer_groups', 'customers.customer_group_id', '=', 'customer_groups.id')
-            ->selectRaw('customers.customer_group_id, customer_groups.name as group_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
+            ->selectRaw('customers.customer_group_id, customer_groups.name as group_name, SUM(order_items.subtotal) as revenue, COUNT(DISTINCT orders.id) as orders')
             ->whereNotNull('customers.customer_group_id')
             ->groupBy('customers.customer_group_id', 'customer_groups.name')
             ->orderByDesc('revenue')

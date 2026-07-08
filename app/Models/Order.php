@@ -71,6 +71,10 @@ class Order extends Model
                 $generator = app(ResourceCodeGenerator::class);
                 $model->order_number = $generator->generateForOrder($model->tahun);
             }
+
+            if (is_null($model->created_by) && auth()->check()) {
+                $model->created_by = auth()->id();
+            }
         });
     }
 
