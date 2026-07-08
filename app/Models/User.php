@@ -119,11 +119,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(User::class, 'manager_id');
     }
 
-    public function managedTerritories(): HasMany
-    {
-        return $this->hasMany(Territory::class, 'manager_id');
-    }
-
     public function activities(): HasMany
     {
         return $this->hasMany(Activity::class);
