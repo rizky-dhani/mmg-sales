@@ -18,4 +18,20 @@ class Territory extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Territory::class, 'parent_id');
+    }
+
+    public function getAllDescendantIds(): array
+    {
+        $ids = [$this->id];
+
+        foreach ($this->children as $child) {
+            $ids = array_merge($ids, $child->getAllDescendantIds());
+        }
+
+        return $ids;
+    }
 }
