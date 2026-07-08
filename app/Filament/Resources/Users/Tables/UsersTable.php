@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Users\Tables;
 
+use App\Models\Department;
+use App\Models\Position;
 use App\Models\Territory;
 use Carbon\Carbon;
 use Filament\Actions\BulkAction;
@@ -11,6 +13,7 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
 class UsersTable
@@ -61,7 +64,14 @@ class UsersTable
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('department_id')
+                    ->label('Department')
+                    ->options(fn () => Department::orderBy('name')->pluck('name', 'id'))
+                    ->searchable(),
+                SelectFilter::make('position_id')
+                    ->label('Position')
+                    ->options(fn () => Position::orderBy('name')->pluck('name', 'id'))
+                    ->searchable(),
             ])
             ->recordActions([
                 ViewAction::make(),
