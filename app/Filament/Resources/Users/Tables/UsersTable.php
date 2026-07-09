@@ -24,17 +24,17 @@ class UsersTable
         return $table
             ->modifyQueryUsing(fn ($query) => $query->where('id', '!=', auth()->user()->id)->where('id', '!=', 1)->orderBy('created_at', 'desc'))
             ->columns([
-                TextColumn::make('name')
-                    ->label('User Name')
-                    ->searchable()
-                    ->sortable()
-                    ->weight('bold'),
-
                 TextColumn::make('code')
                     ->label('Code')
                     ->searchable()
                     ->sortable()
                     ->formatStateUsing(fn ($state) => str_replace('MMG-USR-', '', $state)),
+
+                TextColumn::make('name')
+                    ->label('User Name')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
 
                 TextColumn::make('email')
                     ->label('Email')
