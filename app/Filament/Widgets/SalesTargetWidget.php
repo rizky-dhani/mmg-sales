@@ -61,7 +61,6 @@ class SalesTargetWidget extends BaseWidget
                 ->description(now()->year.' target')
                 ->descriptionIcon('heroicon-m-flag'),
             Stat::make('Target Achievement', number_format($monthlyAchievement, 1).'% monthly / '.number_format($annualAchievement, 1).'% annual')
-                ->description($formatter->formatCurrency($monthlyShippedAmount, 'IDR').' of '.$formatter->formatCurrency($monthlyTarget, 'IDR').' monthly | '.$formatter->formatCurrency($annualShippedAmount, 'IDR').' of '.$formatter->formatCurrency($annualTarget, 'IDR').' annual')
                 ->color($color),
         ];
     }
