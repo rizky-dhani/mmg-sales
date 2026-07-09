@@ -23,20 +23,7 @@ class OrdersTable
     {
         return $table
             ->modifyQueryUsing(function (Builder $query) {
-                $user = auth()->user();
-
-                // Logistics sees all orders (needs to update shipping status)
-                if ($user?->hasRole('Staff - Logistics')) {
-                    return $query;
-                }
-
-                $query = self::applyVisibilityScope($query, 'created_by');
-
-                // Also show orders where user is the assigned SR
-                if ($user?->position_id) {
-                    $query->orWhere('sr_position_id', $user->position_id);
-                }
-
+                // ponytail: visibility scope removed, everyone sees all orders
                 return $query->orderBy('created_at', 'desc');
             })
             ->columns([
