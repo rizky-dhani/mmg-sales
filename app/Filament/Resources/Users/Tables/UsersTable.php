@@ -112,6 +112,24 @@ class UsersTable
                             });
                         })
                         ->deselectRecordsAfterCompletion(),
+                    BulkAction::make('setActive')
+                        ->label('Set Active Status')
+                        ->icon('heroicon-o-check-circle')
+                        ->form([
+                            Select::make('is_active')
+                                ->label('Status')
+                                ->options([
+                                    true => 'Active',
+                                    false => 'Inactive',
+                                ])
+                                ->required(),
+                        ])
+                        ->action(function ($records, array $data) {
+                            $records->each(function ($record) use ($data) {
+                                $record->update(['is_active' => $data['is_active']]);
+                            });
+                        })
+                        ->deselectRecordsAfterCompletion(),
                 ]),
             ]);
     }
