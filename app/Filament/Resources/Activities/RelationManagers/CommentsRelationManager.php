@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -39,9 +40,6 @@ class CommentsRelationManager extends RelationManager
                 TextEntry::make('created_at')
                     ->dateTime('d M Y H:i')
                     ->placeholder('-'),
-                TextEntry::make('updated_at')
-                    ->dateTime('d M Y H:i')
-                    ->placeholder('-'),
             ]);
     }
 
@@ -67,10 +65,11 @@ class CommentsRelationManager extends RelationManager
                         'user_id' => auth()->id(),
                     ])),
             ])
-            ->actions([
+            ->recordActions([
+                EditAction::make(),
                 DeleteAction::make(),
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
