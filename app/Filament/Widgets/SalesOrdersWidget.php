@@ -36,6 +36,9 @@ class SalesOrdersWidget extends BaseWidget
         $shippedCount = $shippedOrders->count();
         $shippedAmount = $shippedOrders->sum('total_amount');
 
+        $totalOrders = Order::query()->count();
+        $totalAmount = Order::query()->sum('total_amount');
+
         return [
             Stat::make('Open Orders (YTD)', $openCount.' orders')
                 ->description($formatter->formatCurrency($openAmount, 'IDR').' in open orders')
@@ -45,6 +48,10 @@ class SalesOrdersWidget extends BaseWidget
                 ->description($formatter->formatCurrency($shippedAmount, 'IDR').' in shipped orders')
                 ->descriptionIcon('heroicon-m-truck')
                 ->color('primary'),
+            Stat::make('Total Orders', $totalOrders.' orders')
+                ->description($formatter->formatCurrency($totalAmount, 'IDR').' all-time')
+                ->descriptionIcon('heroicon-m-shopping-bag')
+                ->color('info'),
         ];
     }
 }

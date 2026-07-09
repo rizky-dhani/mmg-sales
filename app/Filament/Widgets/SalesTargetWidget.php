@@ -27,17 +27,27 @@ class SalesTargetWidget extends BaseWidget
         $monthlyTarget = (float) ($target->monthly_target ?? 0);
         $annualTarget = (float) ($target->annual_target ?? 0);
 
-        $shippedAmount = Order::query()
+        $annualShippedAmount = Order::query()
             ->where('created_by', $user->id)
             ->whereHas('deliveryStatuses', fn ($q) => $q->whereNotNull('shipped_date'))
             ->whereYear('order_date', now()->year)
             ->sum('total_amount');
 
-        $achievement = $annualTarget > 0 ? ($shippedAmount / $annualTarget) * 100 : 0;
+        $monthlyShippedAmount = Order::query()
+            ->where('created_by', $user->id)
+            ->whereHas('deliveryStatuses', fn ($q) => $q->whereNotNull('shipped_date'))
+            ->whereYear('order_date', now()->year)
+            ->whereMonth('order_date', now()->month)
+            ->sum('total_amount');
+
+        $annualAchievement = $annualTarget > 0 ? ($annualShippedAmount / $annualTarget) * 100 : 0;
+        $monthlyAchievement = $monthlyTarget > 0 ? ($monthlyShippedAmount / $monthlyTarget) * 100 : 0;
+
+        $lowerAchievement = min($annualAchievement, $monthlyAchievement);
         $color = 'danger';
-        if ($achievement >= 100) {
+        if ($lowerAchievement >= 100) {
             $color = 'success';
-        } elseif ($achievement >= 75) {
+        } elseif ($lowerAchievement >= 75) {
             $color = 'warning';
         }
 
@@ -50,8 +60,8 @@ class SalesTargetWidget extends BaseWidget
             Stat::make('Annual Target', $formatter->formatCurrency($annualTarget, 'IDR'))
                 ->description(now()->year.' target')
                 ->descriptionIcon('heroicon-m-flag'),
-            Stat::make('Target Achievement', number_format($achievement, 1).'%')
-                ->description($achievement >= 100 ? 'Target Surpassed' : 'Remaining: '.$formatter->formatCurrency(max(0, $annualTarget - $shippedAmount), 'IDR'))
+            Stat::make('Target Achievement', number_format($monthlyAchievement, 1).'% monthly / '.number_format($annualAchievement, 1).'% annual')
+                ->description($formatter->formatCurrency($monthlyShippedAmount, 'IDR').' of '.$formatter->formatCurrency($monthlyTarget, 'IDR').' monthly | '.$formatter->formatCurrency($annualShippedAmount, 'IDR').' of '.$formatter->formatCurrency($annualTarget, 'IDR').' annual')
                 ->color($color),
         ];
     }
