@@ -57,7 +57,7 @@ class ActivityScopeService
     public function getAllSubordinateIds(User $user): Collection
     {
         if ($user->hasRole('Super Admin') || $user->hasBaseRole('Director') || $user->hasBaseRole('Manager')) {
-            return User::pluck('id');
+            return User::active()->pluck('id');
         }
 
         $subordinateIds = collect();

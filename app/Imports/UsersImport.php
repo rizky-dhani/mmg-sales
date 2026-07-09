@@ -29,6 +29,7 @@ class UsersImport implements ToCollection, WithHeadingRow
                 'position_id' => $this->resolvePositionId($row['jabatan'] ?? null, $departmentId),
                 'territory_id' => $this->resolveTerritoryId($row['area'] ?? null),
                 'department_id' => $departmentId,
+                'is_active' => true,
             ]);
 
             // Sync roles from the Roles column

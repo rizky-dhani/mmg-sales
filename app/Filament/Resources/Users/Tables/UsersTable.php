@@ -12,6 +12,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -62,6 +63,11 @@ class UsersTable
                     ->date('d M Y')
                     ->formatStateUsing(fn ($state) => strtoupper(Carbon::parse($state)->translatedFormat('d M Y')))
                     ->toggleable(isToggledHiddenByDefault: true),
+
+                IconColumn::make('is_active')
+                    ->label('Active')
+                    ->boolean()
+                    ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('department_id')
@@ -72,6 +78,12 @@ class UsersTable
                     ->label('Position')
                     ->options(fn () => Position::orderBy('name')->pluck('name', 'id'))
                     ->searchable(),
+                SelectFilter::make('is_active')
+                    ->label('Status')
+                    ->options([
+                        true => 'Active',
+                        false => 'Inactive',
+                    ]),
             ])
             ->recordActions([
                 ViewAction::make(),

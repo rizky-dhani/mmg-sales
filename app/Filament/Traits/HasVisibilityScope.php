@@ -100,7 +100,7 @@ trait HasVisibilityScope
         if ($user->position) {
             $descendantPositionIds = $user->position->getAllDescendantIds();
 
-            $positionUserIds = User::whereIn('position_id', $descendantPositionIds)
+            $positionUserIds = User::active()->whereIn('position_id', $descendantPositionIds)
                 ->where('id', '!=', $user->id)
                 ->pluck('id')
                 ->toArray();
@@ -110,7 +110,7 @@ trait HasVisibilityScope
 
         // Users in same territory
         if ($user->territory_id) {
-            $territoryUserIds = User::where('territory_id', $user->territory_id)
+            $territoryUserIds = User::active()->where('territory_id', $user->territory_id)
                 ->where('id', '!=', $user->id)
                 ->pluck('id')
                 ->toArray();
@@ -119,7 +119,7 @@ trait HasVisibilityScope
         }
 
         // Direct reports (users who have this user as manager)
-        $directReportIds = User::where('manager_id', $user->id)
+        $directReportIds = User::active()->where('manager_id', $user->id)
             ->pluck('id')
             ->toArray();
 
@@ -134,7 +134,7 @@ trait HasVisibilityScope
     {
         $salesRoles = ['Staff', 'Manager', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'];
 
-        return User::whereHas('roles', function ($query) use ($salesRoles): void {
+        return User::active()->whereHas('roles', function ($query) use ($salesRoles): void {
             $query->where(function ($q) use ($salesRoles): void {
                 foreach ($salesRoles as $role) {
                     $q->orWhere('name', $role)->orWhere('name', 'like', "{$role} - %");

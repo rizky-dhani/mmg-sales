@@ -6,6 +6,7 @@ use App\Traits\HasCode;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -58,6 +59,7 @@ class User extends Authenticatable implements FilamentUser
         'sales_target',
         'target_metadata',
         'code',
+        'is_active',
     ];
 
     protected $codeColumn = 'code';
@@ -153,5 +155,10 @@ class User extends Authenticatable implements FilamentUser
                 }
             })
             ->exists();
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
     }
 }
