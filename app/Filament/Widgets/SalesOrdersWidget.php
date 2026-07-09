@@ -48,6 +48,7 @@ class SalesOrdersWidget extends BaseWidget
                 ->descriptionIcon('heroicon-m-truck')
                 ->color('primary'),
             Stat::make('Total Orders', $totalOrders.' orders')
+                ->description('All-time')
                 ->descriptionIcon('heroicon-m-shopping-bag')
                 ->color('info'),
         ];
