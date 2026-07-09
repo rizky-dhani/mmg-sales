@@ -9,6 +9,7 @@ use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\Facades\File;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -26,11 +27,9 @@ class ListPermissions extends ListRecords
                 ->form([
                     Select::make('model')
                         ->label('Model')
-                        ->options(collect(app_path('Models'))
-                            ->files()
+                        ->options(collect(File::files(app_path('Models')))
                             ->mapWithKeys(fn (\SplFileInfo $file) => [
-                                str($file->getFilename())->before('.php')->snake()->toString() =>
-                                    str($file->getFilename())->before('.php')->headline()->toString(),
+                                str($file->getFilename())->before('.php')->snake()->toString() => str($file->getFilename())->before('.php')->headline()->toString(),
                             ])
                             ->sort()
                             ->toArray())
