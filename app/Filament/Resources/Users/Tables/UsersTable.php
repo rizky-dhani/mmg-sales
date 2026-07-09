@@ -33,7 +33,8 @@ class UsersTable
                 TextColumn::make('code')
                     ->label('Code')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->formatStateUsing(fn ($state) => str_replace('MMG-USR-', '', $state)),
 
                 TextColumn::make('email')
                     ->label('Email')
