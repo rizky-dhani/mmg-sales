@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Order;
+use App\Models\Target;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Auth;
@@ -18,19 +19,21 @@ class SalesTargetWidget extends BaseWidget
             return [];
         }
 
-        $target = (float) ($user->sales_target ?? 0);
+        $target = Target::where('user_id', $user->id)
+            ->where('year', now()->year)
+            ->where('month', now()->month)
+            ->first();
 
-        // Summing net_sales_total for orders created by the user in the current year
-        $actual = Order::query()
+        $monthlyTarget = (float) ($target->monthly_target ?? 0);
+        $annualTarget = (float) ($target->annual_target ?? 0);
+
+        $shippedAmount = Order::query()
             ->where('created_by', $user->id)
+            ->whereHas('deliveryStatuses', fn ($q) => $q->whereNotNull('shipped_date'))
             ->whereYear('order_date', now()->year)
-            ->sum('net_sales_total');
+            ->sum('total_amount');
 
-        $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
-        $formattedTarget = $formatter->formatCurrency($target, 'IDR');
-        $formattedActual = $formatter->formatCurrency($actual, 'IDR');
-
-        $achievement = $target > 0 ? ($actual / $target) * 100 : 0;
+        $achievement = $annualTarget > 0 ? ($shippedAmount / $annualTarget) * 100 : 0;
         $color = 'danger';
         if ($achievement >= 100) {
             $color = 'success';
@@ -38,23 +41,18 @@ class SalesTargetWidget extends BaseWidget
             $color = 'warning';
         }
 
+        $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
+
         return [
-            Stat::make('Annual Sales Target', $formattedTarget)
-                ->description('Yearly target goal')
+            Stat::make('Monthly Target', $formatter->formatCurrency($monthlyTarget, 'IDR'))
+                ->description(now()->translatedFormat('F Y'))
+                ->descriptionIcon('heroicon-m-calendar'),
+            Stat::make('Annual Target', $formatter->formatCurrency($annualTarget, 'IDR'))
+                ->description(now()->year.' target')
                 ->descriptionIcon('heroicon-m-flag'),
-            Stat::make('Current Revenue (YTD)', $formattedActual)
-                ->description(number_format($achievement, 1).'% of target achieved')
-                ->descriptionIcon($achievement >= 100 ? 'heroicon-m-check-circle' : 'heroicon-m-arrow-trending-up')
+            Stat::make('Target Achievement', number_format($achievement, 1).'%')
+                ->description($achievement >= 100 ? 'Target Surpassed' : 'Remaining: '.$formatter->formatCurrency(max(0, $annualTarget - $shippedAmount), 'IDR'))
                 ->color($color),
-            Stat::make('Target vs Actual Gauge', number_format($achievement, 1).'%')
-                ->description($achievement >= 100 ? 'Target Surpassed' : 'Remaining: '.$formatter->formatCurrency(max(0, $target - $actual), 'IDR'))
-                ->color($color)
-                ->chart([7, 10, 5, 2, 20, 30, 45, 60, achievement_to_chart($achievement)]), // Simple chart representation
         ];
     }
-}
-
-function achievement_to_chart($achievement)
-{
-    return min(100, $achievement);
 }
