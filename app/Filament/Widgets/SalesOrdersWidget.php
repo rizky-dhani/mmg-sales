@@ -26,7 +26,6 @@ class SalesOrdersWidget extends BaseWidget
             ->whereYear('order_date', now()->year);
 
         $openCount = $openOrders->count();
-        $openAmount = $openOrders->sum('total_amount');
 
         $shippedOrders = Order::query()
             ->where('created_by', $user->id)
@@ -34,17 +33,16 @@ class SalesOrdersWidget extends BaseWidget
             ->whereYear('order_date', now()->year);
 
         $shippedCount = $shippedOrders->count();
-        $shippedAmount = $shippedOrders->sum('total_amount');
 
         $totalOrders = Order::query()->count();
 
         return [
             Stat::make('Open Orders', $openCount.' orders')
-                ->description('YTD · '.$formatter->formatCurrency($openAmount, 'IDR'))
+                ->description('YTD')
                 ->descriptionIcon('heroicon-m-clock')
                 ->color('warning'),
             Stat::make('Shipped Orders', $shippedCount.' orders')
-                ->description('YTD · '.$formatter->formatCurrency($shippedAmount, 'IDR'))
+                ->description('YTD')
                 ->descriptionIcon('heroicon-m-truck')
                 ->color('primary'),
             Stat::make('Total Orders', $totalOrders.' orders')
