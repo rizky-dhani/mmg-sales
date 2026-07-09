@@ -6,7 +6,7 @@ use App\Filament\Resources\Permissions\PermissionResource;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
 use Spatie\Permission\Models\Permission;
@@ -24,11 +24,18 @@ class ListPermissions extends ListRecords
                 ->label('Generate Permissions')
                 ->icon('heroicon-o-sparkles')
                 ->form([
-                    TextInput::make('model')
-                        ->label('Model slug')
+                    Select::make('model')
+                        ->label('Model')
+                        ->options(collect(app_path('Models'))
+                            ->files()
+                            ->mapWithKeys(fn (\SplFileInfo $file) => [
+                                str($file->getFilename())->before('.php')->snake()->toString() =>
+                                    str($file->getFilename())->before('.php')->headline()->toString(),
+                            ])
+                            ->sort()
+                            ->toArray())
                         ->required()
-                        ->regex('/^[a-z_]+$/')
-                        ->helperText('E.g., customer, order, product'),
+                        ->searchable(),
                     CheckboxList::make('actions')
                         ->options([
                             'view' => 'View',
