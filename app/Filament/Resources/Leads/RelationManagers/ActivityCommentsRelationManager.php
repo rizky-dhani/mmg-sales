@@ -6,15 +6,30 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms;
 use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Schemas\Schema;
 use Filament\Tables;
 use Filament\Tables\Table;
 
 class ActivityCommentsRelationManager extends RelationManager
 {
     protected static string $relationship = 'activityComments';
+
+    public function form(Schema $schema): Schema
+    {
+        return $schema->components([
+            Forms\Components\Select::make('activity_id')
+                ->label('Activity')
+                ->relationship('activity', 'subject')
+                ->searchable()
+                ->required(),
+            Forms\Components\Textarea::make('comment')
+                ->required()
+                ->rows(3)
+                ->columnSpanFull(),
+        ]);
+    }
 
     public function table(Table $table): Table
     {
@@ -36,21 +51,8 @@ class ActivityCommentsRelationManager extends RelationManager
                     ->dateTime('d M Y H:i')
                     ->sortable(),
             ])
-            ->filters([
-                //
-            ])
             ->headerActions([
                 CreateAction::make()
-                    ->schema([
-                        Select::make('activity_id')
-                            ->label('Activity')
-                            ->options(fn ($record) => $record->activities()->pluck('subject', 'id'))
-                            ->required(),
-                        Textarea::make('comment')
-                            ->required()
-                            ->rows(3)
-                            ->columnSpanFull(),
-                    ])
                     ->mutateFormDataUsing(fn (array $data) => array_merge($data, [
                         'user_id' => auth()->id(),
                     ])),
