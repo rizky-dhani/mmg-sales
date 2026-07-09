@@ -29,7 +29,6 @@ class SalesAchievementWidget extends BaseWidget
         $shippedAmount = $shippedOrders->sum('total_amount');
 
         $openOrders = Order::query()
-            ->where('created_by', $user->id)
             ->whereDoesntHave('deliveryStatuses')
             ->whereDoesntHave('paymentStatuses')
             ->whereYear('order_date', now()->year);
