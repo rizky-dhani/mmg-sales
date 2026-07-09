@@ -2,35 +2,17 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Spatie\Permission\Models\Permission;
 
 class PermissionHelper
 {
     /**
-     * Known model slugs derived from the permission naming convention.
-     * Ordered longest-first for suffix matching (e.g., customer_group before customer).
+     * Dynamically discovered model slugs from app/Models/.
+     * Ordered longest-first for suffix matching.
      */
-    private static array $models = [
-        'customer_group',
-        'sub_segment',
-        'sales_type',
-        'customer',
-        'department',
-        'distributor',
-        'activity',
-        'contact',
-        'product',
-        'lead',
-        'segment',
-        'territory',
-        'position',
-        'principal',
-        'milestone',
-        'item',
-        'order',
-        'target',
-        'user',
-    ];
+    private static ?Collection $models = null;
 
     /**
      * Available actions in the permission naming convention.
@@ -88,9 +70,7 @@ class PermissionHelper
      */
     public static function parsePermissionName(string $permission): ?array
     {
-        // Match from longest model name first
-        foreach (self::$models as $model) {
-            // Check if permission ends with the model name
+        foreach (self::discoverModels() as $model) {
             if (str_ends_with($permission, '_'.$model)) {
                 $prefix = substr($permission, 0, -(strlen($model) + 1));
 
@@ -105,10 +85,21 @@ class PermissionHelper
     }
 
     /**
-     * Get all known model slugs from the static list.
+     * Get all known model slugs from the filesystem.
      */
     public static function getModels(): array
     {
+        return self::discoverModels()->values()->toArray();
+    }
+
+    private static function discoverModels(): Collection
+    {
+        if (self::$models === null) {
+            self::$models = collect(File::files(app_path('Models')))
+                ->map(fn ($file) => str($file->getFilename())->before('.php')->snake()->toString())
+                ->sort(fn ($a, $b) => strlen($b) <=> strlen($a));
+        }
+
         return self::$models;
     }
 
