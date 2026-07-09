@@ -43,21 +43,24 @@ class UsersTable
                 TextColumn::make('department.name')
                     ->label('Department')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('position.name')
                     ->label('Position')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('roles.name')
                     ->label('Roles')
                     ->badge()
-                    ->color('success'),
+                    ->color('success')
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('manager.name')
                     ->label('Manager')
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->label('Created')
