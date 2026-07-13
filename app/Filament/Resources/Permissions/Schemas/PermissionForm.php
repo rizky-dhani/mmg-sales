@@ -6,6 +6,7 @@ use App\Models\Role;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\File;
 
 class PermissionForm
 {
@@ -18,6 +19,16 @@ class PermissionForm
                     ->unique(ignoreRecord: true)
                     ->maxLength(255)
                     ->regex('/^[a-z_]+$/'),
+                Select::make('model')
+                    ->label('Model')
+                    ->options(collect(File::files(app_path('Models')))
+                        ->mapWithKeys(fn (\SplFileInfo $file) => [
+                            str($file->getFilename())->before('.php')->snake()->toString() => str($file->getFilename())->before('.php')->headline()->toString(),
+                        ])
+                        ->sort()
+                        ->toArray())
+                    ->searchable()
+                    ->nullable(),
                 Select::make('guard_name')
                     ->options([
                         'web' => 'Web',
