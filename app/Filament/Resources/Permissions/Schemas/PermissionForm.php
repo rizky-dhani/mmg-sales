@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Permissions\Schemas;
 
+use App\Helpers\PermissionHelper;
 use App\Models\Role;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -18,7 +19,21 @@ class PermissionForm
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(255)
-                    ->regex('/^[a-z_]+$/'),
+                    ->regex('/^[a-z_]+$/')
+                    ->helperText(function ($get): ?string {
+                        $name = $get('name');
+                        if (blank($name)) {
+                            return null;
+                        }
+
+                        $parsed = PermissionHelper::parsePermissionName($name);
+                        if ($parsed === null) {
+                            return str($name)->replace('_', ' ')->title();
+                        }
+
+                        return PermissionHelper::getActionLabel($parsed['action'])
+                            .' '.PermissionHelper::getModelLabel($parsed['model']);
+                    }),
                 Select::make('model')
                     ->label('Model')
                     ->options(collect(File::files(app_path('Models')))
