@@ -9,7 +9,7 @@ class ContactsTemplateExport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
-            'Template' => new ContactsTemplateSheet,
+            'Contacts List' => new ContactsTemplateSheet,
             'Customer List' => new CustomerListSheet,
         ];
     }

@@ -5,8 +5,9 @@ namespace App\Exports;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class ContactsTemplateSheet implements FromCollection, WithHeadings
+class ContactsTemplateSheet implements FromCollection, WithHeadings, WithTitle
 {
     public function collection(): Collection
     {
@@ -44,5 +45,10 @@ class ContactsTemplateSheet implements FromCollection, WithHeadings
             'is_billing_contact',
             'notes',
         ];
+    }
+
+    public function title(): string
+    {
+        return 'Contacts List';
     }
 }
