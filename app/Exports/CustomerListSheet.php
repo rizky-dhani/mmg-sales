@@ -6,8 +6,9 @@ use App\Models\Customer;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class CustomerListSheet implements FromCollection, WithHeadings
+class CustomerListSheet implements FromCollection, WithHeadings, WithTitle
 {
     public function collection(): Collection
     {
@@ -20,5 +21,10 @@ class CustomerListSheet implements FromCollection, WithHeadings
     public function headings(): array
     {
         return ['id', 'name'];
+    }
+
+    public function title(): string
+    {
+        return 'Customer List';
     }
 }
