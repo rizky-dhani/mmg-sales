@@ -23,7 +23,7 @@ class ListContacts extends ListRecords
                 ->icon('heroicon-o-arrow-down-tray')
                 ->color('info')
                 ->action(fn () => Excel::download(new ContactsTemplateExport, 'contacts_template.xlsx'))
-                ->visible(fn () => auth()->user()->hasRole('Super Admin')),
+                ->visible(fn () => auth()->user()->can('download_contacts_template')),
             CreateAction::make(),
         ];
     }

@@ -37,6 +37,10 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::findOrCreate('update_delivery_order');
         Permission::findOrCreate('update_payment_order');
 
+        // ── Contact action permissions ───────────────────────────────────
+        Permission::findOrCreate('import_contacts');
+        Permission::findOrCreate('download_contacts_template');
+
         // ── Report permissions ───────────────────────────────────────────
         $reportPermissions = [
             'view_sales_reports',
@@ -77,6 +81,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_any_customer', 'view_customer', 'create_customer', 'update_customer', 'delete_customer', 'restore_customer', 'force_delete_customer',
             'view_any_customer_group', 'view_customer_group', 'create_customer_group', 'update_customer_group', 'delete_customer_group', 'restore_customer_group', 'force_delete_customer_group',
             'view_any_contact', 'view_contact', 'create_contact', 'update_contact', 'delete_contact', 'restore_contact', 'force_delete_contact',
+            'import_contacts', 'download_contacts_template',
             'view_any_segment', 'view_segment', 'create_segment', 'update_segment', 'delete_segment', 'restore_segment', 'force_delete_segment',
             'view_any_sub_segment', 'view_sub_segment', 'create_sub_segment', 'update_sub_segment', 'delete_sub_segment', 'restore_sub_segment', 'force_delete_sub_segment',
         ], $viewReference);
