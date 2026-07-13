@@ -24,7 +24,7 @@ class ListContacts extends ListRecords
                 ->color('info')
                 ->action(fn () => Excel::download(new ContactsTemplateExport, 'contacts_template.xlsx'))
                 ->visible(fn () => auth()->user()->can('download_contacts_template')),
-            CreateAction::make(),
+            CreateAction::make()->color('success'),
         ];
     }
 }
