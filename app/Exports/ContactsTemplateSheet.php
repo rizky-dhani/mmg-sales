@@ -13,7 +13,6 @@ class ContactsTemplateSheet implements FromCollection, WithHeadings, WithTitle
     {
         return collect([
             [
-                'contact_code' => '',
                 'customer_id' => '1',
                 'name' => 'John Doe',
                 'status' => 'active',
@@ -32,7 +31,6 @@ class ContactsTemplateSheet implements FromCollection, WithHeadings, WithTitle
     public function headings(): array
     {
         return [
-            'contact_code',
             'customer_id',
             'name',
             'status',

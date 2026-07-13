@@ -23,22 +23,28 @@ class ContactsImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            Contact::updateOrCreate(
-                ['contact_code' => $row['contact_code'] ?? null],
-                [
-                    'customer_id' => $customerId,
-                    'name' => $row['name'],
-                    'status' => $this->normalizeStatus($row['status'] ?? null),
-                    'position' => $row['position'] ?? null,
-                    'department' => $row['department'] ?? null,
-                    'email' => $row['email'] ?? null,
-                    'phone' => $row['phone'] ?? null,
-                    'mobile' => $row['mobile'] ?? null,
-                    'is_primary' => $this->normalizeBoolean($row['is_primary'] ?? null),
-                    'is_billing_contact' => $this->normalizeBoolean($row['is_billing_contact'] ?? null),
-                    'notes' => $row['notes'] ?? null,
-                ]
-            );
+            $exists = Contact::query()
+                ->where('customer_id', $customerId)
+                ->where('name', $row['name'])
+                ->exists();
+
+            if ($exists) {
+                continue;
+            }
+
+            Contact::create([
+                'customer_id' => $customerId,
+                'name' => $row['name'],
+                'status' => $this->normalizeStatus($row['status'] ?? null),
+                'position' => $row['position'] ?? null,
+                'department' => $row['department'] ?? null,
+                'email' => $row['email'] ?? null,
+                'phone' => $row['phone'] ?? null,
+                'mobile' => $row['mobile'] ?? null,
+                'is_primary' => $this->normalizeBoolean($row['is_primary'] ?? null),
+                'is_billing_contact' => $this->normalizeBoolean($row['is_billing_contact'] ?? null),
+                'notes' => $row['notes'] ?? null,
+            ]);
         }
     }
 
