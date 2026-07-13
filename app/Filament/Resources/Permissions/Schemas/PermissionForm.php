@@ -43,7 +43,8 @@ class PermissionForm
                         ->sort()
                         ->toArray())
                     ->searchable()
-                    ->nullable(),
+                    ->nullable()
+                    ->dehydrated(false),
                 Select::make('guard_name')
                     ->options([
                         'web' => 'Web',
