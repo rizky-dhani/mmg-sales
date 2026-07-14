@@ -22,6 +22,7 @@ class ImportCustomersAction extends Action
             ->label('Import Customers')
             ->icon('heroicon-o-arrow-up-tray')
             ->color('warning')
+            ->visible(fn () => auth()->user()->can('import_customers'))
             ->form([
                 FileUpload::make('file')
                     ->label('Excel File')

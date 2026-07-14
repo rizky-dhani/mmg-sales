@@ -40,6 +40,9 @@ class RolesAndPermissionsSeeder extends Seeder
         // ── Contact action permissions ───────────────────────────────────
         Permission::findOrCreate('import_contacts');
         Permission::findOrCreate('download_contacts_template');
+        // ── Customer action permissions ──────────────────────────────────
+        Permission::findOrCreate('import_customers');
+        Permission::findOrCreate('download_customers_template');
 
         // ── Report permissions ───────────────────────────────────────────
         $reportPermissions = [
