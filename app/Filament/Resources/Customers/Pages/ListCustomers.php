@@ -22,9 +22,10 @@ class ListCustomers extends ListRecords
             Action::make('download_template')
                 ->label('Download Template')
                 ->icon(Heroicon::OutlinedDocumentArrowDown)
+                ->color('info')
                 ->visible(fn () => auth()->user()->hasRole('Super Admin'))
                 ->action(fn () => Excel::download(new CustomersTemplateExport, 'customers_template.xlsx')),
-            CreateAction::make(),
+            CreateAction::make()->color('success'),
         ];
     }
 }

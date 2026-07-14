@@ -21,7 +21,7 @@ class ImportContactsAction extends Action
         $this
             ->label('Import Contacts')
             ->icon('heroicon-o-arrow-up-tray')
-            ->color('success')
+            ->color('warning')
             ->visible(fn () => auth()->user()->can('import_contacts'))
             ->form([
                 FileUpload::make('file')
