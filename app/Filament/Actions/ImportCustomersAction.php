@@ -22,7 +22,7 @@ class ImportCustomersAction extends Action
             ->label('Import Customers')
             ->icon('heroicon-o-arrow-up-tray')
             ->color('warning')
-            ->can('import_customers')
+            ->visible(fn () => auth()->user()->can('import_customers'))
             ->form([
                 FileUpload::make('file')
                     ->label('Excel File')
@@ -36,6 +36,7 @@ class ImportCustomersAction extends Action
                     ->required(),
             ])
             ->action(function (array $data): void {
+                abort_unless(auth()->user()->can('import_customers'), 403);
                 $file = storage_path('app/public/'.$data['file']);
 
                 Excel::import(new CustomersImport, $file);
