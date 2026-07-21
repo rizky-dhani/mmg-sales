@@ -55,9 +55,8 @@ class ResourceCodeGenerator
 
             $nextValue = 1;
 
-            if ($sequence) {
-                $nextValue = $sequence->sequence_value + 1;
-            } elseif ($table && $column) {
+            // Always check actual table for max existing code
+            if ($table && $column) {
                 $maxCode = DB::table($table)
                     ->where($column, 'like', "%-{$prefix}-%")
                     ->max($column);
@@ -68,6 +67,11 @@ class ResourceCodeGenerator
                         $nextValue = (int) $matches[1] + 1;
                     }
                 }
+            }
+
+            // If sequence record exists, take the higher of sequence vs actual table max
+            if ($sequence) {
+                $nextValue = max($nextValue, $sequence->sequence_value + 1);
             }
 
             if ($sequence) {
