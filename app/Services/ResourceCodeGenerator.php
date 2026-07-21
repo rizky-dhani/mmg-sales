@@ -53,9 +53,9 @@ class ResourceCodeGenerator
                 ->lockForUpdate()
                 ->first();
 
-            $nextValue = 1;
+            $currentMax = 0;
 
-            // Always check actual table for max existing code
+            // Actual table is source of truth
             if ($table && $column) {
                 $maxCode = DB::table($table)
                     ->where($column, 'like', "%-{$prefix}-%")
@@ -64,25 +64,22 @@ class ResourceCodeGenerator
                 if ($maxCode) {
                     preg_match('/'.preg_quote($prefix, '/').'-(\d+)$/', $maxCode, $matches);
                     if ($matches) {
-                        $nextValue = (int) $matches[1] + 1;
+                        $currentMax = (int) $matches[1];
                     }
                 }
             }
 
-            // If sequence record exists, take the higher of sequence vs actual table max
-            if ($sequence) {
-                $nextValue = max($nextValue, $sequence->sequence_value + 1);
-            }
+            $nextValue = $currentMax + 1;
 
             if ($sequence) {
                 DB::table('code_sequences')
                     ->where('id', $sequence->id)
-                    ->update(['sequence_value' => $nextValue, 'updated_at' => now()]);
+                    ->update(['sequence_value' => $currentMax, 'updated_at' => now()]);
             } else {
                 DB::table('code_sequences')->insert([
                     'prefix' => $prefix,
                     'partition' => $partition ?? '',
-                    'sequence_value' => $nextValue,
+                    'sequence_value' => $currentMax,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
