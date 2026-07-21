@@ -23,7 +23,7 @@ class ListCustomers extends ListRecords
                 ->label('Download Template')
                 ->icon(Heroicon::OutlinedDocumentArrowDown)
                 ->color('info')
-                ->visible(fn () => auth()->user()->can('download_customers_template'))
+            ->visible(fn () => auth()->user()->can('download_customers_template'))
                 ->action(function () {
                     abort_unless(auth()->user()->can('download_customers_template'), 403);
                     return Excel::download(new CustomersTemplateExport, 'customers_template.xlsx');

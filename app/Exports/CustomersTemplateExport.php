@@ -12,6 +12,7 @@ class CustomersTemplateExport implements FromCollection, WithHeadings
     {
         return collect([
             [
+                'customer_acc_code' => '',
                 'name' => 'PT Example Customer',
                 'customer_name' => 'PT Example Customer',
                 'type' => 'hospital_clinic',
@@ -30,7 +31,6 @@ class CustomersTemplateExport implements FromCollection, WithHeadings
                 'is_active' => 1,
                 'cd_ncd_type' => 'CD',
                 'customer_group_id' => 1,
-                'customer_acc_code' => '',
             ],
         ]);
     }
@@ -38,6 +38,7 @@ class CustomersTemplateExport implements FromCollection, WithHeadings
     public function headings(): array
     {
         return [
+            'internal_code',
             'name',
             'customer_name',
             'type',
@@ -56,7 +57,6 @@ class CustomersTemplateExport implements FromCollection, WithHeadings
             'is_active',
             'cd_ncd_type',
             'customer_group_id',
-            'customer_acc_code',
         ];
     }
 }

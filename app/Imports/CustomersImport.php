@@ -31,7 +31,7 @@ class CustomersImport implements ToCollection, WithHeadingRow
             $isActive = $this->normalizeIsActive($row['is_active'] ?? null);
             $status = $this->normalizeStatus($row['status'] ?? null);
             $cdNcdType = $this->normalizeCdNcdType($row['cd_ncd_type'] ?? null);
-            $customerAccCode = $row['customer_acc_code'] ?? null;
+            $customerAccCode = $row['internal_code'] ?? $row['customer_acc_code'] ?? null;
 
             // Match by customer_acc_code if provided, otherwise fall back to name
             $uniqueBy = ! empty($customerAccCode)
