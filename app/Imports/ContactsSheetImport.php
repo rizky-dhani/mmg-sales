@@ -14,14 +14,16 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
 
     public function collection(Collection $collection): void
     {
-        foreach ($collection as $row) {
+        foreach ($collection as $i => $row) {
             if (empty($row['name'])) {
+                logger("ContactsImport: row {$i} skipped — empty name, keys: ".json_encode(array_keys($row->toArray())));
                 continue;
             }
 
             $customerId = $this->resolveCustomerId($row['customer'] ?? $row['customer_id'] ?? null);
 
             if ($customerId === null) {
+                logger("ContactsImport: row {$i} skipped — customer not resolved, customer value: ".json_encode($row['customer'] ?? $row['customer_id'] ?? null));
                 continue;
             }
 
@@ -31,6 +33,7 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
 
             if (!empty($phone) || !empty($mobile) || !empty($email)) {
                 $exists = Contact::query()
+                    ->where('customer_id', $customerId)
                     ->where(function ($q) use ($phone, $mobile, $email) {
                         if (!empty($phone)) {
                             $q->orWhere('phone', $phone);
@@ -45,6 +48,7 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
                     ->exists();
 
                 if ($exists) {
+                    logger("ContactsImport: row {$i} skipped — duplicate phone/mobile/email: phone={$phone} mobile={$mobile} email={$email}");
                     continue;
                 }
             }
@@ -115,15 +119,18 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
             return null;
         }
 
-        if (is_numeric($value)) {
-            return Customer::where('id', (int) $value)->value('id');
-        }
-
         $value = trim((string) $value);
 
+        if (is_numeric($value)) {
+            $id = Customer::where('id', (int) $value)->value('id');
+            if ($id !== null) {
+                return $id;
+            }
+        }
+
         $customer = Customer::query()
-            ->whereRaw('LOWER(name) = ?', [strtolower($value)])
-            ->orWhereRaw('LOWER(customer_acc_code) = ?', [strtolower($value)])
+            ->whereRaw('LOWER(TRIM(name)) = ?', [strtolower($value)])
+            ->orWhereRaw('LOWER(TRIM(customer_acc_code)) = ?', [strtolower($value)])
             ->first();
 
         return $customer?->id;
