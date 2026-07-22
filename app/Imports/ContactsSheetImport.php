@@ -14,9 +14,14 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
 
     public function collection(Collection $collection): void
     {
+        $first = true;
         foreach ($collection as $i => $row) {
+            if ($first) {
+                logger("ContactsImport: first row keys: ".json_encode(array_keys($row->toArray()))." values: ".json_encode($row->toArray()));
+                $first = false;
+            }
+
             if (empty($row['name'])) {
-                logger("ContactsImport: row {$i} skipped — empty name, keys: ".json_encode(array_keys($row->toArray())));
                 continue;
             }
 
@@ -48,7 +53,6 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
                     ->exists();
 
                 if ($exists) {
-                    logger("ContactsImport: row {$i} skipped — duplicate phone/mobile/email: phone={$phone} mobile={$mobile} email={$email}");
                     continue;
                 }
             }
