@@ -27,16 +27,20 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
 
             $phone = $row['phone'] ?? null;
             $mobile = $row['mobile'] ?? null;
+            $email = $row['email'] ?? null;
 
-            if (!empty($phone) || !empty($mobile)) {
+            if (!empty($phone) || !empty($mobile) || !empty($email)) {
                 $exists = Contact::query()
                     ->where('customer_id', $customerId)
-                    ->where(function ($q) use ($phone, $mobile) {
+                    ->where(function ($q) use ($phone, $mobile, $email) {
                         if (!empty($phone)) {
                             $q->orWhere('phone', $phone);
                         }
                         if (!empty($mobile)) {
                             $q->orWhere('mobile', $mobile);
+                        }
+                        if (!empty($email)) {
+                            $q->orWhere('email', $email);
                         }
                     })
                     ->exists();
