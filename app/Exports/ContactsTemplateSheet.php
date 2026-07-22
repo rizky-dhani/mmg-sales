@@ -13,17 +13,16 @@ class ContactsTemplateSheet implements FromCollection, WithHeadings, WithTitle
     {
         return collect([
             [
-                'customer_id' => '1',
-                'name' => 'John Doe',
-                'status' => 'active',
-                'position' => 'Purchasing Manager',
-                'department' => 'Procurement',
-                'email' => 'john.doe@example.com',
-                'phone' => '021-1234567',
-                'mobile' => '0812-3456-7890',
-                'is_primary' => '1',
-                'is_billing_contact' => '0',
-                'notes' => '',
+                'Customer' => '1',
+                'Name' => 'John Doe',
+                'Status' => 'active',
+                'Position' => 'Purchasing Manager',
+                'Department' => 'Procurement',
+                'Email' => 'john.doe@example.com',
+                'Phone' => '021-1234567',
+                'Mobile' => '0812-3456-7890',
+                'Is Primary' => '1',
+                'Is Billing Contact' => '0',
             ],
         ]);
     }
@@ -31,17 +30,16 @@ class ContactsTemplateSheet implements FromCollection, WithHeadings, WithTitle
     public function headings(): array
     {
         return [
-            'customer_id',
-            'name',
-            'status',
-            'position',
-            'department',
-            'email',
-            'phone',
-            'mobile',
-            'is_primary',
-            'is_billing_contact',
-            'notes',
+            'Customer',
+            'Name',
+            'Status',
+            'Position',
+            'Department',
+            'Email',
+            'Phone',
+            'Mobile',
+            'Is Primary',
+            'Is Billing Contact',
         ];
     }
 
