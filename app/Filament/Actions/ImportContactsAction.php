@@ -2,7 +2,7 @@
 
 namespace App\Filament\Actions;
 
-use App\Imports\ContactsSheetImport;
+use App\Imports\ContactsImport;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Maatwebsite\Excel\Facades\Excel;
@@ -39,7 +39,7 @@ class ImportContactsAction extends Action
                 $file = storage_path('app/public/'.$data['file']);
 
                 $before = \App\Models\Contact::count();
-                Excel::import(new ContactsSheetImport, $file);
+                Excel::import(new ContactsImport, $file);
                 $count = \App\Models\Contact::count() - $before;
 
                 $this->successNotificationTitle(

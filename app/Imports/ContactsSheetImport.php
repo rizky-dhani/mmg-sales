@@ -14,13 +14,7 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
 
     public function collection(Collection $collection): void
     {
-        $first = true;
-        foreach ($collection as $i => $row) {
-            if ($first) {
-                logger("ContactsImport: first row keys: ".json_encode(array_keys($row->toArray()))." values: ".json_encode($row->toArray()));
-                $first = false;
-            }
-
+        foreach ($collection as $row) {
             if (empty($row['name'])) {
                 continue;
             }
@@ -28,7 +22,6 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
             $customerId = $this->resolveCustomerId($row['customer'] ?? $row['customer_id'] ?? null);
 
             if ($customerId === null) {
-                logger("ContactsImport: row {$i} skipped — customer not resolved, customer value: ".json_encode($row['customer'] ?? $row['customer_id'] ?? null));
                 continue;
             }
 
