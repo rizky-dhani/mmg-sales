@@ -2,11 +2,9 @@
 
 namespace App\Filament\Actions;
 
-use App\Imports\ContactsImport;
 use App\Imports\ContactsSheetImport;
 use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
-use Maatwebsite\Excel\Exceptions\SheetNotFoundException;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ImportContactsAction extends Action
@@ -40,17 +38,9 @@ class ImportContactsAction extends Action
             ->action(function (array $data): void {
                 $file = storage_path('app/public/'.$data['file']);
 
-                $import = new ContactsImport;
-
-                try {
-                    Excel::import($import, $file);
-                } catch (SheetNotFoundException) {
-                    $fallback = new ContactsSheetImport;
-                    Excel::import($fallback, $file);
-                    $count = $fallback->importedCount;
-                }
-
-                $count ??= $import->sheet->importedCount;
+                $before = \App\Models\Contact::count();
+                Excel::import(new ContactsSheetImport, $file);
+                $count = \App\Models\Contact::count() - $before;
 
                 $this->successNotificationTitle(
                     $count > 0
