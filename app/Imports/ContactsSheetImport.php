@@ -31,7 +31,6 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
 
             if (!empty($phone) || !empty($mobile) || !empty($email)) {
                 $exists = Contact::query()
-                    ->where('customer_id', $customerId)
                     ->where(function ($q) use ($phone, $mobile, $email) {
                         if (!empty($phone)) {
                             $q->orWhere('phone', $phone);
