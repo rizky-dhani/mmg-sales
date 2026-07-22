@@ -19,19 +19,31 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            $customerId = $this->resolveCustomerId($row['customer'] ?? null);
+            $customerId = $this->resolveCustomerId($row['customer'] ?? $row['customer_id'] ?? null);
 
             if ($customerId === null) {
                 continue;
             }
 
-            $exists = Contact::query()
-                ->where('customer_id', $customerId)
-                ->where('name', $row['name'])
-                ->exists();
+            $phone = $row['phone'] ?? null;
+            $mobile = $row['mobile'] ?? null;
 
-            if ($exists) {
-                continue;
+            if (!empty($phone) || !empty($mobile)) {
+                $exists = Contact::query()
+                    ->where('customer_id', $customerId)
+                    ->where(function ($q) use ($phone, $mobile) {
+                        if (!empty($phone)) {
+                            $q->orWhere('phone', $phone);
+                        }
+                        if (!empty($mobile)) {
+                            $q->orWhere('mobile', $mobile);
+                        }
+                    })
+                    ->exists();
+
+                if ($exists) {
+                    continue;
+                }
             }
 
             Contact::create([
