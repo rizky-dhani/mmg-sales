@@ -25,7 +25,7 @@ describe('Model Code Generation', function () {
         $activity = Activity::factory()->create();
 
         expect($activity->activity_code)->not->toBeNull();
-        expect($activity->activity_code)->toMatch('/^ACT-\d{6}$/');
+        expect($activity->activity_code)->toMatch('/^ACT-\d{4}-\d{6}$/');
     });
 
     it('generates customer_code when creating customer', function () {
@@ -104,7 +104,7 @@ describe('Model Code Generation', function () {
         $customer = Customer::factory()->create();
 
         expect($lead->lead_code)->toMatch('/^LEA-\d{6}$/');
-        expect($activity->activity_code)->toMatch('/^ACT-\d{6}$/');
+        expect($activity->activity_code)->toMatch('/^ACT-\d{4}-\d{6}$/');
         expect($customer->customer_code)->toMatch('/^CST-\d{6}$/');
     });
 });

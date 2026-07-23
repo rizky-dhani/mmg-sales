@@ -13,6 +13,14 @@ class ResourceCodeGenerator
         return sprintf('%s-%06d', strtoupper($prefix), $sequence);
     }
 
+    public function generateForActivity(?int $year = null): string
+    {
+        $year = $year ?? now()->year;
+        $sequence = $this->getNextSequence('ACT', (string) $year, 'activities', 'activity_code');
+
+        return sprintf('ACT-%d-%06d', $year, $sequence);
+    }
+
     public function generateForOrder(?int $year = null): string
     {
         $year = $year ?? now()->year;
@@ -42,7 +50,7 @@ class ResourceCodeGenerator
             // Actual table is source of truth
             if ($table && $column) {
                 $maxCode = DB::table($table)
-                    ->where($column, 'like', "{$prefix}-%")
+                    ->where($column, 'like', $partition ? "{$prefix}-{$partition}-%" : "{$prefix}-%")
                     ->max($column);
 
                 if ($maxCode) {
