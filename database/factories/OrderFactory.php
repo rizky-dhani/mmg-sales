@@ -32,7 +32,7 @@ class OrderFactory extends Factory
             'pm_jpm_pe_position_id' => Position::factory(),
             'rsm_asm_position_id' => Position::factory(),
             'spv_position_id' => Position::factory(),
-            'sr_position_id' => Position::factory(),
+            'sales' => [User::factory()],
             'end_customer_id' => Customer::factory(),
             'principal_id' => Principal::factory(),
             'reg_inst' => fake()->randomElements(['REG', 'INST', 'Consumable'], random_int(1, 2)),

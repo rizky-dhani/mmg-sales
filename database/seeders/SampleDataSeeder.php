@@ -133,7 +133,7 @@ class SampleDataSeeder extends Seeder
                 'sales_type_id' => $salesTypes[array_rand($salesTypes)],
                 'distributor_id' => $distributors->random()->id,
                 'department_id' => $srUser->department_id ?? $departments->random()->id,
-                'sr_position_id' => $srUser->position_id ?? $positions->where('code', 'SR')->first()->id,
+                'sales' => [$srUser->id],
                 'spv_position_id' => $positions->where('code', 'SPV')->first()->id,
                 'rsm_asm_position_id' => $positions->where('code', 'RSM')->first()->id,
                 'head_position_id' => $positions->where('code', 'HEAD')->first()->id,

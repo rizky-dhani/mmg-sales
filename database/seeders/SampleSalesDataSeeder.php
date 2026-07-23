@@ -119,7 +119,7 @@ class SampleSalesDataSeeder extends Seeder
                 'head_position_id' => $headPos->id,
                 'rsm_asm_position_id' => $rsmPos->id,
                 'spv_position_id' => $spvPos->id,
-                'sr_position_id' => $srPos->id,
+                'sales' => [$user?->id ?? User::factory()->create()->id],
                 'end_customer_id' => $customerIds[array_rand($customerIds)],
                 'principal_id' => $selectedItem->principal_id,
                 'reg_inst' => collect(['REG', 'INST', 'Consumable'])->random(rand(1, 2))->values()->all(),

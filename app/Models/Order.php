@@ -20,7 +20,7 @@ class Order extends Model
         'pm_jpm_pe_position_id',
         'rsm_asm_position_id',
         'spv_position_id',
-        'sr_position_id',
+        'sales',
         'end_customer_id',
         'principal_id',
         'reg_inst',
@@ -48,6 +48,7 @@ class Order extends Model
     {
         return [
             'reg_inst' => 'array',
+            'sales' => 'array',
             'order_date' => 'date',
             'expected_delivery_date' => 'date',
             'actual_delivery_date' => 'date',
@@ -103,10 +104,6 @@ class Order extends Model
         return $this->belongsTo(Position::class, 'spv_position_id');
     }
 
-    public function srPosition(): BelongsTo
-    {
-        return $this->belongsTo(Position::class, 'sr_position_id');
-    }
 
     public function customer(): BelongsTo
     {

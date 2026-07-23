@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Orders\Schemas;
 
 use App\Models\Customer;
-use App\Models\Lead;
+use App\Models\Department;
 use App\Models\Position;
 use App\Models\Principal;
 use App\Models\Product;
@@ -88,18 +88,25 @@ class OrderForm
                                         if (! $state) {
                                             $set('end_customer_id', null);
                                             $set('notes', null);
+                                            $set('sales', []);
                                             $set('orderItems', []);
 
                                             return;
                                         }
 
-                                        $lead = Lead::with(['customer', 'products.principal'])->find($state);
+                                        $lead = Lead::with(['customer', 'products.principal', 'creator', 'collaborators'])->find($state);
                                         if (! $lead) {
                                             return;
                                         }
 
                                         $set('end_customer_id', $lead->customer_id);
                                         $set('notes', $lead->notes);
+                                        $salesReps = collect([$lead->creator?->id])
+                                            ->merge($lead->collaborators->pluck('id'))
+                                            ->filter()
+                                            ->values()
+                                            ->toArray();
+                                        $set('sales', $salesReps);
 
                                         $orderItems = $lead->products->map(fn ($product) => [
                                             'principal_id' => $product->principal_id,
@@ -178,10 +185,13 @@ class OrderForm
                                     ->required()
                                     ->preload()
                                     ->searchable(),
-                                Select::make('sr_position_id')
-                                    ->label('Sales Rep')
-                                    ->options(fn () => Position::where('level', Position::SR_LEVEL)->pluck('name', 'id'))
-                                    ->default($user?->position_id)
+                                Select::make('sales')
+                                    ->label('Sales')
+                                    ->multiple()
+                                    ->options(fn () => User::where('department_id', Department::where('code', 'SAL')->value('id'))
+                                        ->pluck('name', 'id'))
+                                    ->default(fn () => $user?->id ? [$user->id] : [])
+                                    ->disabled(fn ($get) => $get('order_source') === 'leads' && $get('lead_id'))
                                     ->preload()
                                     ->searchable(),
                                 Select::make('pm_jpm_pe_position_id')

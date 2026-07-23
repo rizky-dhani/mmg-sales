@@ -231,15 +231,18 @@ class SalesReportService
     private function getRevenueBySalesRep(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQueryWithItems($filters)
-            ->leftJoin('users', 'orders.created_by', '=', 'users.id')
-            ->selectRaw('orders.created_by, users.name as user_name, SUM(order_items.subtotal) as revenue, COUNT(DISTINCT orders.id) as orders')
-            ->groupBy('orders.created_by', 'users.name')
+            ->join('users', function ($join) {
+                $join->whereRaw('JSON_CONTAINS(orders.sales, CAST(users.id AS JSON))')
+                    ->where('users.is_active', true);
+            })
+            ->selectRaw('users.id as user_id, users.name as user_name, SUM(order_items.subtotal) as revenue, COUNT(DISTINCT orders.id) as orders')
+            ->groupBy('users.id', 'users.name')
             ->orderByDesc('revenue')
             ->limit(10)
             ->get()
             ->map(fn ($row) => [
-                'user_id' => $row->created_by,
-                'name' => $row->user_name ?? 'Unknown',
+                'user_id' => $row->user_id,
+                'name' => $row->user_name,
                 'revenue' => (float) $row->revenue,
                 'orders' => $row->orders,
             ]);
@@ -248,8 +251,11 @@ class SalesReportService
     private function getRevenueByTerritory(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQueryWithItems($filters)
-            ->leftJoin('users', 'orders.created_by', '=', 'users.id')
-            ->leftJoin('territories', 'users.territory_id', '=', 'territories.id')
+            ->join('users', function ($join) {
+                $join->whereRaw('JSON_CONTAINS(orders.sales, CAST(users.id AS JSON))')
+                    ->where('users.is_active', true);
+            })
+            ->join('territories', 'users.territory_id', '=', 'territories.id')
             ->selectRaw('users.territory_id, territories.name as territory_name, SUM(order_items.subtotal) as revenue, COUNT(DISTINCT orders.id) as orders')
             ->groupBy('users.territory_id', 'territories.name')
             ->orderByDesc('revenue')
@@ -257,7 +263,7 @@ class SalesReportService
             ->get()
             ->map(fn ($row) => [
                 'territory_id' => $row->territory_id,
-                'name' => $row->territory_name ?? 'Unknown',
+                'name' => $row->territory_name,
                 'revenue' => (float) $row->revenue,
                 'orders' => $row->orders,
             ]);
