@@ -28,7 +28,7 @@ class UsersTable
                     ->label('Code')
                     ->searchable()
                     ->sortable()
-                    ->formatStateUsing(fn ($state) => str_replace('MMG-USR-', '', $state)),
+                    ->formatStateUsing(fn ($state) => str_replace('USR-', '', $state)),
 
                 TextColumn::make('name')
                     ->label('User Name')

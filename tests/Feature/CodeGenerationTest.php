@@ -18,35 +18,35 @@ describe('Model Code Generation', function () {
         $lead = Lead::factory()->create();
 
         expect($lead->lead_code)->not->toBeNull();
-        expect($lead->lead_code)->toMatch('/^MMG-LEA-\d{6}$/');
+        expect($lead->lead_code)->toMatch('/^LEA-\d{6}$/');
     });
 
     it('generates activity_code when creating activity', function () {
         $activity = Activity::factory()->create();
 
         expect($activity->activity_code)->not->toBeNull();
-        expect($activity->activity_code)->toMatch('/^MMG-ACT-\d{6}$/');
+        expect($activity->activity_code)->toMatch('/^ACT-\d{6}$/');
     });
 
     it('generates customer_code when creating customer', function () {
         $customer = Customer::factory()->create();
 
         expect($customer->customer_code)->not->toBeNull();
-        expect($customer->customer_code)->toMatch('/^MMG-CST-\d{6}$/');
+        expect($customer->customer_code)->toMatch('/^CST-\d{6}$/');
     });
 
     it('generates contact_code when creating contact', function () {
         $contact = Contact::factory()->create();
 
         expect($contact->contact_code)->not->toBeNull();
-        expect($contact->contact_code)->toMatch('/^MMG-CON-\d{6}$/');
+        expect($contact->contact_code)->toMatch('/^CON-\d{6}$/');
     });
 
     it('generates principal_code when creating principal', function () {
         $principal = Principal::factory()->create();
 
         expect($principal->principal_code)->not->toBeNull();
-        expect($principal->principal_code)->toMatch('/^MMG-PRN-\d{6}$/');
+        expect($principal->principal_code)->toMatch('/^PRN-\d{6}$/');
     });
 
     it('reuses latest existing principal_code after deletion', function () {
@@ -54,23 +54,23 @@ describe('Model Code Generation', function () {
         $principal2 = Principal::factory()->create();
         $principal3 = Principal::factory()->create();
 
-        expect($principal1->principal_code)->toBe('MMG-PRN-000001');
-        expect($principal2->principal_code)->toBe('MMG-PRN-000002');
-        expect($principal3->principal_code)->toBe('MMG-PRN-000003');
+        expect($principal1->principal_code)->toBe('PRN-000001');
+        expect($principal2->principal_code)->toBe('PRN-000002');
+        expect($principal3->principal_code)->toBe('PRN-000003');
 
         // Delete the last principal
         $principal3->delete();
 
         // Create a new principal - should get code 3 (latest existing + 1)
         $principal4 = Principal::factory()->create();
-        expect($principal4->principal_code)->toBe('MMG-PRN-000003');
+        expect($principal4->principal_code)->toBe('PRN-000003');
 
         // Delete principal 2
         $principal2->delete();
 
         // Create another principal - should get code 4 (latest existing 003 + 1)
         $principal5 = Principal::factory()->create();
-        expect($principal5->principal_code)->toBe('MMG-PRN-000004');
+        expect($principal5->principal_code)->toBe('PRN-000004');
     });
 
     it('generates product_code when creating product', function () {
@@ -85,9 +85,9 @@ describe('Model Code Generation', function () {
         $lead2 = Lead::factory()->create();
         $lead3 = Lead::factory()->create();
 
-        expect($lead1->lead_code)->toBe('MMG-LEA-000001');
-        expect($lead2->lead_code)->toBe('MMG-LEA-000002');
-        expect($lead3->lead_code)->toBe('MMG-LEA-000003');
+        expect($lead1->lead_code)->toBe('LEA-000001');
+        expect($lead2->lead_code)->toBe('LEA-000002');
+        expect($lead3->lead_code)->toBe('LEA-000003');
     });
 
     it('allows manual code assignment', function () {
@@ -103,9 +103,9 @@ describe('Model Code Generation', function () {
         $activity = Activity::factory()->create();
         $customer = Customer::factory()->create();
 
-        expect($lead->lead_code)->toMatch('/^MMG-LEA-\d{6}$/');
-        expect($activity->activity_code)->toMatch('/^MMG-ACT-\d{6}$/');
-        expect($customer->customer_code)->toMatch('/^MMG-CST-\d{6}$/');
+        expect($lead->lead_code)->toMatch('/^LEA-\d{6}$/');
+        expect($activity->activity_code)->toMatch('/^ACT-\d{6}$/');
+        expect($customer->customer_code)->toMatch('/^CST-\d{6}$/');
     });
 });
 
@@ -114,7 +114,7 @@ describe('Order Order Number Generation', function () {
         $order = Order::factory()->create();
 
         expect($order->order_number)->not->toBeNull();
-        expect($order->order_number)->toMatch('/^MMG-ORD-\d{4}-\d{6}$/');
+        expect($order->order_number)->toMatch('/^ORD-\d{4}-\d{6}$/');
     });
 
     it('generates sequential order numbers', function () {
@@ -122,9 +122,9 @@ describe('Order Order Number Generation', function () {
         $order2 = Order::factory()->create();
         $order3 = Order::factory()->create();
 
-        expect($order1->order_number)->toBe('MMG-ORD-2026-000001');
-        expect($order2->order_number)->toBe('MMG-ORD-2026-000002');
-        expect($order3->order_number)->toBe('MMG-ORD-2026-000003');
+        expect($order1->order_number)->toBe('ORD-2026-000001');
+        expect($order2->order_number)->toBe('ORD-2026-000002');
+        expect($order3->order_number)->toBe('ORD-2026-000003');
     });
 
     it('resets order sequence for new year', function () {
@@ -133,12 +133,12 @@ describe('Order Order Number Generation', function () {
 
         $order3 = Order::factory()->create(['created_at' => now()->addYear()]);
 
-        expect($order3->order_number)->toBe('MMG-ORD-2027-000001');
+        expect($order3->order_number)->toBe('ORD-2027-000001');
     });
 
     it('generates order number using current year when not specified', function () {
         $order = Order::factory()->create();
 
-        expect($order->order_number)->toMatch('/^MMG-ORD-'.date('Y').'-\d{6}$/');
+        expect($order->order_number)->toMatch('/^ORD-'.date('Y').'-\d{6}$/');
     });
 });

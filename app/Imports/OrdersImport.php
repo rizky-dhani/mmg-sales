@@ -31,7 +31,7 @@ class OrdersImport implements ToCollection
                 }
 
                 // Deterministic Order Number for Duplicate Detection
-                // MMG-ORD-YYYY-MM-HASH(SR, Customer, Item, Qty, Total)
+                // ORD-YYYY-MM-HASH(SR, Customer, Item, Qty, Total)
                 $hashInput = implode('|', [
                     $row[8],  // SR
                     $row[11], // End Customer
@@ -39,7 +39,7 @@ class OrdersImport implements ToCollection
                     $row[21], // Qty
                     $row[23], // Total HNA
                 ]);
-                $orderNumber = 'MMG-ORD-'.$row[1].'-'.$row[2].'-'.strtoupper(substr(sha1($hashInput), 0, 8));
+                $orderNumber = 'ORD-'.$row[1].'-'.$row[2].'-'.strtoupper(substr(sha1($hashInput), 0, 8));
 
                 // Check for duplicates
                 if (Order::where('order_number', $orderNumber)->exists()) {

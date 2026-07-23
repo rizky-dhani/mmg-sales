@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Services\ResourceCodeGenerator;
 use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -59,11 +58,6 @@ class Lead extends Model
                 $lead->created_by = auth()->id();
             }
         });
-    }
-
-    public function generateCode(): string
-    {
-        return app(ResourceCodeGenerator::class)->generateForLead();
     }
 
     public function getAgingAttribute(): string

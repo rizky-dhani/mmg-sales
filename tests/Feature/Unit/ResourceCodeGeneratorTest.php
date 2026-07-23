@@ -12,7 +12,7 @@ describe('ResourceCodeGenerator', function () {
         $generator = app(ResourceCodeGenerator::class);
         $code = $generator->generate('LEA');
 
-        expect($code)->toMatch('/^MMG-LEA-\d{6}$/');
+        expect($code)->toMatch('/^LEA-\d{6}$/');
     });
 
     it('generates sequential codes', function () {
@@ -22,9 +22,9 @@ describe('ResourceCodeGenerator', function () {
         $code2 = $generator->generate('LEA');
         $code3 = $generator->generate('LEA');
 
-        expect($code1)->toBe('MMG-LEA-000001');
-        expect($code2)->toBe('MMG-LEA-000002');
-        expect($code3)->toBe('MMG-LEA-000003');
+        expect($code1)->toBe('LEA-000001');
+        expect($code2)->toBe('LEA-000002');
+        expect($code3)->toBe('LEA-000003');
     });
 
     it('generates different codes for different prefixes', function () {
@@ -34,17 +34,17 @@ describe('ResourceCodeGenerator', function () {
         $activityCode = $generator->generate('ACT');
         $customerCode = $generator->generate('CST');
 
-        expect($leadCode)->toBe('MMG-LEA-000001');
-        expect($activityCode)->toBe('MMG-ACT-000001');
-        expect($customerCode)->toBe('MMG-CST-000001');
+        expect($leadCode)->toBe('LEA-000001');
+        expect($activityCode)->toBe('ACT-000001');
+        expect($customerCode)->toBe('CST-000001');
     });
 
     it('generates order number with year', function () {
         $generator = app(ResourceCodeGenerator::class);
         $code = $generator->generateForOrder(2025);
 
-        expect($code)->toMatch('/^MMG-ORD-2025-\d{6}$/');
-        expect($code)->toBe('MMG-ORD-2025-000001');
+        expect($code)->toMatch('/^ORD-2025-\d{6}$/');
+        expect($code)->toBe('ORD-2025-000001');
     });
 
     it('generates sequential order numbers within same year', function () {
@@ -54,9 +54,9 @@ describe('ResourceCodeGenerator', function () {
         $code2 = $generator->generateForOrder(2025);
         $code3 = $generator->generateForOrder(2025);
 
-        expect($code1)->toBe('MMG-ORD-2025-000001');
-        expect($code2)->toBe('MMG-ORD-2025-000002');
-        expect($code3)->toBe('MMG-ORD-2025-000003');
+        expect($code1)->toBe('ORD-2025-000001');
+        expect($code2)->toBe('ORD-2025-000002');
+        expect($code3)->toBe('ORD-2025-000003');
     });
 
     it('resets order sequence for new year', function () {
@@ -66,7 +66,7 @@ describe('ResourceCodeGenerator', function () {
         $generator->generateForOrder(2025);
         $code2026 = $generator->generateForOrder(2026);
 
-        expect($code2026)->toBe('MMG-ORD-2026-000001');
+        expect($code2026)->toBe('ORD-2026-000001');
     });
 
     it('generates codes case insensitive prefix', function () {
@@ -74,7 +74,7 @@ describe('ResourceCodeGenerator', function () {
 
         $code = $generator->generate('lea');
 
-        expect($code)->toMatch('/^MMG-LEA-\d{6}$/');
+        expect($code)->toMatch('/^LEA-\d{6}$/');
     });
 
     it('generates unique codes under concurrent-like load', function () {

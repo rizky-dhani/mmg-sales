@@ -10,31 +10,15 @@ class ResourceCodeGenerator
     {
         $sequence = $this->getNextSequence($prefix, null, $table, $column);
 
-        return sprintf('MMG-%s-%06d', strtoupper($prefix), $sequence);
+        return sprintf('%s-%06d', strtoupper($prefix), $sequence);
     }
 
     public function generateForOrder(?int $year = null): string
     {
         $year = $year ?? now()->year;
-        $sequence = $this->getNextSequence('ORD', (string) $year);
+        $sequence = $this->getNextSequence('ORD', (string) $year, 'orders', 'order_number');
 
-        return sprintf('MMG-ORD-%d-%06d', $year, $sequence);
-    }
-
-    public function generateForLead(?int $year = null): string
-    {
-        $year = $year ?? now()->year;
-        $sequence = $this->getNextSequence('LEAD', (string) $year);
-
-        return sprintf('LEAD-%d-%06d', $year, $sequence);
-    }
-
-    public function generateForActivity(?int $year = null): string
-    {
-        $year = $year ?? now()->year;
-        $sequence = $this->getNextSequence('ACT', (string) $year);
-
-        return sprintf('ACT-%d-%06d', $year, $sequence);
+        return sprintf('ORD-%d-%06d', $year, $sequence);
     }
 
     public function getNextSequenceValue(string $prefix, ?string $partition = null, ?string $table = null, ?string $column = null): int
@@ -58,7 +42,7 @@ class ResourceCodeGenerator
             // Actual table is source of truth
             if ($table && $column) {
                 $maxCode = DB::table($table)
-                    ->where($column, 'like', "%-{$prefix}-%")
+                    ->where($column, 'like', "{$prefix}-%")
                     ->max($column);
 
                 if ($maxCode) {
