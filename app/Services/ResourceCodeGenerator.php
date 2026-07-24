@@ -54,7 +54,7 @@ class ResourceCodeGenerator
                     ->max($column);
 
                 if ($maxCode) {
-                    preg_match('/'.preg_quote($prefix, '/').'-(\d+)$/', $maxCode, $matches);
+                    preg_match('/(\d+)$/', $maxCode, $matches);
                     if ($matches) {
                         $currentMax = (int) $matches[1];
                     }
