@@ -36,8 +36,6 @@ class ResourceCodeGenerator
 
     protected function getNextSequence(string $prefix, ?string $partition = null, ?string $table = null, ?string $column = null): int
     {
-        $lockKey = "code_gen_{$prefix}_{$partition}";
-
         return DB::transaction(function () use ($prefix, $partition, $table, $column) {
             $sequence = DB::table('code_sequences')
                 ->where('prefix', $prefix)
@@ -61,17 +59,27 @@ class ResourceCodeGenerator
                 }
             }
 
+            // Fallback: when table scan finds nothing (empty table or null table/column),
+            // use code_sequences as the tracker so the sequence advances correctly.
+            // This handles generic generate() calls that don't pass a table, and
+            // cases where generated codes haven't been persisted yet.
+            if ($currentMax === 0 && $sequence) {
+                $currentMax = $sequence->sequence_value;
+            }
+
             $nextValue = $currentMax + 1;
 
+            // Store $nextValue (the value we're returning) so the next call
+            // can advance from here when the table scan finds nothing.
             if ($sequence) {
                 DB::table('code_sequences')
                     ->where('id', $sequence->id)
-                    ->update(['sequence_value' => $currentMax, 'updated_at' => now()]);
+                    ->update(['sequence_value' => $nextValue, 'updated_at' => now()]);
             } else {
                 DB::table('code_sequences')->insert([
                     'prefix' => $prefix,
                     'partition' => $partition ?? '',
-                    'sequence_value' => $currentMax,
+                    'sequence_value' => $nextValue,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
