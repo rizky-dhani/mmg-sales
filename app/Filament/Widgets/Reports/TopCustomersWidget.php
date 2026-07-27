@@ -25,10 +25,6 @@ class TopCustomersWidget extends TableWidget
                     ->state(fn ($record, $rowLoop) => $rowLoop->iteration),
                 TextColumn::make('name')
                     ->label('Customer'),
-                TextColumn::make('cd_ncd_type')
-                    ->label('Type')
-                    ->badge()
-                    ->color(fn ($state) => $state === 'CD' ? 'blue' : 'green'),
                 TextColumn::make('revenue')
                     ->label('Revenue')
                     ->money('IDR')

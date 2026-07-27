@@ -58,7 +58,7 @@ class ProductReportPage extends Page
         return [
             'default' => 1,
             'md' => 2,
-            'lg' => 4,
+            'lg' => 2,
         ];
     }
 
