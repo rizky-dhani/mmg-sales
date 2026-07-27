@@ -166,7 +166,9 @@ class PipelineReportService
             ->join('lead_collaborators', 'leads.id', '=', 'lead_collaborators.lead_id')
             ->join('users as collaborators', 'lead_collaborators.user_id', '=', 'collaborators.id')
             ->join('positions', 'collaborators.position_id', '=', 'positions.id')
+            ->join('departments', 'collaborators.department_id', '=', 'departments.id')
             ->where('positions.name', 'not like', '%Director%')
+            ->where('departments.name', '!=', 'Marketing')
             ->leftJoin('users as adders', 'lead_collaborators.added_by', '=', 'adders.id')
             ->selectRaw('
                 collaborators.id as user_id,
