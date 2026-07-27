@@ -79,8 +79,8 @@ class DatabaseBackup extends Page implements HasTable
                     $command = "{$dumpBinary} --user={$user} --password=".escapeshellarg($password)." --host={$host} --port={$port}";
 
                     // MySQL 8.0+ mysqldump queries information_schema.COLUMN_STATISTICS
-                    // which doesn't exist in MariaDB — disable it for compatibility
-                    if (str_contains(basename($dumpBinary), 'mysql')) {
+                    // which doesn't exist in MariaDB — probe version to decide
+                    if (! $this->isMariaDump($dumpBinary)) {
                         $command .= ' --column-statistics=0';
                     }
 
@@ -166,6 +166,21 @@ class DatabaseBackup extends Page implements HasTable
         }
 
         return null;
+    }
+
+    /**
+     * Detect whether the dump binary is MariaDB (which doesn't support --column-statistics).
+     */
+    private function isMariaDump(string $binary): bool
+    {
+        $suffix = PHP_OS_FAMILY === 'Windows' ? ' 2>nul' : ' 2>/dev/null';
+        $result = Process::run("\"{$binary}\" --version{$suffix}");
+
+        if (! $result->successful()) {
+            return false;
+        }
+
+        return str_contains($result->output(), 'MariaDB');
     }
 
     public function table(Table $table): Table

@@ -232,7 +232,7 @@ class SalesReportService
     {
         return $this->buildBaseQueryWithItems($filters)
             ->join('users', function ($join) {
-                $join->whereRaw('JSON_CONTAINS(orders.sales, CAST(users.id AS JSON))')
+                $join->on('orders.sales', '=', 'users.id')
                     ->where('users.is_active', true);
             })
             ->selectRaw('users.id as user_id, users.name as user_name, SUM(order_items.subtotal) as revenue, COUNT(DISTINCT orders.id) as orders')
@@ -252,7 +252,7 @@ class SalesReportService
     {
         return $this->buildBaseQueryWithItems($filters)
             ->join('users', function ($join) {
-                $join->whereRaw('JSON_CONTAINS(orders.sales, CAST(users.id AS JSON))')
+                $join->on('orders.sales', '=', 'users.id')
                     ->where('users.is_active', true);
             })
             ->join('territories', 'users.territory_id', '=', 'territories.id')
