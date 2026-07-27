@@ -137,10 +137,10 @@ class ProductReportService
         }
 
         return $query
-            ->leftJoin('items', 'order_items.item_id', '=', 'items.id')
-            ->selectRaw('order_items.item_id, items.name as item_name, SUM(order_items.subtotal) as revenue, SUM(order_items.quantity) as quantity, COUNT(DISTINCT orders.id) as orders')
+            ->leftJoin('products', 'order_items.item_id', '=', 'products.id')
+            ->selectRaw('order_items.item_id, products.name as item_name, SUM(order_items.subtotal) as revenue, SUM(order_items.quantity) as quantity, COUNT(DISTINCT orders.id) as orders')
             ->whereNotNull('order_items.item_id')
-            ->groupBy('order_items.item_id', 'items.name')
+            ->groupBy('order_items.item_id', 'products.name')
             ->orderByDesc('revenue')
             ->limit(15)
             ->get()
@@ -210,10 +210,10 @@ class ProductReportService
         }
 
         return $query
-            ->leftJoin('items', 'order_items.item_id', '=', 'items.id')
-            ->selectRaw('order_items.item_id, items.name as item_name, SUM(order_items.quantity) as quantity')
+            ->leftJoin('products', 'order_items.item_id', '=', 'products.id')
+            ->selectRaw('order_items.item_id, products.name as item_name, SUM(order_items.quantity) as quantity')
             ->whereNotNull('order_items.item_id')
-            ->groupBy('order_items.item_id', 'items.name')
+            ->groupBy('order_items.item_id', 'products.name')
             ->orderByDesc('quantity')
             ->limit(15)
             ->get()
