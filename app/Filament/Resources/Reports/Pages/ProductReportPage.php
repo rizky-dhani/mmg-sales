@@ -47,9 +47,9 @@ class ProductReportPage extends Page
         return [
             ProductReportStatsWidget::class,
             MonthlyRevenueTrendWidget::class,
+            ProductRevenueByPrincipalWidget::class,
             ProductRevenueBySegmentWidget::class,
             TopSellingProductsWidget::class,
-            ProductRevenueByPrincipalWidget::class,
         ];
     }
 
@@ -58,7 +58,7 @@ class ProductReportPage extends Page
         return [
             'default' => 1,
             'md' => 2,
-            'lg' => 2,
+            'lg' => 3,
         ];
     }
 
