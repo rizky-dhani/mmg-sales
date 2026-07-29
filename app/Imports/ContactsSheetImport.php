@@ -127,7 +127,7 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
 
         $customer = Customer::query()
             ->whereRaw('LOWER(TRIM(name)) = ?', [strtolower($value)])
-            ->orWhereRaw('LOWER(TRIM(customer_acc_code)) = ?', [strtolower($value)])
+            ->orWhereRaw('LOWER(TRIM(internal_code)) = ?', [strtolower($value)])
             ->first();
 
         return $customer?->id;

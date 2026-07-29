@@ -26,7 +26,7 @@ class CustomersTable
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('customer_acc_code')
+                TextColumn::make('internal_code')
                     ->label('Internal Code')
                     ->searchable()
                     ->sortable(),

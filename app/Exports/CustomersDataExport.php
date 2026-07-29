@@ -15,7 +15,7 @@ class CustomersDataExport implements FromCollection, WithHeadings, WithMapping, 
     {
         return Customer::query()
             ->select([
-                'customer_acc_code',
+                'internal_code',
                 'name',
                 'customer_name',
                 'type',
@@ -67,7 +67,7 @@ class CustomersDataExport implements FromCollection, WithHeadings, WithMapping, 
     public function map($row): array
     {
         return [
-            $row->customer_acc_code,
+            $row->internal_code,
             $row->name,
             $row->customer_name,
             $row->type,

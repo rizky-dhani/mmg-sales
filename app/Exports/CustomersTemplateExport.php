@@ -13,7 +13,7 @@ class CustomersTemplateExport implements FromCollection, WithHeadings, WithTitle
     {
         return collect([
             [
-                'customer_acc_code' => '',
+                'internal_code' => '',
                 'name' => 'PT Example Customer',
                 'customer_name' => 'PT Example Customer',
                 'type' => 'hospital_clinic',

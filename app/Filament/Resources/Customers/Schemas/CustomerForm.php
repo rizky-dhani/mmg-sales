@@ -23,7 +23,7 @@ class CustomerForm
                         Section::make('Customer Information')
                             ->columns(2)
                             ->schema([
-                                TextInput::make('customer_acc_code')
+                                TextInput::make('internal_code')
                                     ->label('Internal Code')
                                     ->default(null),
                                 TextInput::make('name')

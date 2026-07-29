@@ -38,7 +38,7 @@ class Customer extends Model
         'sub_segment_id',
         'customer_group_id',
         'customer_code',
-        'customer_acc_code',
+        'internal_code',
         'max_contact_persons',
     ];
 

@@ -54,13 +54,14 @@ class Activity extends Model
     {
         parent::boot();
 
-        static::creating(function ($activity) {
-            $minDate = now()->subDays(3)->startOfDay();
-
-            if ($activity->performed_at && $activity->performed_at->lt($minDate)) {
-                throw new \InvalidArgumentException('Activity date cannot be more than 3 days in the past.');
-            }
-        });
+        // TODO: Re-enable after review
+        // static::creating(function ($activity) {
+        //     $minDate = now()->subDays(3)->startOfDay();
+        //
+        //     if ($activity->performed_at && $activity->performed_at->lt($minDate)) {
+        //         throw new \InvalidArgumentException('Activity date cannot be more than 3 days in the past.');
+        //     }
+        // });
     }
 
     protected $codeColumn = 'activity_code';

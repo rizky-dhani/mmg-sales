@@ -31,11 +31,11 @@ class CustomersSheetImport implements ToCollection, WithHeadingRow
             $isActive = $this->normalizeIsActive($row['is_active'] ?? null);
             $status = $this->normalizeStatus($row['status'] ?? null);
             $cdNcdType = $this->normalizeCdNcdType($row['cd_ncd_type'] ?? null);
-            $customerAccCode = $row['internal_code'] ?? $row['customer_acc_code'] ?? null;
+            $customerAccCode = $row['internal_code'] ?? null;
 
-            // Match by customer_acc_code if provided, otherwise fall back to name
+            // Match by internal_code if provided, otherwise fall back to name
             $uniqueBy = ! empty($customerAccCode)
-                ? ['customer_acc_code' => $customerAccCode]
+                ? ['internal_code' => $customerAccCode]
                 : ['name' => $row['name']];
 
             Customer::updateOrCreate($uniqueBy,
@@ -59,7 +59,7 @@ class CustomersSheetImport implements ToCollection, WithHeadingRow
                     'status' => $status,
                     'cd_ncd_type' => $cdNcdType,
                     'customer_group_id' => $customerGroupId,
-                    'customer_acc_code' => $customerAccCode,
+                    'internal_code' => $customerAccCode,
                 ]
             );
         }
