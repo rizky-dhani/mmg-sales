@@ -33,35 +33,51 @@ class CustomersSheetImport implements ToCollection, WithHeadingRow
             $cdNcdType = $this->normalizeCdNcdType($row['cd_ncd_type'] ?? null);
             $customerAccCode = $row['internal_code'] ?? null;
 
-            // Match by internal_code if provided, otherwise fall back to name
-            $uniqueBy = ! empty($customerAccCode)
-                ? ['internal_code' => $customerAccCode]
-                : ['name' => $row['name']];
+            $existing = Customer::query()
+                ->where(function ($q) use ($customerAccCode, $row) {
+                    if (! empty($customerAccCode)) {
+                        $q->where('internal_code', $customerAccCode);
+                    }
+                    if (! empty($row['name'])) {
+                        $q->orWhere('name', $row['name']);
+                    }
+                    if (! empty($row['email'])) {
+                        $q->orWhere('email', $row['email']);
+                    }
+                    if (! empty($row['phone'])) {
+                        $q->orWhere('phone', $row['phone']);
+                    }
+                })
+                ->first();
 
-            Customer::updateOrCreate($uniqueBy,
-                [
-                    'name' => $row['name'],
-                    'customer_name' => $row['customer_name'] ?? $row['name'],
-                    'type' => $typeData['type'],
-                    'other_type' => $typeData['other_type'] ?? $row['other_type'] ?? null,
-                    'tax_number' => $row['tax_number'] ?? null,
-                    'address' => $row['address'] ?? null,
-                    'city' => $row['city'] ?? null,
-                    'state' => $row['state'] ?? null,
-                    'postal_code' => $row['postal_code'] ?? null,
-                    'country' => $row['country'] ?? 'Indonesia',
-                    'email' => $row['email'] ?? null,
-                    'phone' => $row['phone'] ?? null,
-                    'phone_purchasing' => $row['phone_purchasing'] ?? null,
-                    'phone_finance' => $row['phone_finance'] ?? null,
-                    'website' => $row['website'] ?? null,
-                    'is_active' => $isActive,
-                    'status' => $status,
-                    'cd_ncd_type' => $cdNcdType,
-                    'customer_group_id' => $customerGroupId,
-                    'internal_code' => $customerAccCode,
-                ]
-            );
+            $data = [
+                'name' => $row['name'],
+                'customer_name' => $row['customer_name'] ?? $row['name'],
+                'type' => $typeData['type'],
+                'other_type' => $typeData['other_type'] ?? $row['other_type'] ?? null,
+                'tax_number' => $row['tax_number'] ?? null,
+                'address' => $row['address'] ?? null,
+                'city' => $row['city'] ?? null,
+                'state' => $row['state'] ?? null,
+                'postal_code' => $row['postal_code'] ?? null,
+                'country' => $row['country'] ?? 'Indonesia',
+                'email' => $row['email'] ?? null,
+                'phone' => $row['phone'] ?? null,
+                'phone_purchasing' => $row['phone_purchasing'] ?? null,
+                'phone_finance' => $row['phone_finance'] ?? null,
+                'website' => $row['website'] ?? null,
+                'is_active' => $isActive,
+                'status' => $status,
+                'cd_ncd_type' => $cdNcdType,
+                'customer_group_id' => $customerGroupId,
+                'internal_code' => $customerAccCode,
+            ];
+
+            if ($existing) {
+                $existing->update($data);
+            } else {
+                Customer::create($data);
+            }
         }
     }
 

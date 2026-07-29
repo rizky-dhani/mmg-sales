@@ -25,32 +25,25 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
                 continue;
             }
 
-            $phone = $row['phone'] ?? null;
-            $mobile = $row['mobile'] ?? null;
-            $email = $row['email'] ?? null;
+            $existing = Contact::query()
+                ->where('customer_id', $customerId)
+                ->where(function ($q) use ($row) {
+                    if (! empty($row['name'])) {
+                        $q->orWhere('name', $row['name']);
+                    }
+                    if (! empty($row['phone'])) {
+                        $q->orWhere('phone', $row['phone']);
+                    }
+                    if (! empty($row['mobile'])) {
+                        $q->orWhere('mobile', $row['mobile']);
+                    }
+                    if (! empty($row['email'])) {
+                        $q->orWhere('email', $row['email']);
+                    }
+                })
+                ->first();
 
-            if (!empty($phone) || !empty($mobile) || !empty($email)) {
-                $exists = Contact::query()
-                    ->where('customer_id', $customerId)
-                    ->where(function ($q) use ($phone, $mobile, $email) {
-                        if (!empty($phone)) {
-                            $q->orWhere('phone', $phone);
-                        }
-                        if (!empty($mobile)) {
-                            $q->orWhere('mobile', $mobile);
-                        }
-                        if (!empty($email)) {
-                            $q->orWhere('email', $email);
-                        }
-                    })
-                    ->exists();
-
-                if ($exists) {
-                    continue;
-                }
-            }
-
-            Contact::create([
+            $data = [
                 'customer_id' => $customerId,
                 'name' => $row['name'],
                 'status' => $this->normalizeStatus($row['status'] ?? null),
@@ -61,7 +54,13 @@ class ContactsSheetImport implements ToCollection, WithHeadingRow
                 'mobile' => $row['mobile'] ?? null,
                 'is_primary' => $this->normalizeBoolean($row['is_primary'] ?? null),
                 'is_billing_contact' => $this->normalizeBoolean($row['is_billing_contact'] ?? null),
-            ]);
+            ];
+
+            if ($existing) {
+                $existing->update($data);
+            } else {
+                Contact::create($data);
+            }
 
             $this->importedCount++;
         }
