@@ -5,8 +5,9 @@ namespace App\Exports;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithTitle;
 
-class CustomersTemplateExport implements FromCollection, WithHeadings
+class CustomersTemplateExport implements FromCollection, WithHeadings, WithTitle
 {
     public function collection(): Collection
     {
@@ -58,5 +59,10 @@ class CustomersTemplateExport implements FromCollection, WithHeadings
             'cd_ncd_type',
             'customer_group_id',
         ];
+    }
+
+    public function title(): string
+    {
+        return 'Customers';
     }
 }

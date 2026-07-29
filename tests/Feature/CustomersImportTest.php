@@ -1,9 +1,9 @@
 <?php
 
-use App\Imports\CustomersImport;
+use App\Imports\CustomersSheetImport;
 
 beforeEach(function () {
-    $this->import = new CustomersImport;
+    $this->import = new CustomersSheetImport;
 });
 
 test('normalizeIsActive returns 1 for null value', function () {
