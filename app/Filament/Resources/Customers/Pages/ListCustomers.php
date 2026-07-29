@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Customers\Pages;
 
+use App\Exports\CustomersDataExport;
 use App\Exports\CustomersTemplateExport;
 use App\Filament\Actions\ImportCustomersAction;
 use App\Filament\Resources\Customers\CustomerResource;
@@ -19,6 +20,15 @@ class ListCustomers extends ListRecords
     {
         return [
             ImportCustomersAction::make(),
+            Action::make('download_excel')
+                ->label('Download Excel')
+                ->icon(Heroicon::OutlinedArrowDownTray)
+                ->color('success')
+                ->visible(fn () => auth()->user()->can('download_customers_template'))
+                ->action(function () {
+                    abort_unless(auth()->user()->can('download_customers_template'), 403);
+                    return Excel::download(new CustomersDataExport, 'customers_'.now()->format('Y-m-d').'.xlsx');
+                }),
             Action::make('download_template')
                 ->label('Download Template')
                 ->icon(Heroicon::OutlinedDocumentArrowDown)
