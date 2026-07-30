@@ -21,7 +21,7 @@ class ListCustomers extends ListRecords
         return [
             ImportCustomersAction::make(),
             Action::make('download_excel')
-                ->label('Download Excel')
+                ->label('Export to Excel')
                 ->icon(Heroicon::OutlinedArrowDownTray)
                 ->color('success')
                 ->visible(fn () => auth()->user()->can('download_customers_template'))
