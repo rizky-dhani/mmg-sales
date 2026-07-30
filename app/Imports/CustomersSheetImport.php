@@ -67,8 +67,6 @@ class CustomersSheetImport implements ToCollection, WithHeadingRow
                 'country' => $row['country'] ?? 'Indonesia',
                 'email' => $row['email'] ?? null,
                 'phone' => $row['phone'] ?? null,
-                'phone_purchasing' => $row['phone_purchasing'] ?? null,
-                'phone_finance' => $row['phone_finance'] ?? null,
                 'website' => $row['website'] ?? null,
                 'is_active' => $isActive,
                 'status' => $status,

@@ -28,8 +28,6 @@ class Customer extends Model
         'country',
         'email',
         'phone',
-        'phone_purchasing',
-        'phone_finance',
         'website',
         'is_active',
         'status',
