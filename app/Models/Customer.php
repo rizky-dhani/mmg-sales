@@ -40,6 +40,7 @@ class Customer extends Model
         'customer_code',
         'internal_code',
         'max_contact_persons',
+        'payment_terms',
     ];
 
     protected $codeColumn = 'customer_code';

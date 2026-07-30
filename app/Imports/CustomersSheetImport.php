@@ -4,6 +4,8 @@ namespace App\Imports;
 
 use App\Models\Customer;
 use App\Models\CustomerGroup;
+use App\Models\Segment;
+use App\Models\SubSegment;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -27,6 +29,8 @@ class CustomersSheetImport implements ToCollection, WithHeadingRow
             }
 
             $customerGroupId = $this->resolveCustomerGroupId($row['customer_group'] ?? $row['customer_group_id'] ?? null);
+            $segmentId = $this->resolveSegmentId($row['segment'] ?? null);
+            $subSegmentId = $this->resolveSubSegmentId($row['sub_segment'] ?? null, $segmentId);
             $typeData = $this->normalizeType($row['type'] ?? null);
             $isActive = $this->normalizeIsActive($row['is_active'] ?? null);
             $status = $this->normalizeStatus($row['status'] ?? null);
@@ -69,8 +73,11 @@ class CustomersSheetImport implements ToCollection, WithHeadingRow
                 'is_active' => $isActive,
                 'status' => $status,
                 'cd_ncd_type' => $cdNcdType,
+                'segment_id' => $segmentId,
+                'sub_segment_id' => $subSegmentId,
                 'customer_group_id' => $customerGroupId,
                 'internal_code' => $customerAccCode,
+                'payment_terms' => $row['payment_terms'] ?? null,
             ];
 
             if ($existing) {
@@ -178,8 +185,8 @@ class CustomersSheetImport implements ToCollection, WithHeadingRow
     }
 
     /**
-     * Normalize the cd_ncd_type value to match the ENUM column ('CD', 'NCD').
-     * Extracts the type from descriptive values like 'LS_LIFE SCIENCE (N-CD)'.
+     * Normalize the cd_ncd_type value to match the ENUM column ('CD', 'LS').
+     * Extracts the type from descriptive values like 'LS_LIFE SCIENCE (LS)'.
      */
     protected function normalizeCdNcdType(?string $value): ?string
     {
@@ -191,21 +198,22 @@ class CustomersSheetImport implements ToCollection, WithHeadingRow
         $upper = strtoupper($trimmed);
 
         // Direct match
-        if (in_array($upper, ['CD', 'NCD'], true)) {
-            return $upper;
+        if (in_array($upper, ['CD', 'LS', 'NCD', 'N-CD'], true)) {
+            // Normalize legacy NCD values to LS
+            return in_array($upper, ['NCD', 'N-CD'], true) ? 'LS' : $upper;
         }
 
-        // Extract from parentheses, e.g. 'LS_LIFE SCIENCE (N-CD)' -> 'NCD'
+        // Extract from parentheses, e.g. 'LS_LIFE SCIENCE (LS)' -> 'LS'
         if (preg_match('/\(([^)]+)\)/', $trimmed, $matches)) {
             $extracted = strtoupper(str_replace('-', '', trim($matches[1])));
-            if (in_array($extracted, ['CD', 'NCD'], true)) {
-                return $extracted;
+            if (in_array($extracted, ['CD', 'LS', 'NCD'], true)) {
+                return in_array($extracted, ['NCD'], true) ? 'LS' : $extracted;
             }
         }
 
-        // Check if the string contains CD or NCD
-        if (str_contains($upper, 'NCD')) {
-            return 'NCD';
+        // Check if the string contains LS or NCD
+        if (str_contains($upper, 'LS') || str_contains($upper, 'NCD') || str_contains($upper, 'N-CD')) {
+            return 'LS';
         }
 
         if (str_contains($upper, 'CD')) {
@@ -213,6 +221,88 @@ class CustomersSheetImport implements ToCollection, WithHeadingRow
         }
 
         return null;
+    }
+
+    /**
+     * Resolve segment ID from name (likeness match).
+     * Returns null if not found.
+     */
+    private function resolveSegmentId(?string $value): ?int
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        // If numeric, treat as ID
+        if (is_numeric($trimmed)) {
+            return Segment::where('id', $trimmed)->value('id');
+        }
+
+        // Exact match first
+        $segment = Segment::query()
+            ->whereRaw('LOWER(name) = ?', [strtolower($trimmed)])
+            ->orWhereRaw('LOWER(code) = ?', [strtolower($trimmed)])
+            ->first();
+
+        if ($segment) {
+            return $segment->id;
+        }
+
+        // Likeness match (contains)
+        $segment = Segment::query()
+            ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($trimmed) . '%'])
+            ->orWhereRaw('LOWER(name) LIKE ?', ['%' . strtolower(addslashes($trimmed)) . '%'])
+            ->first();
+
+        return $segment?->id;
+    }
+
+    /**
+     * Resolve sub-segment ID from name (likeness match).
+     * Returns null if not found.
+     */
+    private function resolveSubSegmentId(?string $value, ?int $segmentId): ?int
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        $trimmed = trim($value);
+
+        // If numeric, treat as ID
+        if (is_numeric($trimmed)) {
+            return SubSegment::where('id', $trimmed)->value('id');
+        }
+
+        $query = SubSegment::query();
+        if ($segmentId) {
+            $query->where('segment_id', $segmentId);
+        }
+
+        // Exact match first
+        $subSegment = $query
+            ->whereRaw('LOWER(name) = ?', [strtolower($trimmed)])
+            ->orWhereRaw('LOWER(code) = ?', [strtolower($trimmed)])
+            ->first();
+
+        if ($subSegment) {
+            return $subSegment->id;
+        }
+
+        // Likeness match (contains)
+        $query2 = SubSegment::query();
+        if ($segmentId) {
+            $query2->where('segment_id', $segmentId);
+        }
+
+        $subSegment = $query2
+            ->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($trimmed) . '%'])
+            ->orWhereRaw('LOWER(name) LIKE ?', ['%' . strtolower(addslashes($trimmed)) . '%'])
+            ->first();
+
+        return $subSegment?->id;
     }
 
     /**

@@ -31,7 +31,10 @@ class CustomersTemplateExport implements FromCollection, WithHeadings, WithTitle
                 'website' => 'https://example.com',
                 'is_active' => 1,
                 'cd_ncd_type' => 'CD',
+                'segment' => 'Life Science',
+                'sub_segment' => 'Pharmaceutical',
                 'customer_group_id' => 1,
+                'payment_terms' => 'NET 30',
             ],
         ]);
     }
@@ -57,7 +60,10 @@ class CustomersTemplateExport implements FromCollection, WithHeadings, WithTitle
             'website',
             'is_active',
             'cd_ncd_type',
+            'segment',
+            'sub_segment',
             'customer_group_id',
+            'payment_terms',
         ];
     }
 

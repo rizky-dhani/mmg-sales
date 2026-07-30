@@ -30,9 +30,8 @@ class CustomerInfolist
                             ->label('Tax Number'),
                         TextEntry::make('credit_limit')
                             ->money('IDR'),
-                        TextEntry::make('payment_terms_days')
-                            ->label('Payment Terms')
-                            ->suffix(' Days'),
+                        TextEntry::make('payment_terms')
+                            ->label('Payment Terms'),
                         TextEntry::make('status')
                             ->label('Status')
                             ->badge()

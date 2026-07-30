@@ -81,10 +81,10 @@ class CustomerForm
                             ->columns(3)
                             ->schema([
                                 Select::make('cd_ncd_type')
-                                    ->label('CD / NCD Type')
+                                    ->label('CD / LS Type')
                                     ->options([
                                         'CD' => 'CD',
-                                        'N-CD' => 'N-CD (Life Science)',
+                                        'LS' => 'LS',
                                     ])
                                     ->live()
                                     ->columnSpanFull(),
@@ -125,10 +125,10 @@ class CustomerForm
                             ->minValue(1)
                             ->default(null)
                             ->helperText('Leave empty for unlimited'),
-                        TextInput::make('payment_terms_days')
-                            ->label('Payment Terms (Days)')
-                            ->numeric()
-                            ->default(30),
+                        TextInput::make('payment_terms')
+                            ->label('Payment Terms')
+                            ->default(null)
+                            ->helperText('e.g. NET 30, COD, 60 DAYS'),
                         Toggle::make('is_active')
                             ->default(true),
                     ]),
