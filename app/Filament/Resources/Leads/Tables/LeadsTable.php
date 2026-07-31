@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Leads\Tables;
 
 use App\Filament\Traits\HasVisibilityScope;
+use App\Models\Activity;
 use App\Models\Lead;
 use App\Models\User;
 use Carbon\Carbon;
@@ -38,7 +39,12 @@ class LeadsTable
                     self::applyVisibilityScope($query, 'created_by');
                 }
 
-                return $query->orderBy('created_at', 'desc');
+                // Sort by latest activity on the lead (most recently worked leads first)
+                return $query->orderByDesc(
+                    Activity::query()
+                        ->whereColumn('activities.lead_id', 'leads.id')
+                        ->selectRaw('MAX(performed_at)')
+                );
             })
             ->columns([
                 TextColumn::make('lead_code')
