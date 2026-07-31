@@ -18,10 +18,6 @@ abstract class BasePolicy
 
     public function before(User $user, string $ability): ?bool
     {
-        if ($user->hasRole('Super Admin')) {
-            return true;
-        }
-
         // Only consider roles whose department matches the user's department (or global)
         $validRoles = $user->roles->filter(function ($role) use ($user) {
             return is_null($role->department_id)

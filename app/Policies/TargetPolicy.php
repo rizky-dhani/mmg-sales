@@ -8,15 +8,6 @@ class TargetPolicy extends BasePolicy
 {
     protected string $model = 'target';
 
-    public function before(User $user, string $ability): ?bool
-    {
-        if ($user->hasRole('Super Admin')) {
-            return true;
-        }
-
-        return null;
-    }
-
     public function viewAny(User $user): bool
     {
         return $user->hasPermissionTo("view_any_{$this->model}");
