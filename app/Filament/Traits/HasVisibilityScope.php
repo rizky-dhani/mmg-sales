@@ -29,9 +29,9 @@ trait HasVisibilityScope
             return $query;
         }
 
-        // Director - can see all records from the sales team
+        // Director - can see all records from the sales team in their territory
         if ($user->hasBaseRole('Director')) {
-            $salesTeamIds = self::getSalesTeamUserIds();
+            $salesTeamIds = self::getSalesTeamUserIds($user);
 
             return $query->whereIn($userColumn, $salesTeamIds);
         }
@@ -96,11 +96,13 @@ trait HasVisibilityScope
     {
         $userIds = [];
 
-        // Users in descendant positions (full tree via parent_id hierarchy)
-        if ($user->position) {
+        // Users in descendant positions AND same territory
+        if ($user->position && $user->territory_id) {
             $descendantPositionIds = $user->position->getAllDescendantIds();
 
-            $positionUserIds = User::active()->whereIn('position_id', $descendantPositionIds)
+            $positionUserIds = User::active()
+                ->whereIn('position_id', $descendantPositionIds)
+                ->where('territory_id', $user->territory_id)
                 ->where('id', '!=', $user->id)
                 ->pluck('id')
                 ->toArray();
@@ -118,28 +120,40 @@ trait HasVisibilityScope
             $userIds = array_merge($userIds, $territoryUserIds);
         }
 
-        // Direct reports (users who have this user as manager)
-        $directReportIds = User::active()->where('manager_id', $user->id)
-            ->pluck('id')
-            ->toArray();
+        // Direct reports in same territory
+        if ($user->territory_id) {
+            $directReportIds = User::active()
+                ->where('manager_id', $user->id)
+                ->where('territory_id', $user->territory_id)
+                ->pluck('id')
+                ->toArray();
 
-        return array_unique(array_merge($userIds, $directReportIds));
+            $userIds = array_merge($userIds, $directReportIds);
+        }
+
+        return array_unique($userIds);
     }
 
     /**
      * Get IDs of all sales team users (Staff, Manager, Supervisor, RSM, ASM).
      * Used by Director to oversee all sales records.
      */
-    private static function getSalesTeamUserIds(): array
+    private static function getSalesTeamUserIds(?User $user = null): array
     {
         $salesRoles = ['Staff', 'Manager', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'];
 
-        return User::active()->whereHas('roles', function ($query) use ($salesRoles): void {
+        $query = User::active()->whereHas('roles', function ($query) use ($salesRoles): void {
             $query->where(function ($q) use ($salesRoles): void {
                 foreach ($salesRoles as $role) {
                     $q->orWhere('name', $role)->orWhere('name', 'like', "{$role} - %");
                 }
             });
-        })->pluck('id')->toArray();
+        });
+
+        if ($user && $user->territory_id) {
+            $query->where('territory_id', $user->territory_id);
+        }
+
+        return $query->pluck('id')->toArray();
     }
 }

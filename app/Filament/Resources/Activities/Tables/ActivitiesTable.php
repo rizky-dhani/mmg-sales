@@ -37,9 +37,8 @@ class ActivitiesTable
                 self::applyVisibilityScope($query, 'user_id');
 
                 // For non-Super Admin users, also include activities on leads
-                // where the user is the creator or a collaborator.
-                // This ensures lead creators and assignees can see all activities
-                // related to their leads, even if they didn't personally perform them.
+                // where the user is the creator or a collaborator,
+                // but only if the activity's user is in the same territory.
                 if (! $user->hasRole('Super Admin')) {
                     $leadIds = DB::table('lead_collaborators')
                         ->where('user_id', $user->id)
@@ -53,7 +52,15 @@ class ActivitiesTable
                         ->toArray();
 
                     if (! empty($leadIds)) {
-                        $query->orWhereIn('lead_id', $leadIds);
+                        $query->orWhere(function ($q) use ($leadIds, $user) {
+                            $q->whereIn('lead_id', $leadIds);
+
+                            if ($user->territory_id) {
+                                $q->whereHas('user', function ($uq) use ($user): void {
+                                    $uq->where('territory_id', $user->territory_id);
+                                });
+                            }
+                        });
                     }
                 }
 

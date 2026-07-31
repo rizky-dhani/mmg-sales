@@ -16,7 +16,18 @@ class ActivityScopeService
     {
         $query = Activity::query();
 
-        if ($user->hasRole('Super Admin') || $user->hasBaseRole('Director') || $user->hasBaseRole('Manager')) {
+        if ($user->hasRole('Super Admin')) {
+            return $query;
+        }
+
+        if ($user->hasBaseRole('Director') || $user->hasBaseRole('Manager')) {
+            if ($user->territory_id) {
+                $territoryUserIds = User::active()
+                    ->where('territory_id', $user->territory_id)
+                    ->pluck('id');
+                $query->whereIn('user_id', $territoryUserIds);
+            }
+
             return $query;
         }
 
@@ -29,9 +40,20 @@ class ActivityScopeService
         // Include activities from leads where user is a collaborator
         $collaboratorLeadIds = $this->getCollaboratorLeadIds($user);
 
-        return $query->where(function ($q) use ($allowedUserIds, $collaboratorLeadIds) {
-            $q->whereIn('user_id', $allowedUserIds)
-                ->orWhereIn('lead_id', $collaboratorLeadIds);
+        return $query->where(function ($q) use ($allowedUserIds, $collaboratorLeadIds, $user) {
+            $q->whereIn('user_id', $allowedUserIds);
+
+            if ($collaboratorLeadIds->isNotEmpty()) {
+                $q->orWhere(function ($oq) use ($collaboratorLeadIds, $user) {
+                    $oq->whereIn('lead_id', $collaboratorLeadIds);
+
+                    if ($user->territory_id) {
+                        $oq->whereHas('user', function ($uq) use ($user): void {
+                            $uq->where('territory_id', $user->territory_id);
+                        });
+                    }
+                });
+            }
         });
     }
 
@@ -57,7 +79,13 @@ class ActivityScopeService
     public function getAllSubordinateIds(User $user): Collection
     {
         if ($user->hasRole('Super Admin') || $user->hasBaseRole('Director') || $user->hasBaseRole('Manager')) {
-            return User::active()->pluck('id');
+            $query = User::active();
+
+            if ($user->territory_id) {
+                $query->where('territory_id', $user->territory_id);
+            }
+
+            return $query->pluck('id');
         }
 
         $subordinateIds = collect();
