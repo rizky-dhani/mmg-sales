@@ -29,9 +29,9 @@ trait HasVisibilityScope
             return $query;
         }
 
-        // Director - can see all records from the sales team in their territory
+        // Director - can see all records from the sales team (all territories)
         if ($user->hasBaseRole('Director')) {
-            $salesTeamIds = self::getSalesTeamUserIds($user);
+            $salesTeamIds = self::getSalesTeamUserIds();
 
             return $query->whereIn($userColumn, $salesTeamIds);
         }
@@ -138,22 +138,16 @@ trait HasVisibilityScope
      * Get IDs of all sales team users (Staff, Manager, Supervisor, RSM, ASM).
      * Used by Director to oversee all sales records.
      */
-    private static function getSalesTeamUserIds(?User $user = null): array
+    private static function getSalesTeamUserIds(): array
     {
         $salesRoles = ['Staff', 'Manager', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'];
 
-        $query = User::active()->whereHas('roles', function ($query) use ($salesRoles): void {
+        return User::active()->whereHas('roles', function ($query) use ($salesRoles): void {
             $query->where(function ($q) use ($salesRoles): void {
                 foreach ($salesRoles as $role) {
                     $q->orWhere('name', $role)->orWhere('name', 'like', "{$role} - %");
                 }
             });
-        });
-
-        if ($user && $user->territory_id) {
-            $query->where('territory_id', $user->territory_id);
-        }
-
-        return $query->pluck('id')->toArray();
+        })->pluck('id')->toArray();
     }
 }

@@ -39,6 +39,7 @@ class ActivitiesTable
                 // For non-Super Admin users, also include activities on leads
                 // where the user is the creator or a collaborator,
                 // but only if the activity's user is in the same territory.
+                // Director sees all territories, so no territory constraint.
                 if (! $user->hasRole('Super Admin')) {
                     $leadIds = DB::table('lead_collaborators')
                         ->where('user_id', $user->id)
@@ -55,7 +56,7 @@ class ActivitiesTable
                         $query->orWhere(function ($q) use ($leadIds, $user) {
                             $q->whereIn('lead_id', $leadIds);
 
-                            if ($user->territory_id) {
+                            if (! $user->hasBaseRole('Director') && $user->territory_id) {
                                 $q->whereHas('user', function ($uq) use ($user): void {
                                     $uq->where('territory_id', $user->territory_id);
                                 });
