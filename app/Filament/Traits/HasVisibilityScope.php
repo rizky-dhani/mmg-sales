@@ -24,13 +24,18 @@ trait HasVisibilityScope
             return $query;
         }
 
+        // DEBUG: Log user info
+        \Log::info('[VisibilityScope] User: ' . $user->id . ' (' . $user->name . '), Roles: ' . $user->getRoleNames()->implode(', '));
+
         // Super Admin bypasses all visibility restrictions
         if ($user->hasRole('Super Admin')) {
+            \Log::info('[VisibilityScope] Branch: Super Admin');
             return $query;
         }
 
         // Director - can see all records from the sales team (all territories)
         if ($user->hasBaseRole('Director')) {
+            \Log::info('[VisibilityScope] Branch: Director');
             $salesTeamIds = self::getSalesTeamUserIds();
 
             return $query->whereIn($userColumn, $salesTeamIds);
@@ -38,6 +43,7 @@ trait HasVisibilityScope
 
         // Staff - can only see their own records
         if ($user->hasBaseRole('Staff')) {
+            \Log::info('[VisibilityScope] Branch: Staff');
             return $query->where($userColumn, $user->id);
         }
 
@@ -46,6 +52,7 @@ trait HasVisibilityScope
         $subordinateIds = self::getSubordinateUserIds($user);
 
         if (! empty($subordinateIds)) {
+            \Log::info('[VisibilityScope] Branch: Subordinates', ['subordinateIds' => $subordinateIds]);
             return $query->where(function ($q) use ($user, $userColumn, $subordinateIds) {
                 $q->where($userColumn, $user->id) // Own records
                     ->orWhereIn($userColumn, $subordinateIds); // Subordinate records
@@ -53,6 +60,7 @@ trait HasVisibilityScope
         }
 
         // Default: own records only
+        \Log::info('[VisibilityScope] Branch: Default (own only)');
         return $query->where($userColumn, $user->id);
     }
 
