@@ -98,7 +98,10 @@ trait HasVisibilityScope
 
         // Users in descendant positions AND same territory
         if ($user->position && $user->territory_id) {
-            $descendantPositionIds = $user->position->getAllDescendantIds();
+            $descendantPositionIds = array_diff(
+                $user->position->getAllDescendantIds(),
+                [$user->position_id]
+            );
 
             $positionUserIds = User::active()
                 ->whereIn('position_id', $descendantPositionIds)
