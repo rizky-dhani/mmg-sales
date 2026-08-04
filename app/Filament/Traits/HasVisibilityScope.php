@@ -110,16 +110,6 @@ trait HasVisibilityScope
             $userIds = array_merge($userIds, $positionUserIds);
         }
 
-        // Users in same territory
-        if ($user->territory_id) {
-            $territoryUserIds = User::active()->where('territory_id', $user->territory_id)
-                ->where('id', '!=', $user->id)
-                ->pluck('id')
-                ->toArray();
-
-            $userIds = array_merge($userIds, $territoryUserIds);
-        }
-
         // Direct reports in same territory
         if ($user->territory_id) {
             $directReportIds = User::active()
