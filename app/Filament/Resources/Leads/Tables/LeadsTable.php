@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Leads\Tables;
 use App\Filament\Traits\HasVisibilityScope;
 use App\Models\Activity;
 use App\Models\Lead;
-use App\Models\User;
 use Carbon\Carbon;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -28,15 +27,12 @@ class LeadsTable
             ->modifyQueryUsing(function (Builder $query) {
                 $user = auth()->user();
 
-                // Territory-based scope: if user has territory, scope to territory hierarchy
-                if ($user && ! $user->hasRole('Super Admin') && $user->territory_id) {
-                    $territoryUserIds = User::where('territory_id', $user->territory_id)
-                        ->pluck('id')
-                        ->toArray();
+                // Role-based visibility: staff sees own, managers see subordinates, etc.
+                self::applyVisibilityScope($query, 'created_by');
 
-                    $query->whereIn('created_by', array_merge($territoryUserIds, [$user->id]));
-                } else {
-                    self::applyVisibilityScope($query, 'created_by');
+                // Also include leads where the user is a collaborator
+                if ($user) {
+                    $query->orWhereHas('collaborators', fn ($q) => $q->where('users.id', $user->id));
                 }
 
                 // Sort by latest activity on the lead (most recently worked leads first)
