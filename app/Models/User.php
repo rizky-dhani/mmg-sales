@@ -137,21 +137,22 @@ class User extends Authenticatable implements FilamentUser
     public function hasBaseRole(string $roleName): bool
     {
         return $this->roles()
-            ->where('name', $roleName)
-            ->orWhere('name', 'like', "{$roleName} - %")
+            ->where(function ($q) use ($roleName) {
+                $q->where('name', $roleName)
+                    ->orWhere('name', 'like', "{$roleName} - %");
+            })
             ->exists();
     }
 
-    /**
-     * Check if user has any of the given base role names.
-     */
     public function hasAnyBaseRole(array $roleNames): bool
     {
         return $this->roles()
             ->where(function ($query) use ($roleNames): void {
                 foreach ($roleNames as $name) {
-                    $query->orWhere('name', $name)
-                        ->orWhere('name', 'like', "{$name} - %");
+                    $query->orWhere(function ($q) use ($name) {
+                        $q->where('name', $name)
+                            ->orWhere('name', 'like', "{$name} - %");
+                    });
                 }
             })
             ->exists();
