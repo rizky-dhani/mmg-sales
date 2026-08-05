@@ -19,7 +19,7 @@ class DistributorResource extends Resource
 
     public static function shouldRegisterNavigation(): bool
     {
-        return auth()->user()?->hasRole('Super Admin') ?? false;
+        return auth()->user()?->hasBaseRole('Super Admin') ?? false;
     }
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedTruck;
