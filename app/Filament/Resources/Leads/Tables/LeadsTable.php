@@ -73,6 +73,12 @@ class LeadsTable
                     ->searchable()
                     ->sortable()
                     ->weight('bold')
+                    ->formatStateUsing(function ($state): string {
+                        $state = (string) $state;
+
+                        return strlen($state) > 32 ? substr($state, 0, 32).'...' : $state;
+                    })
+                    ->tooltip(fn (string $state): ?string => strlen($state) > 32 ? $state : null)
                     ->toggleable(),
 
                 TextColumn::make('contactPerson.name')
