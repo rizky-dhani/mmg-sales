@@ -17,10 +17,7 @@ class SubSegmentResource extends Resource
 {
     protected static ?string $model = SubSegment::class;
 
-    public static function shouldRegisterNavigation(): bool
-    {
-        return auth()->user()?->hasBaseRole('Super Admin') ?? false;
-    }
+    protected static ?string $navigationPermission = 'view_any_sub_segment';
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedAdjustmentsVertical;
 
