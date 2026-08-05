@@ -25,7 +25,7 @@ trait HasVisibilityScope
         }
 
         // Super Admin bypasses all visibility restrictions
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasBaseRole('Super Admin')) {
             return $query;
         }
 
