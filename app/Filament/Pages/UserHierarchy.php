@@ -30,7 +30,7 @@ class UserHierarchy extends Page implements HasTable
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->hasBaseRole('Super Admin') ?? false;
+        return auth()->user()?->hasRole('Super Admin') ?? false;
     }
 
     public function table(Table $table): Table
