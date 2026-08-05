@@ -51,9 +51,10 @@ class LeadInfolist
                             ->label('Expected Finish')
                             ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('M Y')) : '-')
                             ->weight('bold'),
-                        TextEntry::make('collaborators.name')
+                        TextEntry::make('collaborators')
                             ->label('Sales Rep')
-                            ->formatStateUsing(fn ($state, $record) => $record->collaborators->pluck('name')->join(', ')),
+                            ->getStateUsing(fn ($record) => $record->collaborators->pluck('name')->join(', '))
+                            ->placeholder('-'),
                         TextEntry::make('creator.name')
                             ->label('Created By'),
                     ]),
