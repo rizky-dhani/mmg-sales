@@ -49,6 +49,14 @@ class LeadsTable
                     ->sortable()
                     ->toggleable(),
 
+                TextColumn::make('latestActivity.performed_at')
+                    ->label('Last Contact')
+                    ->date('d M Y')
+                    ->description(fn (Lead $record): ?string => $record->latestActivity?->subject)
+                    ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('d M Y')) : '-')
+                    ->sortable()
+                    ->toggleable(),
+
                 TextColumn::make('customer_name')
                     ->label('Customer')
                     ->searchable()
@@ -126,14 +134,6 @@ class LeadsTable
                     ->searchable()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('latestActivity.performed_at')
-                    ->label('Last Contact')
-                    ->date('d M Y')
-                    ->description(fn (Lead $record): ?string => $record->latestActivity?->subject)
-                    ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('d M Y')) : '-')
-                    ->sortable()
-                    ->toggleable(),
 
                 TextColumn::make('converted_at')
                     ->label('Converted')
