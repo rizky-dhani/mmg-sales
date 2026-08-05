@@ -52,7 +52,18 @@ class LeadsTable
                 TextColumn::make('latestActivity.performed_at')
                     ->label('Last Contact')
                     ->date('d M Y')
-                    ->description(fn (Lead $record): ?string => $record->latestActivity?->subject)
+                    ->description(function (Lead $record): ?string {
+                        $subject = $record->latestActivity?->subject;
+
+                        if (! $subject) {
+                            return null;
+                        }
+
+                        return strlen($subject) > 16
+                            ? substr($subject, 0, 16).'...'
+                            : $subject;
+                    })
+                    ->tooltip(fn (Lead $record): ?string => $record->latestActivity?->subject)
                     ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('d M Y')) : '-')
                     ->sortable()
                     ->toggleable(),
