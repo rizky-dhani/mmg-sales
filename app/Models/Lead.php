@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ResourceCodeGenerator;
 use App\Traits\HasCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

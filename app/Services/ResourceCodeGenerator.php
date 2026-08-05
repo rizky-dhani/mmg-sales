@@ -27,6 +27,7 @@ class ResourceCodeGenerator
         $sequence = $this->getNextSequence('ORD', (string) $year, 'orders', 'order_number');
 
         return sprintf('ORD-%d-%06d', $year, $sequence);
+    }
 
     public function generateForLead(?string $yearMonth = null): string
     {
