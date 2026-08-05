@@ -78,7 +78,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Bypasses all permissions via Gate::before in AppServiceProvider
         Role::findOrCreate('Super Admin');
 
-        // ── 2. Admin - Sales ─────────────────────────────────────────────
+        // ── 2. Sales Admin ──────────────────────────────────────────────
         // CRUD: Customer, Customer Group, Contact, Segment, Sub Segment
         $adminSalesPermissions = array_merge([
             'view_any_customer', 'view_customer', 'create_customer', 'update_customer', 'delete_customer', 'restore_customer', 'force_delete_customer',
@@ -89,9 +89,9 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_any_sub_segment', 'view_sub_segment', 'create_sub_segment', 'update_sub_segment', 'delete_sub_segment', 'restore_sub_segment', 'force_delete_sub_segment',
         ], $viewReference);
 
-        Role::findOrCreate('Admin - Sales')->syncPermissions($adminSalesPermissions);
+        Role::findOrCreate('Sales Admin')->syncPermissions($adminSalesPermissions);
 
-        // ── 3. Supervisor - Import & Purchasing ──────────────────────────
+        // ── 3. Import & Purchasing Supervisor ───────────────────────────
         // CRUD: Principal, Product, Distributor
         $supervisorIpPermissions = array_merge([
             'view_any_principal', 'view_principal', 'create_principal', 'update_principal', 'delete_principal', 'restore_principal', 'force_delete_principal',
@@ -99,7 +99,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_any_distributor', 'view_distributor', 'create_distributor', 'update_distributor', 'delete_distributor', 'restore_distributor', 'force_delete_distributor',
         ], $viewReference);
 
-        Role::findOrCreate('Supervisor - Import & Purchasing')->syncPermissions($supervisorIpPermissions);
+        Role::findOrCreate('Import & Purchasing Supervisor')->syncPermissions($supervisorIpPermissions);
 
         // ── 4. Sales & Marketing department roles ────────────────────────
         // CRUD: Lead, Activity, Order, Target
@@ -117,33 +117,33 @@ class RolesAndPermissionsSeeder extends Seeder
         ], $viewReference);
 
         $smRoles = [
-            'Staff - Sales',
-            'Supervisor - Sales',
-            'Area Sales Manager - Sales',
-            'Regional Sales Manager - Sales',
-            'Staff - Marketing',
-            'Manager - Marketing',
-            'Manager - Sales',
+            'Sales Staff',
+            'Sales Supervisor',
+            'Sales Area Manager',
+            'Sales Regional Manager',
+            'Marketing Staff',
+            'Marketing Manager',
+            'Sales Manager',
         ];
 
         foreach ($smRoles as $roleName) {
             Role::findOrCreate($roleName)->syncPermissions($smPermissions);
         }
 
-        // ── 5. Director - Management ─────────────────────────────────────
+        // ── 5. Management Director ──────────────────────────────────────
         // Reports access + view reference data + view comments
         $directorPermissions = array_merge($reportPermissions, $viewReference, [
             'view_any_activity_comment', 'view_activity_comment',
         ]);
 
-        Role::findOrCreate('Director - Management')->syncPermissions($directorPermissions);
+        Role::findOrCreate('Management Director')->syncPermissions($directorPermissions);
 
         // ── 6. Report access (add report permissions to specific roles) ──
         $reportRoles = [
-            'Regional Sales Manager - Sales',
-            'Area Sales Manager - Sales',
-            'Manager - Marketing',
-            'Manager - Sales',
+            'Sales Regional Manager',
+            'Sales Area Manager',
+            'Marketing Manager',
+            'Sales Manager',
         ];
 
         foreach ($reportRoles as $roleName) {
@@ -159,25 +159,25 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // ── Clean up: strip permissions from non-S&M dept roles ─────────
         $otherDeptRoles = [
-            'Staff - TSS', 'Staff - Finance & Accounting', 'Staff - RQA',
-            'Supervisor - Finance & Accounting', 'Supervisor - TSS',
-            'Manager - TSS',
+            'TSS Staff', 'Finance & Accounting Staff', 'RQA Staff',
+            'Finance & Accounting Supervisor', 'TSS Supervisor',
+            'TSS Manager',
         ];
 
         foreach ($otherDeptRoles as $roleName) {
             Role::where('name', $roleName)->first()?->syncPermissions([]);
         }
 
-        // ── 7. Staff - Logistics ──────────────────────────────────────────
+        // ── 7. Logistics Staff ──────────────────────────────────────────
         // Full order visibility + shipping status updates
-        Role::findOrCreate('Staff - Logistics')
+        Role::findOrCreate('Logistics Staff')
             ->syncPermissions([
                 'view_any_order', 'view_order', 'update_order',
             ])
             ->givePermissionTo('update_delivery_order');
 
-        // ── 8. Staff - Finance & Accounting ──────────────────────────────
-        Role::findOrCreate('Staff - Finance & Accounting')
+        // ── 8. Finance & Accounting Staff ───────────────────────────────
+        Role::findOrCreate('Finance & Accounting Staff')
             ->givePermissionTo('update_payment_order');
     }
 }

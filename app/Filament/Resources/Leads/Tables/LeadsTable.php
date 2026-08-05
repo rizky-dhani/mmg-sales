@@ -31,7 +31,7 @@ class LeadsTable
                 self::applyVisibilityScope($query, 'created_by');
 
                 // Also include leads where the user is a collaborator (skip for Super Admin)
-                if ($user && ! $user->hasBaseRole('Super Admin')) {
+                if ($user && ! $user->hasRole('Super Admin')) {
                     $query->orWhereHas('collaborators', fn ($q) => $q->where('users.id', $user->id));
                 }
 
@@ -193,11 +193,11 @@ class LeadsTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->visible(fn () => auth()->user()?->hasAnyBaseRole(['Super Admin', 'Staff', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'])),
+                        ->visible(fn () => auth()->user()?->hasAnyRole(['Super Admin', 'Sales Staff', 'Marketing Staff', 'Logistics Staff', 'Finance & Accounting Staff', 'Sales Supervisor', 'Import & Purchasing Supervisor', 'Sales Regional Manager', 'Sales Area Manager'])),
                     ForceDeleteBulkAction::make()
-                        ->visible(fn () => auth()->user()?->hasBaseRole('Super Admin')),
+                        ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
                     RestoreBulkAction::make()
-                        ->visible(fn () => auth()->user()?->hasBaseRole('Super Admin')),
+                        ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
                 ]),
             ]);
     }

@@ -103,7 +103,7 @@ class TargetResource extends Resource
             ->modifyQueryUsing(function ($query): void {
                 $user = auth()->user();
 
-                if (! $user->hasBaseRole('Super Admin')) {
+                if (! $user->hasRole('Super Admin')) {
                     $query->where('user_id', $user->id);
                 }
             })

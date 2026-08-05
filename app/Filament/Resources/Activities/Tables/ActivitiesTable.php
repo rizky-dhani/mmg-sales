@@ -40,7 +40,7 @@ class ActivitiesTable
                 // where the user is the creator or a collaborator,
                 // but only if the activity's user is in the same territory.
                 // Director sees all territories, so no territory constraint.
-                if (! $user->hasBaseRole('Super Admin')) {
+                if (! $user->hasRole('Super Admin')) {
                     $leadIds = DB::table('lead_collaborators')
                         ->where('user_id', $user->id)
                         ->pluck('lead_id')
@@ -56,7 +56,7 @@ class ActivitiesTable
                         $query->orWhere(function ($q) use ($leadIds, $user) {
                             $q->whereIn('lead_id', $leadIds);
 
-                            if (! $user->hasBaseRole('Director') && $user->territory_id) {
+                            if (! $user->hasRole('Management Director') && $user->territory_id) {
                                 $q->whereHas('user', function ($uq) use ($user): void {
                                     $uq->where('territory_id', $user->territory_id);
                                 });
@@ -177,7 +177,7 @@ class ActivitiesTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->visible(fn () => auth()->user()?->hasBaseRole('Super Admin')),
+                        ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
                 ]),
             ]);
     }

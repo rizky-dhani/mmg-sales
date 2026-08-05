@@ -25,19 +25,20 @@ trait HasVisibilityScope
         }
 
         // Super Admin bypasses all visibility restrictions
-        if ($user->hasBaseRole('Super Admin')) {
+        if ($user->hasRole('Super Admin')) {
             return $query;
         }
 
         // Director - can see all records from the sales team (all territories)
-        if ($user->hasBaseRole('Director')) {
+        if ($user->hasRole('Management Director')) {
             $salesTeamIds = self::getSalesTeamUserIds();
 
             return $query->whereIn($userColumn, $salesTeamIds);
         }
 
         // Staff - can only see their own records
-        if ($user->hasBaseRole('Staff')) {
+        $staffRoles = ['Sales Staff', 'Marketing Staff', 'Logistics Staff', 'Finance & Accounting Staff'];
+        if ($user->hasAnyRole($staffRoles)) {
             return $query->where($userColumn, $user->id);
         }
 
@@ -72,12 +73,12 @@ trait HasVisibilityScope
         }
 
         // Super Admin can modify anything
-        if ($user->hasBaseRole('Super Admin')) {
+        if ($user->hasRole('Super Admin')) {
             return true;
         }
 
         // Director is view-only, cannot modify any records
-        if ($user->hasBaseRole('Director')) {
+        if ($user->hasRole('Management Director')) {
             return false;
         }
 
@@ -133,12 +134,12 @@ trait HasVisibilityScope
      */
     private static function getSalesTeamUserIds(): array
     {
-        $salesRoles = ['Staff', 'Manager', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'];
+        $salesRoles = ['Staff', 'Manager', 'Supervisor', 'Regional Manager', 'Area Manager'];
 
         return User::active()->whereHas('roles', function ($query) use ($salesRoles): void {
             $query->where(function ($q) use ($salesRoles): void {
                 foreach ($salesRoles as $role) {
-                    $q->orWhere('name', $role)->orWhere('name', 'like', "{$role} - %");
+                    $q->orWhere('name', 'like', "% {$role}");
                 }
             });
         })->pluck('id')->toArray();

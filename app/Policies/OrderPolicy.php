@@ -21,7 +21,7 @@ class OrderPolicy extends BasePolicy
         }
 
         // Logistics can update any order (shipping status)
-        if ($user->hasRole('Staff - Logistics')) {
+        if ($user->hasRole('Logistics Staff')) {
             return true;
         }
 

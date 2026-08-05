@@ -131,33 +131,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Target::class);
     }
 
-    /**
-     * Check if user has a role by base name (matches 'Staff', 'Staff - Sales', etc.).
-     */
-    public function hasBaseRole(string $roleName): bool
-    {
-        return $this->roles()
-            ->where(function ($q) use ($roleName) {
-                $q->where('name', $roleName)
-                    ->orWhere('name', 'like', "{$roleName} - %");
-            })
-            ->exists();
-    }
-
-    public function hasAnyBaseRole(array $roleNames): bool
-    {
-        return $this->roles()
-            ->where(function ($query) use ($roleNames): void {
-                foreach ($roleNames as $name) {
-                    $query->orWhere(function ($q) use ($name) {
-                        $q->where('name', $name)
-                            ->orWhere('name', 'like', "{$name} - %");
-                    });
-                }
-            })
-            ->exists();
-    }
-
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);

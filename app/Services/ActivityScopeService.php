@@ -17,12 +17,13 @@ class ActivityScopeService
         $query = Activity::query();
 
         // Director sees all territories (top of hierarchy)
-        if ($user->hasBaseRole('Super Admin') || $user->hasBaseRole('Director')) {
+        if ($user->hasRole('Super Admin') || $user->hasRole('Management Director')) {
             return $query;
         }
 
         // Manager is territory-scoped (under Director)
-        if ($user->hasBaseRole('Manager')) {
+        $managerRoles = ['Marketing Manager', 'Sales Manager'];
+        if ($user->hasAnyRole($managerRoles)) {
             if ($user->territory_id) {
                 $territoryUserIds = User::active()
                     ->where('territory_id', $user->territory_id)
@@ -81,12 +82,13 @@ class ActivityScopeService
     public function getAllSubordinateIds(User $user): Collection
     {
         // Super Admin and Director see all territories
-        if ($user->hasBaseRole('Super Admin') || $user->hasBaseRole('Director')) {
+        if ($user->hasRole('Super Admin') || $user->hasRole('Management Director')) {
             return User::active()->pluck('id');
         }
 
         // Manager is territory-scoped
-        if ($user->hasBaseRole('Manager')) {
+        $managerRoles = ['Marketing Manager', 'Sales Manager'];
+        if ($user->hasAnyRole($managerRoles)) {
             $query = User::active();
 
             if ($user->territory_id) {

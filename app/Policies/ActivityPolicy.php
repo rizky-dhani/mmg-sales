@@ -40,7 +40,7 @@ class ActivityPolicy extends BasePolicy
 
     public function createForLead(User $user, $lead): bool
     {
-        if ($user->hasBaseRole('Super Admin')) {
+        if ($user->hasRole('Super Admin')) {
             return true;
         }
 

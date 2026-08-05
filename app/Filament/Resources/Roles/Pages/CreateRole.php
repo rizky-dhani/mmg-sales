@@ -26,7 +26,7 @@ class CreateRole extends CreateRecord
 
         $name = $position?->name ?? 'Unnamed';
         if ($department) {
-            $name .= ' - '.$department->name;
+            $name = $department->name.' '.$name;
         }
 
         return $name;

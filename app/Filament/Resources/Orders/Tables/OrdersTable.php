@@ -142,14 +142,14 @@ class OrdersTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make()
-                    ->visible(fn (Order $record) => auth()->user()?->hasRole('Staff - Logistics') || self::canModifyRecord($record, 'created_by')),
+                    ->visible(fn (Order $record) => auth()->user()?->hasRole('Logistics Staff') || self::canModifyRecord($record, 'created_by')),
                 UpdateDeliveryAction::make(),
                 UpdatePaymentAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->visible(fn () => auth()->user()?->hasBaseRole('Super Admin')),
+                        ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
                 ]),
             ]);
     }

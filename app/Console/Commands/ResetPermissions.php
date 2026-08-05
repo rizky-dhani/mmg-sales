@@ -99,7 +99,7 @@ class ResetPermissions extends Command
         Role::findOrCreate('Super Admin');
         $this->info('  Super Admin: bypass (no permissions)');
 
-        // 2. Admin - Sales: CRUD Customer, Customer Group, Contact, Segment, Sub Segment
+        // 2. Sales Admin: CRUD Customer, Customer Group, Contact, Segment, Sub Segment
         $adminSalesPerms = array_merge([
             'view_any_customer', 'view_customer', 'create_customer', 'update_customer', 'delete_customer', 'restore_customer', 'force_delete_customer',
             'view_any_customer_group', 'view_customer_group', 'create_customer_group', 'update_customer_group', 'delete_customer_group', 'restore_customer_group', 'force_delete_customer_group',
@@ -108,18 +108,18 @@ class ResetPermissions extends Command
             'view_any_sub_segment', 'view_sub_segment', 'create_sub_segment', 'update_sub_segment', 'delete_sub_segment', 'restore_sub_segment', 'force_delete_sub_segment',
         ], $viewReference);
 
-        Role::findOrCreate('Admin - Sales')->syncPermissions($adminSalesPerms);
-        $this->info('  Admin - Sales: '.count($adminSalesPerms).' permissions');
+        Role::findOrCreate('Sales Admin')->syncPermissions($adminSalesPerms);
+        $this->info('  Sales Admin: '.count($adminSalesPerms).' permissions');
 
-        // 3. Supervisor - Import & Purchasing: CRUD Principal, Product, Distributor
+        // 3. Import & Purchasing Supervisor: CRUD Principal, Product, Distributor
         $supIpPerms = array_merge([
             'view_any_principal', 'view_principal', 'create_principal', 'update_principal', 'delete_principal', 'restore_principal', 'force_delete_principal',
             'view_any_product', 'view_product', 'create_product', 'update_product', 'delete_product', 'restore_product', 'force_delete_product',
             'view_any_distributor', 'view_distributor', 'create_distributor', 'update_distributor', 'delete_distributor', 'restore_distributor', 'force_delete_distributor',
         ], $viewReference);
 
-        Role::findOrCreate('Supervisor - Import & Purchasing')->syncPermissions($supIpPerms);
-        $this->info('  Supervisor - Import & Purchasing: '.count($supIpPerms).' permissions');
+        Role::findOrCreate('Import & Purchasing Supervisor')->syncPermissions($supIpPerms);
+        $this->info('  Import & Purchasing Supervisor: '.count($supIpPerms).' permissions');
 
         // 4. Sales & Marketing dept roles: CRUD Lead, Activity, Order, Target + view reference
         $smPerms = array_merge([
@@ -130,13 +130,13 @@ class ResetPermissions extends Command
         ], $viewReference);
 
         $smRoles = [
-            'Staff - Sales',
-            'Supervisor - Sales',
-            'Area Sales Manager - Sales',
-            'Regional Sales Manager - Sales',
-            'Staff - Marketing',
-            'Manager - Marketing',
-            'Manager - Sales',
+            'Sales Staff',
+            'Sales Supervisor',
+            'Sales Area Manager',
+            'Sales Regional Manager',
+            'Marketing Staff',
+            'Marketing Manager',
+            'Sales Manager',
         ];
 
         foreach ($smRoles as $roleName) {
@@ -144,18 +144,18 @@ class ResetPermissions extends Command
         }
         $this->info('  S&M dept roles ('.count($smRoles).' roles): '.count($smPerms).' permissions each');
 
-        // 5. Director - Management: reports + view reference
+        // 5. Management Director: reports + view reference
         $directorPerms = array_merge($reportPermissions, $viewReference);
 
-        Role::findOrCreate('Director - Management')->syncPermissions($directorPerms);
-        $this->info('  Director - Management: '.count($directorPerms).' permissions');
+        Role::findOrCreate('Management Director')->syncPermissions($directorPerms);
+        $this->info('  Management Director: '.count($directorPerms).' permissions');
 
         // 6. Report access: add report perms on top of S&M perms for specific roles
         $reportRoles = [
-            'Regional Sales Manager - Sales',
-            'Area Sales Manager - Sales',
-            'Manager - Marketing',
-            'Manager - Sales',
+            'Sales Regional Manager',
+            'Sales Area Manager',
+            'Marketing Manager',
+            'Sales Manager',
         ];
 
         foreach ($reportRoles as $roleName) {
@@ -170,15 +170,15 @@ class ResetPermissions extends Command
 
         // [old role name, department name, new role name]
         $mapping = [
-            ['Staff',                  'Sales',               'Staff - Sales'],
-            ['Supervisor',             'Sales',               'Supervisor - Sales'],
-            ['Area Sales Manager',     'Sales',               'Area Sales Manager - Sales'],
-            ['Regional Sales Manager', 'Sales',               'Regional Sales Manager - Sales'],
-            ['Admin',                  'Sales',               'Admin - Sales'],
-            ['Staff',                  'Marketing',           'Staff - Marketing'],
-            ['Manager',                'Marketing',           'Manager - Marketing'],
-            ['Director',               'Management',          'Director - Management'],
-            ['Supervisor',             'Import & Purchasing', 'Supervisor - Import & Purchasing'],
+            ['Staff',                  'Sales',               'Sales Staff'],
+            ['Supervisor',             'Sales',               'Sales Supervisor'],
+            ['Area Sales Manager',     'Sales',               'Sales Area Manager'],
+            ['Regional Sales Manager', 'Sales',               'Sales Regional Manager'],
+            ['Admin',                  'Sales',               'Sales Admin'],
+            ['Staff',                  'Marketing',           'Marketing Staff'],
+            ['Manager',                'Marketing',           'Marketing Manager'],
+            ['Director',               'Management',          'Management Director'],
+            ['Supervisor',             'Import & Purchasing', 'Import & Purchasing Supervisor'],
         ];
 
         // Track per-user reassignment (last match wins)
