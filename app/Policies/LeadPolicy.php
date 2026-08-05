@@ -8,6 +8,8 @@ class LeadPolicy extends BasePolicy
 {
     protected string $model = 'lead';
 
+    protected array $authorizedRoles = ['Super Admin'];
+
     /**
      * Determine whether the user can update the model.
      * Staff can only update their own leads.
