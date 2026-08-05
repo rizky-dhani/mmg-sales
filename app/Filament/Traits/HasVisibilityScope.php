@@ -21,11 +21,17 @@ trait HasVisibilityScope
         $user = auth()->user();
 
         if (! $user) {
+            \Log::info('[VisibilityScope] No authenticated user');
             return $query;
         }
 
+        \Log::info('[VisibilityScope] User: ' . $user->id . ' (' . $user->name . '), Roles: ' . $user->getRoleNames()->implode(', '));
+        \Log::info('[VisibilityScope] hasRole(Super Admin): ' . ($user->hasRole('Super Admin') ? 'true' : 'false'));
+        \Log::info('[VisibilityScope] hasBaseRole(Super Admin): ' . ($user->hasBaseRole('Super Admin') ? 'true' : 'false'));
+
         // Super Admin bypasses all visibility restrictions
         if ($user->hasBaseRole('Super Admin')) {
+            \Log::info('[VisibilityScope] Branch: Super Admin (hasBaseRole)');
             return $query;
         }
 
