@@ -27,8 +27,14 @@ class ResourceCodeGenerator
         $sequence = $this->getNextSequence('ORD', (string) $year, 'orders', 'order_number');
 
         return sprintf('ORD-%d-%06d', $year, $sequence);
-    }
 
+    public function generateForLead(?string $yearMonth = null): string
+    {
+        $yearMonth = $yearMonth ?? now()->format('Ym');
+        $sequence = $this->getNextSequence('LEAD', $yearMonth, 'leads', 'lead_code');
+
+        return sprintf('LEAD-%s-%04d', $yearMonth, $sequence);
+    }
     public function getNextSequenceValue(string $prefix, ?string $partition = null, ?string $table = null, ?string $column = null): int
     {
         return $this->getNextSequence($prefix, $partition, $table, $column);

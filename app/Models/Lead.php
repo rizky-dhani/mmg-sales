@@ -44,10 +44,15 @@ class Lead extends Model
         'converted_at' => 'datetime',
         'last_contacted_at' => 'datetime',
     ];
-
     protected $codeColumn = 'lead_code';
 
-    protected $codePrefix = 'LEA';
+    // Uses generateForLead from ResourceCodeGenerator (LEAD-YYYYMM-XXXX)
+    public function generateCode(): string
+    {
+        $generator = app(ResourceCodeGenerator::class);
+
+        return $generator->generateForLead();
+    }
 
     protected static function boot(): void
     {
