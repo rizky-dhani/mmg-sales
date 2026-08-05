@@ -46,27 +46,32 @@ class LeadsTable
                 TextColumn::make('lead_code')
                     ->label('Lead Code')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('customer_name')
                     ->label('Customer')
                     ->searchable()
                     ->sortable()
-                    ->weight('bold'),
+                    ->weight('bold')
+                    ->toggleable(),
 
                 TextColumn::make('contactPerson.name')
                     ->label('Contact Person')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
 
                 TextColumn::make('creator.name')
                     ->label('Creator')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('assignedCollaborators')
                     ->label('Assigned To')
                     ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('collaborators', fn ($q) => $q->where('name', 'like', "%{$search}%")))
-                    ->getStateUsing(fn ($record) => $record->collaborators->pluck('name')->join(', ')),
+                    ->getStateUsing(fn ($record) => $record->collaborators->pluck('name')->join(', '))
+                    ->toggleable(),
 
                 TextColumn::make('priority')
                     ->badge()
@@ -78,7 +83,8 @@ class LeadsTable
                         'urgent' => 'danger',
                         default => 'gray',
                     })
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('estimated_value')
                     ->label('Estimated Value')
@@ -89,13 +95,15 @@ class LeadsTable
                 TextColumn::make('estimated_revenue')
                     ->label('Expected Revenue')
                     ->money('IDR')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('estimated_completion_date')
                     ->label('Est. Finish')
                     ->date('M Y')
                     ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('M Y')) : '-')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('source')
                     ->badge()
@@ -124,7 +132,8 @@ class LeadsTable
                     ->date('d M Y')
                     ->description(fn (Lead $record): ?string => $record->latestActivity?->subject)
                     ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('d M Y')) : '-')
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('converted_at')
                     ->label('Converted')
