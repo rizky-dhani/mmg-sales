@@ -34,8 +34,8 @@ class LeadsTable
 
                 \Log::info('[LeadsTable] After scope', ['query' => $query->toSql()]);
 
-                // Also include leads where the user is a collaborator
-                if ($user) {
+                // Also include leads where the user is a collaborator (skip for Super Admin)
+                if ($user && ! $user->hasBaseRole('Super Admin')) {
                     $query->orWhereHas('collaborators', fn ($q) => $q->where('users.id', $user->id));
                 }
 
