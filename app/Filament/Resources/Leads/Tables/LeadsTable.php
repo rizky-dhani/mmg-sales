@@ -78,7 +78,24 @@ class LeadsTable
                 TextColumn::make('assignedCollaborators')
                     ->label('Assigned To')
                     ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('collaborators', fn ($q) => $q->where('name', 'like', "%{$search}%")))
-                    ->getStateUsing(fn ($record) => $record->collaborators->pluck('name')->join(', '))
+                    ->getStateUsing(function ($record): string {
+                        $names = $record->collaborators->pluck('name')->filter()->values();
+
+                        if ($names->isEmpty()) {
+                            return '-';
+                        }
+
+                        if ($names->count() === 1) {
+                            return $names->first();
+                        }
+
+                        return $names->first().' + '.($names->count() - 1).' others';
+                    })
+                    ->tooltip(function ($record): ?string {
+                        $names = $record->collaborators->pluck('name')->filter();
+
+                        return $names->isEmpty() ? null : $names->join(', ');
+                    })
                     ->toggleable(),
 
                 TextColumn::make('priority')
