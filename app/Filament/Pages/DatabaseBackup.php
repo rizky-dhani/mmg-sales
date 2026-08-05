@@ -34,7 +34,7 @@ class DatabaseBackup extends Page implements HasTable
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->hasRole('Super Admin') ?? false;
+        return auth()->user()?->hasBaseRole('Super Admin') ?? false;
     }
 
     public function getHeaderActions(): array

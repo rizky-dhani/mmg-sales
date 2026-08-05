@@ -72,7 +72,7 @@ trait HasVisibilityScope
         }
 
         // Super Admin can modify anything
-        if ($user->hasRole('Super Admin')) {
+        if ($user->hasBaseRole('Super Admin')) {
             return true;
         }
 

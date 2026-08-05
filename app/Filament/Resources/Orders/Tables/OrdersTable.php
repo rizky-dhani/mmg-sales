@@ -149,7 +149,7 @@ class OrdersTable
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
+                        ->visible(fn () => auth()->user()?->hasBaseRole('Super Admin')),
                 ]),
             ]);
     }

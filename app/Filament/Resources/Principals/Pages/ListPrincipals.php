@@ -22,7 +22,7 @@ class ListPrincipals extends ListRecords
             Action::make('download_template')
                 ->label('Download Template')
                 ->icon(Heroicon::OutlinedDocumentArrowDown)
-                ->visible(fn () => auth()->user()->hasRole('Super Admin'))
+                ->visible(fn () => auth()->user()->hasBaseRole('Super Admin'))
                 ->action(fn () => Excel::download(new PrincipalsTemplateExport, 'principals_template.xlsx')),
             CreateAction::make(),
         ];

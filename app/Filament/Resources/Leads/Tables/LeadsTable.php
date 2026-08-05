@@ -161,9 +161,9 @@ class LeadsTable
                     DeleteBulkAction::make()
                         ->visible(fn () => auth()->user()?->hasAnyBaseRole(['Super Admin', 'Staff', 'Supervisor', 'Regional Sales Manager', 'Area Sales Manager'])),
                     ForceDeleteBulkAction::make()
-                        ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
+                        ->visible(fn () => auth()->user()?->hasBaseRole('Super Admin')),
                     RestoreBulkAction::make()
-                        ->visible(fn () => auth()->user()?->hasRole('Super Admin')),
+                        ->visible(fn () => auth()->user()?->hasBaseRole('Super Admin')),
                 ]),
             ]);
     }
