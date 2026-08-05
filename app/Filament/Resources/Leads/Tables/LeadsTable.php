@@ -23,17 +23,22 @@ class LeadsTable
 
     public static function configure(Table $table): Table
     {
-        return $table
             ->modifyQueryUsing(function (Builder $query) {
                 $user = auth()->user();
 
+                \Log::info('[LeadsTable] Before scope', ['user' => $user?->id, 'query' => $query->toSql()]);
+
                 // Role-based visibility: staff sees own, managers see subordinates, etc.
                 self::applyVisibilityScope($query, 'created_by');
+
+                \Log::info('[LeadsTable] After scope', ['query' => $query->toSql()]);
 
                 // Also include leads where the user is a collaborator
                 if ($user) {
                     $query->orWhereHas('collaborators', fn ($q) => $q->where('users.id', $user->id));
                 }
+
+                \Log::info('[LeadsTable] After collaborator', ['query' => $query->toSql()]);
 
                 // Sort by latest activity on the lead (most recently worked leads first)
                 return $query->orderByDesc(
