@@ -41,6 +41,12 @@ class LeadInfolist
                         TextEntry::make('estimated_revenue')
                             ->label('Expected Revenue')
                             ->money('IDR'),
+                        TextEntry::make('actual_sales')
+                            ->label('Actual Sales')
+                            ->money('IDR')
+                            ->getStateUsing(fn ($record) => $record->orders->sum('total_amount'))
+                            ->weight('bold')
+                            ->color(fn ($state, $record) => $state >= ($record->estimated_revenue ?? 0) ? 'success' : 'warning'),
                         TextEntry::make('estimated_completion_date')
                             ->label('Expected Finish')
                             ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('M Y')) : '-')
