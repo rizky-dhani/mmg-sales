@@ -23,12 +23,6 @@ class LeadStatusOverview extends BaseWidget
         $inProgressCount = Lead::whereNotIn('status', ['new', 'won', 'lost'])->count();
 
         return [
-            Stat::make('Total', $totalCount)
-                ->description('All leads')
-                ->descriptionIcon('heroicon-m-users')
-                ->color('primary')
-                ->url(route('filament.admin.resources.leads.index')),
-
             Stat::make('Converted', $wonCount)
                 ->description('Partnerships established')
                 ->descriptionIcon('heroicon-m-check-circle')
@@ -46,6 +40,12 @@ class LeadStatusOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-x-circle')
                 ->color('danger')
                 ->url(route('filament.admin.resources.leads.index', ['tableFilters[status][value]' => 'lost'])),
+
+            Stat::make('Total', $totalCount)
+                ->description('All leads')
+                ->descriptionIcon('heroicon-m-users')
+                ->color('primary')
+                ->url(route('filament.admin.resources.leads.index')),
         ];
     }
 }
