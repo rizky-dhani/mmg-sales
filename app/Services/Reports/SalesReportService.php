@@ -36,8 +36,6 @@ class SalesReportService
         $averageOrderValue = $totalOrders > 0 ? $totalRevenue / $totalOrders : 0;
         $overdueRevenue = 0;
 
-        $comparisonData = $this->getComparisonData($filters);
-
         return new SalesReportData(
             totalRevenue: $totalRevenue,
             totalNetSales: $totalNetSales,
@@ -51,10 +49,6 @@ class SalesReportService
             revenueByPrincipal: $this->getRevenueByPrincipal($filters),
             revenueBySegment: $this->getRevenueBySegment($filters),
             revenueByCustomerGroup: $this->getRevenueByCustomerGroup($filters),
-            comparisonTotalRevenue: $comparisonData['totalRevenue'] ?? null,
-            comparisonTotalNetSales: $comparisonData['totalNetSales'] ?? null,
-            comparisonTotalOrders: $comparisonData['totalOrders'] ?? null,
-            comparisonAverageOrderValue: $comparisonData['averageOrderValue'] ?? null,
         );
     }
 
@@ -141,76 +135,6 @@ class SalesReportService
         }
 
         return $query->join('order_items', 'orders.id', '=', 'order_items.order_id');
-    }
-
-    private function getComparisonData(ReportFilterData $filters): array
-    {
-        if (! $filters->hasComparison()) {
-            return [];
-        }
-
-        $comparisonQuery = Order::query()
-            ->whereBetween('order_date', [$filters->comparisonStartDate, $filters->comparisonEndDate]);
-
-        if ($filters->userId) {
-            $comparisonQuery->where('created_by', $filters->userId);
-        }
-
-        if (! empty($filters->userIds)) {
-            $comparisonQuery->whereIn('created_by', $filters->userIds);
-        }
-
-        $needsCustomerJoin = $filters->customerGroupId
-            || $filters->segmentId
-            || $filters->subSegmentId
-            || $filters->cdNcdType;
-
-        if ($needsCustomerJoin) {
-            $comparisonQuery->leftJoin('customers', 'orders.end_customer_id', '=', 'customers.id');
-        }
-
-        if ($filters->territoryId) {
-            $comparisonQuery->leftJoin('users', 'orders.created_by', '=', 'users.id')
-                ->where('users.territory_id', $filters->territoryId);
-        }
-
-        if ($filters->departmentId) {
-            $comparisonQuery->where('department_id', $filters->departmentId);
-        }
-
-        if ($filters->principalId) {
-            $comparisonQuery->where('principal_id', $filters->principalId);
-        }
-
-        if ($filters->customerId) {
-            $comparisonQuery->where('end_customer_id', $filters->customerId);
-        }
-
-        if ($filters->customerGroupId) {
-            $comparisonQuery->where('customers.customer_group_id', $filters->customerGroupId);
-        }
-
-        if ($filters->segmentId) {
-            $comparisonQuery->where('customers.segment_id', $filters->segmentId);
-        }
-
-        if ($filters->subSegmentId) {
-            $comparisonQuery->where('customers.sub_segment_id', $filters->subSegmentId);
-        }
-
-        if ($filters->cdNcdType) {
-            $comparisonQuery->where('customers.cd_ncd_type', $filters->cdNcdType);
-        }
-
-        $totalRevenue = (clone $comparisonQuery)->sum('total_amount');
-        $totalOrders = (clone $comparisonQuery)->count();
-
-        return [
-            'totalRevenue' => $totalRevenue,
-            'totalNetSales' => (clone $comparisonQuery)->sum('net_sales_total'),
-            'totalOrders' => $totalOrders,
-            'averageOrderValue' => $totalOrders > 0 ? $totalRevenue / $totalOrders : 0,
-        ];
     }
 
     private function getRevenueByPeriod(ReportFilterData $filters): Collection

@@ -31,9 +31,7 @@ class CustomerReportStatsWidget extends StatsOverviewWidget
                 ->description('Active customers'),
 
             Stat::make('Total Revenue', $formatter->formatCurrency($data->totalRevenue, 'IDR'))
-                ->description($this->getGrowthDescription($data->getRevenueGrowthPercentage()))
-                ->descriptionIcon($this->getGrowthIcon($data->getRevenueGrowthPercentage()))
-                ->color($this->getGrowthColor($data->getRevenueGrowthPercentage())),
+                ->description('Revenue for selected period'),
 
             Stat::make('New Customers', number_format($data->newCustomers))
                 ->description('This period'),
@@ -43,32 +41,4 @@ class CustomerReportStatsWidget extends StatsOverviewWidget
         ];
     }
 
-    private function getGrowthDescription(?float $percentage): string
-    {
-        if ($percentage === null) {
-            return 'No comparison data';
-        }
-
-        $sign = $percentage >= 0 ? '+' : '';
-
-        return "{$sign}".number_format($percentage, 1).'% vs comparison period';
-    }
-
-    private function getGrowthIcon(?float $percentage): string
-    {
-        if ($percentage === null) {
-            return 'heroicon-m-minus';
-        }
-
-        return $percentage >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down';
-    }
-
-    private function getGrowthColor(?float $percentage): string
-    {
-        if ($percentage === null) {
-            return 'gray';
-        }
-
-        return $percentage >= 0 ? 'success' : 'danger';
-    }
 }

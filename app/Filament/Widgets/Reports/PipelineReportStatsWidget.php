@@ -30,14 +30,10 @@ class PipelineReportStatsWidget extends StatsOverviewWidget
 
         return [
             Stat::make('Total Pipeline Value', $formatter->formatCurrency($data->totalPipelineValue, 'IDR'))
-                ->description($this->getGrowthDescription($data->getPipelineGrowthPercentage()))
-                ->descriptionIcon($this->getGrowthIcon($data->getPipelineGrowthPercentage()))
-                ->color($this->getGrowthColor($data->getPipelineGrowthPercentage())),
+                ->description('Total estimated value'),
 
             Stat::make('Win Rate', number_format($data->winRate, 1).'%')
-                ->description($this->getWinRateChangeDescription($data->getWinRateChange()))
-                ->descriptionIcon($this->getWinRateChangeIcon($data->getWinRateChange()))
-                ->color($this->getWinRateChangeColor($data->getWinRateChange())),
+                ->description('Won vs total closed'),
             Stat::make('Total Leads', number_format($data->totalProjects))
                 ->description("Converted: {$data->wonProjects} | Not Won: {$data->lostProjects}"),
 
@@ -54,61 +50,4 @@ class PipelineReportStatsWidget extends StatsOverviewWidget
         ];
     }
 
-    private function getGrowthDescription(?float $percentage): string
-    {
-        if ($percentage === null) {
-            return 'No comparison data';
-        }
-
-        $sign = $percentage >= 0 ? '+' : '';
-
-        return "{$sign}".number_format($percentage, 1).'% vs comparison period';
-    }
-
-    private function getGrowthIcon(?float $percentage): string
-    {
-        if ($percentage === null) {
-            return 'heroicon-m-minus';
-        }
-
-        return $percentage >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down';
-    }
-
-    private function getGrowthColor(?float $percentage): string
-    {
-        if ($percentage === null) {
-            return 'gray';
-        }
-
-        return $percentage >= 0 ? 'success' : 'danger';
-    }
-
-    private function getWinRateChangeDescription(?float $change): string
-    {
-        if ($change === null) {
-            return 'No comparison data';
-        }
-
-        $sign = $change >= 0 ? '+' : '';
-
-        return "{$sign}".number_format($change, 1).'% vs comparison period';
-    }
-
-    private function getWinRateChangeIcon(?float $change): string
-    {
-        if ($change === null) {
-            return 'heroicon-m-minus';
-        }
-
-        return $change >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down';
-    }
-
-    private function getWinRateChangeColor(?float $change): string
-    {
-        if ($change === null) {
-            return 'gray';
-        }
-
-        return $change >= 0 ? 'success' : 'danger';
-    }
 }

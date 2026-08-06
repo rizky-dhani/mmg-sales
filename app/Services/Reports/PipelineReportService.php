@@ -40,8 +40,6 @@ class PipelineReportService
         $averageDealSize = $wonProjects > 0 ? $wonValue / $wonProjects : 0;
         $averageSalesCycle = $this->calculateAverageSalesCycle($filters);
 
-        $comparisonData = $this->getComparisonData($filters);
-
         return new PipelineReportData(
             totalPipelineValue: $totalPipelineValue,
             wonValue: $wonValue,
@@ -57,8 +55,6 @@ class PipelineReportService
             monthlyTrend: $this->getMonthlyTrend($filters),
             recentWins: $this->getRecentWins($filters),
             recentLosses: $this->getRecentLosses($filters),
-            comparisonTotalPipelineValue: $comparisonData['totalPipelineValue'] ?? null,
-            comparisonWinRate: $comparisonData['winRate'] ?? null,
         );
     }
 
@@ -92,43 +88,6 @@ class PipelineReportService
         }
 
         return $query;
-    }
-
-    private function getComparisonData(ReportFilterData $filters): array
-    {
-        if (! $filters->hasComparison()) {
-            return [];
-        }
-
-        $comparisonQuery = Lead::query()
-            ->whereBetween('created_at', [$filters->comparisonStartDate, $filters->comparisonEndDate]);
-
-        if ($filters->userId) {
-            $comparisonQuery->where('assigned_to', $filters->userId);
-        }
-
-        if (! empty($filters->userIds)) {
-            $comparisonQuery->whereIn('assigned_to', $filters->userIds);
-        }
-
-        if ($filters->leadSource) {
-            $comparisonQuery->where('source', $filters->leadSource);
-        }
-
-        if ($filters->leadPriority) {
-            $comparisonQuery->where('priority', $filters->leadPriority);
-        }
-
-        $wonProjects = (clone $comparisonQuery)->where('status', 'won')->count();
-        $lostProjects = (clone $comparisonQuery)->where('status', 'lost')->count();
-        $winRate = ($wonProjects + $lostProjects) > 0
-            ? ($wonProjects / ($wonProjects + $lostProjects)) * 100
-            : 0;
-
-        return [
-            'totalPipelineValue' => (clone $comparisonQuery)->sum('estimated_revenue'),
-            'winRate' => $winRate,
-        ];
     }
 
     private function calculateAverageSalesCycle(ReportFilterData $filters): int

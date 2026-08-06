@@ -9,8 +9,6 @@ readonly class ReportFilterData
     public function __construct(
         public Carbon $startDate,
         public Carbon $endDate,
-        public ?Carbon $comparisonStartDate = null,
-        public ?Carbon $comparisonEndDate = null,
         public ?int $userId = null,
         public ?int $territoryId = null,
         public ?int $departmentId = null,
@@ -29,23 +27,9 @@ readonly class ReportFilterData
         public array $userIds = [],
     ) {}
 
-    public function hasComparison(): bool
-    {
-        return $this->comparisonStartDate !== null && $this->comparisonEndDate !== null;
-    }
-
     public function getPrimaryDateRangeLabel(): string
     {
         return "{$this->startDate->format('d M Y')} - {$this->endDate->format('d M Y')}";
-    }
-
-    public function getComparisonDateRangeLabel(): string
-    {
-        if (! $this->comparisonStartDate || ! $this->comparisonEndDate) {
-            return '';
-        }
-
-        return "{$this->comparisonStartDate->format('d M Y')} - {$this->comparisonEndDate->format('d M Y')}";
     }
 
     public function toCacheKey(): string
@@ -58,18 +42,9 @@ readonly class ReportFilterData
         $startDate = Carbon::parse($data['start_date'] ?? now()->startOfYear());
         $endDate = Carbon::parse($data['end_date'] ?? now()->endOfYear());
 
-        $comparisonStartDate = isset($data['comparison_start_date'])
-            ? Carbon::parse($data['comparison_start_date'])
-            : null;
-        $comparisonEndDate = isset($data['comparison_end_date'])
-            ? Carbon::parse($data['comparison_end_date'])
-            : null;
-
         return new self(
             startDate: $startDate,
             endDate: $endDate,
-            comparisonStartDate: $comparisonStartDate,
-            comparisonEndDate: $comparisonEndDate,
             userId: $data['user_id'] ?? null,
             territoryId: $data['territory_id'] ?? null,
             departmentId: $data['department_id'] ?? null,

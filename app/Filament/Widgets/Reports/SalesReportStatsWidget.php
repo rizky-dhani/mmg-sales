@@ -28,51 +28,17 @@ class SalesReportStatsWidget extends StatsOverviewWidget
 
         return [
             Stat::make('Total Revenue', $formatter->formatCurrency($data->totalRevenue, 'IDR'))
-                ->description($this->getGrowthDescription($data->getRevenueGrowthPercentage()))
-                ->descriptionIcon($this->getGrowthIcon($data->getRevenueGrowthPercentage()))
-                ->color($this->getGrowthColor($data->getRevenueGrowthPercentage())),
+                ->description('Revenue for selected period'),
 
             Stat::make('Net Sales', $formatter->formatCurrency($data->totalNetSales, 'IDR'))
                 ->description('Total net sales after discounts'),
 
             Stat::make('Total Orders', number_format($data->totalOrders))
-                ->description($this->getGrowthDescription($data->getOrderGrowthPercentage()))
-                ->descriptionIcon($this->getGrowthIcon($data->getOrderGrowthPercentage()))
-                ->color($this->getGrowthColor($data->getOrderGrowthPercentage())),
+                ->description('Orders in selected period'),
 
             Stat::make('Average Order Value', $formatter->formatCurrency($data->averageOrderValue, 'IDR'))
-                ->description($this->getGrowthDescription($data->getAovGrowthPercentage()))
-                ->descriptionIcon($this->getGrowthIcon($data->getAovGrowthPercentage()))
-                ->color($this->getGrowthColor($data->getAovGrowthPercentage())),
+                ->description('Average per order'),
         ];
     }
 
-    private function getGrowthDescription(?float $percentage): string
-    {
-        if ($percentage === null) {
-            return 'No comparison data';
-        }
-
-        $sign = $percentage >= 0 ? '+' : '';
-
-        return "{$sign}".number_format($percentage, 1).'% vs comparison period';
-    }
-
-    private function getGrowthIcon(?float $percentage): string
-    {
-        if ($percentage === null) {
-            return 'heroicon-m-minus';
-        }
-
-        return $percentage >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down';
-    }
-
-    private function getGrowthColor(?float $percentage): string
-    {
-        if ($percentage === null) {
-            return 'gray';
-        }
-
-        return $percentage >= 0 ? 'success' : 'danger';
-    }
 }

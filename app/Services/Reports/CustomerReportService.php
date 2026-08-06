@@ -35,8 +35,6 @@ class CustomerReportService
 
         $averageRevenuePerCustomer = $totalCustomers > 0 ? $totalRevenue / $totalCustomers : 0;
 
-        $comparisonData = $this->getComparisonData($filters);
-
         return new CustomerReportData(
             topCustomers: $this->getTopCustomers($filters),
             revenueByCustomerGroup: $this->getRevenueByCustomerGroup($filters),
@@ -47,8 +45,6 @@ class CustomerReportService
             totalRevenue: $totalRevenue,
             averageRevenuePerCustomer: $averageRevenuePerCustomer,
             monthlyTrend: $this->getMonthlyTrend($filters),
-            comparisonTotalRevenue: $comparisonData['totalRevenue'] ?? null,
-            comparisonTotalCustomers: $comparisonData['totalCustomers'] ?? null,
         );
     }
 
@@ -103,40 +99,6 @@ class CustomerReportService
             ->pluck('end_customer_id');
 
         return $periodCustomerIds->diff($beforePeriodCustomers);
-    }
-
-    private function getComparisonData(ReportFilterData $filters): array
-    {
-        if (! $filters->hasComparison()) {
-            return [];
-        }
-
-        $comparisonQuery = Order::query()
-            ->whereBetween('order_date', [$filters->comparisonStartDate, $filters->comparisonEndDate]);
-
-        if ($filters->userId) {
-            $comparisonQuery->where('created_by', $filters->userId);
-        }
-
-        if (! empty($filters->userIds)) {
-            $comparisonQuery->whereIn('created_by', $filters->userIds);
-        }
-
-        if ($filters->customerId) {
-            $comparisonQuery->where('end_customer_id', $filters->customerId);
-        }
-
-        if ($filters->customerGroupId) {
-            $comparisonQuery->join('customers', 'orders.end_customer_id', '=', 'customers.id')
-                ->where('customers.customer_group_id', $filters->customerGroupId);
-        }
-
-        $customerIds = (clone $comparisonQuery)->distinct()->pluck('end_customer_id')->filter();
-
-        return [
-            'totalRevenue' => (clone $comparisonQuery)->sum('total_amount'),
-            'totalCustomers' => $customerIds->count(),
-        ];
     }
 
     private function getTopCustomers(ReportFilterData $filters): Collection

@@ -65,10 +65,6 @@ class PipelineReportPage extends Page
                                     ->label('End Date')
                                     ->default(now()->endOfYear())
                                     ->required(),
-                                DatePicker::make('comparison_start_date')
-                                    ->label('Comparison Start'),
-                                DatePicker::make('comparison_end_date')
-                                    ->label('Comparison End'),
                             ]),
                     ])
                     ->collapsible(),
@@ -148,8 +144,6 @@ class PipelineReportPage extends Page
 
     protected function getViewData(): array
     {
-        return [
-            'hasComparison' => ReportFilterData::fromArray($this->filters)->hasComparison(),
-        ];
+        return [];
     }
 }

@@ -33,8 +33,6 @@ class ProductReportService
             ->whereBetween('orders.order_date', [$filters->startDate, $filters->endDate])
             ->sum('order_items.quantity');
 
-        $comparisonData = $this->getComparisonData($filters);
-
         return new ProductReportData(
             topItems: $this->getTopItems($filters),
             revenueByPrincipal: $this->getRevenueByPrincipal($filters),
@@ -44,8 +42,6 @@ class ProductReportService
             totalRevenue: $totalRevenue,
             totalDiscount: $totalDiscount,
             monthlyTrend: $this->getMonthlyTrend($filters),
-            comparisonTotalRevenue: $comparisonData['totalRevenue'] ?? null,
-            comparisonTotalQuantity: $comparisonData['totalQuantity'] ?? null,
         );
     }
 
@@ -79,41 +75,6 @@ class ProductReportService
         if ($filters->customerId) {
             $query->where('end_customer_id', $filters->customerId);
         }
-    }
-
-    private function getComparisonData(ReportFilterData $filters): array
-    {
-        if (! $filters->hasComparison()) {
-            return [];
-        }
-
-        $comparisonQuery = Order::query()
-            ->whereBetween('order_date', [$filters->comparisonStartDate, $filters->comparisonEndDate]);
-
-        if ($filters->userId) {
-            $comparisonQuery->where('created_by', $filters->userId);
-        }
-
-        if (! empty($filters->userIds)) {
-            $comparisonQuery->whereIn('created_by', $filters->userIds);
-        }
-
-        if ($filters->principalId) {
-            $comparisonQuery->where('principal_id', $filters->principalId);
-        }
-
-        $quantityQuery = clone $comparisonQuery;
-        $quantityQuery->join('order_items', 'orders.id', '=', 'order_items.order_id')
-            ->selectRaw('SUM(order_items.quantity) as qty');
-
-        if ($filters->itemId) {
-            $quantityQuery->where('order_items.item_id', $filters->itemId);
-        }
-
-        return [
-            'totalRevenue' => (clone $comparisonQuery)->sum('total_amount'),
-            'totalQuantity' => $quantityQuery->first()->qty ?? 0,
-        ];
     }
 
     private function getTopItems(ReportFilterData $filters): Collection
