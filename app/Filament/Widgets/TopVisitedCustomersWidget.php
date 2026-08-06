@@ -15,7 +15,7 @@ class TopVisitedCustomersWidget extends TableWidget
 {
     protected static ?int $sort = 4;
 
-    protected int|string|array $columnSpan = 2;
+    protected int|string|array $columnSpan = 1;
 
     protected static ?string $heading = 'Top Visited Customers';
 
@@ -39,6 +39,8 @@ class TopVisitedCustomersWidget extends TableWidget
                     ->sortable(),
                 Tables\Columns\TextColumn::make('customer.name')
                     ->label('Customer')
+                    ->limit(20)
+                    ->tooltip(fn ($record): string => $record->customer->name ?? '')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('visit_count')
                     ->label('Total Visits')
