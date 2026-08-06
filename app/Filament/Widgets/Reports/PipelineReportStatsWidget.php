@@ -39,10 +39,10 @@ class PipelineReportStatsWidget extends StatsOverviewWidget
                 ->descriptionIcon($this->getWinRateChangeIcon($data->getWinRateChange()))
                 ->color($this->getWinRateChangeColor($data->getWinRateChange())),
             Stat::make('Total Leads', number_format($data->totalProjects))
-                ->description("Won: {$data->wonProjects} | Not Won: {$data->lostProjects}"),
+                ->description("Converted: {$data->wonProjects} | Not Won: {$data->lostProjects}"),
 
-            Stat::make('Total Won', $formatter->formatCurrency($data->wonValue, 'IDR'))
-                ->description("{$data->wonProjects} leads won")
+            Stat::make('Converted', $formatter->formatCurrency($data->wonValue, 'IDR'))
+                ->description("{$data->wonProjects} partnerships established")
                 ->color('success'),
 
             Stat::make('Not Won', $formatter->formatCurrency($data->lostValue, 'IDR'))
@@ -50,7 +50,7 @@ class PipelineReportStatsWidget extends StatsOverviewWidget
                 ->color('danger'),
 
             Stat::make('Average Deal Size', $formatter->formatCurrency($data->averageDealSize, 'IDR'))
-                ->description('Won deals only'),
+                ->description('Converted deals only'),
         ];
     }
 

@@ -29,8 +29,8 @@ class LeadStatusOverview extends BaseWidget
                 ->color('primary')
                 ->url(route('filament.admin.resources.leads.index')),
 
-            Stat::make('Won', $wonCount)
-                ->description('Converted to customers')
+            Stat::make('Converted', $wonCount)
+                ->description('Partnerships established')
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color('success')
                 ->url(route('filament.admin.resources.leads.index', ['tableFilters[status][value]' => 'won'])),
