@@ -41,8 +41,8 @@ class LeadStatusOverview extends BaseWidget
                 ->color('info')
                 ->url(route('filament.admin.resources.leads.index')),
 
-            Stat::make('Lost', $lostCount)
-                ->description('Dropped opportunities')
+            Stat::make('Did Not Convert', $lostCount)
+                ->description('Opportunities learned from')
                 ->descriptionIcon('heroicon-m-x-circle')
                 ->color('danger')
                 ->url(route('filament.admin.resources.leads.index', ['tableFilters[status][value]' => 'lost'])),
