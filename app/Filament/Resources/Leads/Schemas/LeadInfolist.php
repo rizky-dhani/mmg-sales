@@ -65,10 +65,8 @@ class LeadInfolist
                                             ->weight('bold'),
                                         TextEntry::make('name')
                                             ->label('Product'),
-                                        TextEntry::make('sku')
-                                            ->label('SKU'),
                                     ])
-                                    ->columns(3),
+                                    ->columns(2),
                             ]),
 
                         Livewire::make(LeadRevenueComparisonChart::class)
