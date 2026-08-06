@@ -38,15 +38,6 @@ class LeadInfolist
                             ->copyable(),
                         TextEntry::make('phone')
                             ->copyable(),
-                        TextEntry::make('estimated_revenue')
-                            ->label('Expected Revenue')
-                            ->money('IDR'),
-                        TextEntry::make('actual_sales')
-                            ->label('Actual Sales')
-                            ->money('IDR')
-                            ->getStateUsing(fn ($record) => $record->orders->sum('total_amount'))
-                            ->weight('bold')
-                            ->color(fn ($state, $record) => $state >= ($record->estimated_revenue ?? 0) ? 'success' : 'warning'),
                         TextEntry::make('estimated_completion_date')
                             ->label('Expected Finish')
                             ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('M Y')) : '-')
@@ -59,21 +50,40 @@ class LeadInfolist
                             ->label('Created By'),
                     ]),
 
-                Section::make('Suppliers & Products')
+                Grid::make(2)
                     ->columnSpanFull()
                     ->schema([
-                        RepeatableEntry::make('products')
-                            ->label('')
+                        Section::make('Suppliers & Products')
                             ->schema([
-                                TextEntry::make('principal.name')
-                                    ->label('Principal')
-                                    ->weight('bold'),
-                                TextEntry::make('name')
-                                    ->label('Product'),
-                                TextEntry::make('sku')
-                                    ->label('SKU'),
-                            ])
-                            ->columns(3),
+                                RepeatableEntry::make('products')
+                                    ->label('')
+                                    ->schema([
+                                        TextEntry::make('principal.name')
+                                            ->label('Principal')
+                                            ->weight('bold'),
+                                        TextEntry::make('name')
+                                            ->label('Product'),
+                                        TextEntry::make('sku')
+                                            ->label('SKU'),
+                                    ])
+                                    ->columns(3),
+                            ]),
+
+                        Section::make('Estimated Revenue vs Actual Sales')
+                            ->schema([
+                                Grid::make(2)
+                                    ->schema([
+                                        TextEntry::make('estimated_revenue')
+                                            ->label('Estimated Revenue')
+                                            ->money('IDR'),
+                                        TextEntry::make('actual_sales')
+                                            ->label('Actual Sales')
+                                            ->money('IDR')
+                                            ->getStateUsing(fn ($record) => $record->orders->sum('total_amount'))
+                                            ->weight('bold')
+                                            ->color(fn ($state, $record) => $state >= ($record->estimated_revenue ?? 0) ? 'success' : 'warning'),
+                                    ]),
+                            ]),
                     ]),
 
                 Section::make('Activities History')
