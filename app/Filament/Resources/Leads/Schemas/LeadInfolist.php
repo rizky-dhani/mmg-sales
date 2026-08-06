@@ -72,7 +72,7 @@ class LeadInfolist
                             ]),
 
                         Livewire::make(LeadRevenueComparisonChart::class)
-                            ->data(fn () => ['record' => $this->getRecord()]),
+                            ->data(fn ($component) => ['record' => $component->getRecord()]),
                     ]),
 
                 Section::make('Activities History')
