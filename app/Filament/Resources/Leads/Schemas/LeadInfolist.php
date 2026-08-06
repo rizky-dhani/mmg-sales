@@ -5,7 +5,9 @@ namespace App\Filament\Resources\Leads\Schemas;
 use Carbon\Carbon;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
+use App\Filament\Widgets\LeadRevenueComparisonChart;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Livewire;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
@@ -69,21 +71,8 @@ class LeadInfolist
                                     ->columns(3),
                             ]),
 
-                        Section::make('Estimated Revenue vs Actual Sales')
-                            ->schema([
-                                Grid::make(2)
-                                    ->schema([
-                                        TextEntry::make('estimated_revenue')
-                                            ->label('Estimated Revenue')
-                                            ->money('IDR'),
-                                        TextEntry::make('actual_sales')
-                                            ->label('Actual Sales')
-                                            ->money('IDR')
-                                            ->getStateUsing(fn ($record) => $record->orders->sum('total_amount'))
-                                            ->weight('bold')
-                                            ->color(fn ($state, $record) => $state >= ($record->estimated_revenue ?? 0) ? 'success' : 'warning'),
-                                    ]),
-                            ]),
+                        Livewire::make(LeadRevenueComparisonChart::class)
+                            ->data(fn () => ['record' => $this->getRecord()]),
                     ]),
 
                 Section::make('Activities History')
