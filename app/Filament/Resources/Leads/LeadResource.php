@@ -50,6 +50,7 @@ class LeadResource extends Resource
             RelationManagers\CollaboratorsRelationManager::class,
             RelationManagers\ActivitiesRelationManager::class,
             RelationManagers\ActivityCommentsRelationManager::class,
+            RelationManagers\AuditLogRelationManager::class,
         ];
     }
 

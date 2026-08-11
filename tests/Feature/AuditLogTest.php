@@ -59,3 +59,21 @@ it('order resource registers audit log relation manager', function (): void
         App\Filament\Resources\Orders\RelationManagers\AuditLogRelationManager::class
     );
 });
+
+it('lead resource registers audit log relation manager', function (): void
+{
+    expect(App\Filament\Resources\Leads\LeadResource::getRelations())
+        ->toContain(App\Filament\Resources\Leads\RelationManagers\AuditLogRelationManager::class);
+});
+
+it('customer resource registers audit log relation manager', function (): void
+{
+    expect(App\Filament\Resources\Customers\CustomerResource::getRelations())
+        ->toContain(App\Filament\Resources\Customers\RelationManagers\AuditLogRelationManager::class);
+});
+
+it('product resource registers audit log relation manager', function (): void
+{
+    expect(App\Filament\Resources\Products\ProductResource::getRelations())
+        ->toContain(App\Filament\Resources\Products\RelationManagers\AuditLogRelationManager::class);
+});
