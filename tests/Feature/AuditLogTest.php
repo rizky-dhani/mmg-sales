@@ -77,3 +77,16 @@ it('product resource registers audit log relation manager', function (): void
     expect(App\Filament\Resources\Products\ProductResource::getRelations())
         ->toContain(App\Filament\Resources\Products\RelationManagers\AuditLogRelationManager::class);
 });
+
+it('audit relation manager resolves the activity log relationship', function (): void
+{
+    Spatie\Activitylog\Models\Activity::query()->delete();
+
+    $order = App\Models\Order::factory()->create();
+    $order->update(['total_amount' => 999]);
+
+    $auditActivities = $order->activitiesAsSubject()->get();
+
+    expect($auditActivities)->toHaveCount(2)
+        ->and($auditActivities->pluck('event'))->toContain('updated');
+});

@@ -8,7 +8,7 @@ use Filament\Tables\Columns\TextColumn;
 
 class AuditLogRelationManager extends RelationManager
 {
-    protected static string $relationship = 'activities';
+    protected static string $relationship = 'activitiesAsSubject';
 
     public function table(Table $table): Table
     {
