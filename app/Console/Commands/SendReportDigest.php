@@ -9,6 +9,7 @@ use App\Mail\ReportDigestMail;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 
 class SendReportDigest extends Command
@@ -37,18 +38,24 @@ class SendReportDigest extends Command
         foreach ($users as $user) {
             $filterData = $this->filterForUser($user, $role);
 
-            $filename = 'digest_'.strtolower(str_replace(' ', '_', $role)).'_'.$user->id.'_'.now()->format('Ymd_His').'.xlsx';
-            $diskPath = 'reports/'.$filename;
+            $slug = strtolower(str_replace(' ', '_', $role));
+            $timestamp = now()->format('Ymd_His');
 
-            Excel::store(new SalesReportExport($filterData), $diskPath, 'local');
-            Excel::store(new PipelineReportExport($filterData), $diskPath, 'local');
+            $salesFilename = 'digest_sales_'.$slug.'_'.$user->id.'_'.$timestamp.'.xlsx';
+            $pipelineFilename = 'digest_pipeline_'.$slug.'_'.$user->id.'_'.$timestamp.'.xlsx';
 
-            $absolutePath = storage_path('app/'.$diskPath);
+            Excel::store(new SalesReportExport($filterData), 'reports/'.$salesFilename, 'local');
+            Excel::store(new PipelineReportExport($filterData), 'reports/'.$pipelineFilename, 'local');
+
+            $attachmentPaths = [
+                Storage::disk('local')->path('reports/'.$salesFilename),
+                Storage::disk('local')->path('reports/'.$pipelineFilename),
+            ];
 
             Mail::to($user->email)->send(new ReportDigestMail(
                 period: $period,
                 userName: $user->name,
-                attachmentPath: $absolutePath,
+                attachmentPaths: $attachmentPaths,
             ));
 
             $sent++;

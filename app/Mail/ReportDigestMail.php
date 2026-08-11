@@ -16,7 +16,7 @@ class ReportDigestMail extends Mailable
     public function __construct(
         public string $period,
         public string $userName,
-        public ?string $attachmentPath = null,
+        public array $attachmentPaths = [],
     ) {
     }
 
@@ -36,12 +36,14 @@ class ReportDigestMail extends Mailable
 
     public function attachments(): array
     {
-        if ($this->attachmentPath === null || ! file_exists($this->attachmentPath)) {
-            return [];
+        $attachments = [];
+
+        foreach ($this->attachmentPaths as $path) {
+            if (file_exists($path)) {
+                $attachments[] = Attachment::fromPath($path);
+            }
         }
 
-        return [
-            Attachment::fromPath($this->attachmentPath),
-        ];
+        return $attachments;
     }
 }

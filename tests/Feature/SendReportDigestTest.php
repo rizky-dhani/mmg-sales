@@ -22,7 +22,7 @@ it('sends digest to users of given role', function (): void
         ->assertSuccessful();
 
     Mail::assertSent(ReportDigestMail::class, 1);
-    Mail::assertSent(ReportDigestMail::class, fn (ReportDigestMail $m) => $m->hasTo($director->email));
+    Mail::assertSent(ReportDigestMail::class, fn (ReportDigestMail $m) => $m->hasTo($director->email) && count($m->attachments()) === 2);
 });
 
 it('schedules reports:send-digest weekly on monday 07:00', function (): void

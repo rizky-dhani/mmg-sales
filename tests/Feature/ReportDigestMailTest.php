@@ -15,7 +15,7 @@ it('renders report digest mailable', function (): void
     Mail::to($user->email)->send(new ReportDigestMail(
         period: 'weekly',
         userName: $user->name,
-        attachmentPath: null,
+        attachmentPaths: [],
     ));
 
     Mail::assertSent(ReportDigestMail::class, 1);
