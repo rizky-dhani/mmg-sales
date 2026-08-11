@@ -50,3 +50,12 @@ it('logs customer changes', function (): void
         ->where('subject_id', $customer->id)
         ->exists())->toBeTrue();
 });
+
+it('order resource registers audit log relation manager', function (): void
+{
+    $relationManagers = App\Filament\Resources\Orders\OrderResource::getRelations();
+
+    expect($relationManagers)->toContain(
+        App\Filament\Resources\Orders\RelationManagers\AuditLogRelationManager::class
+    );
+});

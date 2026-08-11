@@ -46,6 +46,7 @@ class OrderResource extends Resource
     {
         return [
             RelationManagers\PaymentStatusRelationManager::class,
+            RelationManagers\AuditLogRelationManager::class,
         ];
     }
 
