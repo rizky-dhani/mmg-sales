@@ -9,3 +9,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('backup:run')->dailyAt('02:00');
+
+Schedule::command('reports:send-digest --period=weekly --role=Management Director')->weeklyOn(1, '07:00');
