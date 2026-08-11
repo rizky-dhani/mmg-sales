@@ -24,3 +24,29 @@ it('logs an update event on order change', function (): void
         ->and($log->event)->toBe('updated')
         ->and((int) $log->attribute_changes->get('attributes')['total_amount'])->toBe(999);
 });
+
+it('logs lead changes', function (): void
+{
+    Spatie\Activitylog\Models\Activity::query()->delete();
+
+    $lead = App\Models\Lead::factory()->create();
+    $lead->update(['status' => 'qualified']);
+
+    expect(Spatie\Activitylog\Models\Activity::query()
+        ->where('subject_type', App\Models\Lead::class)
+        ->where('subject_id', $lead->id)
+        ->exists())->toBeTrue();
+});
+
+it('logs customer changes', function (): void
+{
+    Spatie\Activitylog\Models\Activity::query()->delete();
+
+    $customer = App\Models\Customer::factory()->create();
+    $customer->update(['name' => 'Changed Name']);
+
+    expect(Spatie\Activitylog\Models\Activity::query()
+        ->where('subject_type', App\Models\Customer::class)
+        ->where('subject_id', $customer->id)
+        ->exists())->toBeTrue();
+});
