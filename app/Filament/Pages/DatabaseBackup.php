@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\Backup;
+use App\Services\DatabaseBackupService;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Notifications\Notification;
@@ -13,7 +14,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\Process;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DatabaseBackup extends Page implements HasTable
@@ -48,139 +48,23 @@ class DatabaseBackup extends Page implements HasTable
                 ->modalHeading('Run Database Backup')
                 ->modalDescription('This will dump the database and save a .sql file to storage. Continue?')
                 ->action(function (): void {
-                    $dumpBinary = $this->findDumpBinary();
+                    $backup = app(DatabaseBackupService::class)->run(auth()->id());
 
-                    if ($dumpBinary === null) {
+                    if ($backup === null) {
                         Notification::make()
-                            ->title('Database dump tool not found')
-                            ->body('Install mysql-client or mariadb-client (e.g., apt install mariadb-client).')
+                            ->title('Backup failed — dump binary not found or command errored')
                             ->danger()
                             ->send();
 
                         return;
                     }
 
-                    $filename = 'mmg_sales-'.now()->format('Y-m-d-H-i-s').'.sql';
-                    $dir = storage_path('backups/db');
-
-                    if (! is_dir($dir)) {
-                        mkdir($dir, 0755, true);
-                    }
-
-                    $path = $dir.'/'.$filename;
-
-                    $connection = config('database.default');
-                    $user = config("database.connections.{$connection}.username");
-                    $password = config("database.connections.{$connection}.password");
-                    $host = config("database.connections.{$connection}.host");
-                    $port = config("database.connections.{$connection}.port");
-                    $database = config("database.connections.{$connection}.database");
-
-                    $command = "{$dumpBinary} --user={$user} --password=".escapeshellarg($password)." --host={$host} --port={$port}";
-
-                    // MySQL 8.0+ mysqldump queries information_schema.COLUMN_STATISTICS
-                    // which doesn't exist in MariaDB — probe version to decide
-                    if (! $this->isMariaDump($dumpBinary)) {
-                        $command .= ' --column-statistics=0';
-                    }
-
-                    $command .= " {$database} > {$path}";
-
-                    $result = Process::run($command);
-
-                    if ($result->successful()) {
-                        Backup::create([
-                            'filename' => $filename,
-                            'size' => file_exists($path) ? filesize($path) : 0,
-                            'created_by' => auth()->id(),
-                        ]);
-
-                        Notification::make()
-                            ->title('Backup completed successfully')
-                            ->body("Saved as {$filename}")
-                            ->success()
-                            ->send();
-                    } else {
-                        Notification::make()
-                            ->title('Backup failed')
-                            ->body($result->errorOutput())
-                            ->danger()
-                            ->send();
-                    }
+                    Notification::make()
+                        ->title('Backup created successfully')
+                        ->success()
+                        ->send();
                 }),
         ];
-    }
-
-    private function findDumpBinary(): ?string
-    {
-        if (PHP_OS_FAMILY === 'Windows') {
-            // Try `where` command (Windows equivalent of `which`)
-            foreach (['mysqldump.exe', 'mariadb-dump.exe', 'mysqldump', 'mariadb-dump'] as $binary) {
-                $result = Process::run("where {$binary} 2>nul");
-
-                if ($result->successful() && ($path = trim(explode("\n", $result->output())[0])) !== '') {
-                    return $path;
-                }
-            }
-
-            // Search in Laragon MySQL/MariaDB directories
-            $searchPatterns = [
-                'C:/laragon/bin/mariadb/mariadb*/bin/mariadb-dump.exe',
-                'C:/laragon/bin/mysql/mysql*/bin/mysqldump.exe',
-            ];
-
-            foreach ($searchPatterns as $pattern) {
-                $matches = glob($pattern);
-
-                if (! empty($matches)) {
-                    return $matches[0];
-                }
-            }
-
-            return null;
-        }
-
-        $candidates = ['mariadb-dump', 'mysqldump'];
-
-        // Check using `which` for binaries on PATH
-        foreach ($candidates as $binary) {
-            $result = Process::run("which {$binary} 2>/dev/null");
-
-            if ($result->successful() && ($path = trim($result->output())) !== '') {
-                return $path;
-            }
-        }
-
-        // Fallback: common installation paths
-        $commonPaths = [
-            '/usr/bin/mysqldump',
-            '/usr/local/bin/mysqldump',
-            '/usr/bin/mariadb-dump',
-            '/usr/local/bin/mariadb-dump',
-        ];
-
-        foreach ($commonPaths as $path) {
-            if (file_exists($path) && is_executable($path)) {
-                return $path;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Detect whether the dump binary is MariaDB (which doesn't support --column-statistics).
-     */
-    private function isMariaDump(string $binary): bool
-    {
-        $suffix = PHP_OS_FAMILY === 'Windows' ? ' 2>nul' : ' 2>/dev/null';
-        $result = Process::run("\"{$binary}\" --version{$suffix}");
-
-        if (! $result->successful()) {
-            return false;
-        }
-
-        return str_contains($result->output(), 'MariaDB');
     }
 
     public function table(Table $table): Table
