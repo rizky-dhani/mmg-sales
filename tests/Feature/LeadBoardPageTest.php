@@ -4,6 +4,7 @@ use App\Filament\Resources\Leads\Pages\ListLeads;
 use App\Models\Lead;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
+use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 
@@ -47,4 +48,12 @@ it('keeps visibility scope: sales staff only sees own leads on board', function 
 
     expect($boardRecords)->toHaveCount(1)
         ->and($boardRecords->first()->created_by)->toBe($this->user->id);
+});
+
+it('panel pages no longer register hidden LeadBoard', function (): void
+{
+    $panel = Filament::getPanel('admin');
+
+    expect($panel->getPages())
+        ->not->toContain(App\Filament\Pages\LeadBoard::class);
 });
