@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Models\Concerns\LogsActivity;
+use Spatie\Activitylog\Support\LogOptions;
 
 class Order extends Model
 {
     use HasFactory;
+    use LogsActivity;
 
     protected $fillable = [
         'tahun',
@@ -163,5 +166,17 @@ class Order extends Model
     public function getRouteKeyName(): string
     {
         return 'order_number';
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'order_number', 'order_date', 'total_amount', 'net_sales_total',
+                'expected_delivery_date', 'actual_delivery_date',
+                'shipping_address', 'billing_address', 'payment_method', 'notes',
+            ])
+            ->logOnlyDirty()
+            ->dontLogIfAttributesChangedOnly(['updated_at']);
     }
 }
