@@ -3,8 +3,8 @@
 namespace App\Filament\Resources\ActivityLogs\Tables;
 
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\DateRangeFilter;
 use Filament\Tables\Table;
 use Spatie\Activitylog\Models\Activity;
 
@@ -90,8 +90,21 @@ class ActivityLogsTable
                         'deleted' => 'Deleted',
                     ]),
 
-                DateRangeFilter::make('created_at')
-                    ->label('Date Range'),
+                Filter::make('created_at')
+                    ->label('Date Range')
+                    ->form([
+                        \Filament\Forms\Components\DateTimePicker::make('created_from')
+                            ->label('From')
+                            ->native(false),
+                        \Filament\Forms\Components\DateTimePicker::make('created_until')
+                            ->label('Until')
+                            ->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when($data['created_from'], fn (Builder $query, $date) => $query->where('created_at', '>=', $date))
+                            ->when($data['created_until'], fn (Builder $query, $date) => $query->where('created_at', '<=', $date));
+                    }),
             ])
             ->defaultSort('created_at', 'desc');
     }
