@@ -10,6 +10,8 @@ class LeadStatusOverview extends BaseWidget
 {
     protected int|string|array $columnSpan = 'full';
 
+    protected int|array|null $columns = 4;
+
     public static function canView(): bool
     {
         return true;
