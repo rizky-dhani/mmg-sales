@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\LeadStatusChart;
 use App\Filament\Widgets\LeadStatusOverview;
 use App\Filament\Widgets\TopSalesRepresentativeVisitsWidget;
 use App\Filament\Widgets\TopVisitedCustomersWidget;
@@ -19,6 +20,7 @@ class Dashboard extends BaseDashboard
     {
         return [
             LeadStatusOverview::class,
+            LeadStatusChart::class,
             TopVisitedCustomersWidget::class,
             TopSalesRepresentativeVisitsWidget::class,
         ];

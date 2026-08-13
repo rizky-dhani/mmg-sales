@@ -68,22 +68,10 @@ class LeadRevenueComparisonChart extends ChartWidget
                     'display' => true,
                     'position' => 'top',
                 ],
-                'tooltip' => [
-                    'callbacks' => [
-                        'label' => 'function(context) {
-                            return context.dataset.label + ": " + new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0}).format(context.raw);
-                        }',
-                    ],
-                ],
             ],
             'scales' => [
                 'y' => [
                     'beginAtZero' => true,
-                    'ticks' => [
-                        'callback' => 'function(value) {
-                            return new Intl.NumberFormat("id-ID", {style: "currency", currency: "IDR", minimumFractionDigits: 0}).format(value);
-                        }',
-                    ],
                 ],
             ],
         ];

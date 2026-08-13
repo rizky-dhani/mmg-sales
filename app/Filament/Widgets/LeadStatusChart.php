@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Filament\Widgets;
+
+use App\Models\Lead;
+use Filament\Widgets\ChartWidget;
+
+class LeadStatusChart extends ChartWidget
+{
+    protected ?string $heading = 'Lead Status Distribution';
+
+    protected static bool $isLazy = false;
+
+    protected static ?string $height = '200px';
+
+    public static function canView(): bool
+    {
+        return true;
+    }
+
+    protected function getData(): array
+    {
+        $statuses = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
+        $counts = Lead::whereIn('status', $statuses)
+            ->selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        $labels = ['New', 'Contacted', 'Qualified', 'Proposal', 'Negotiation', 'Converted', 'Not Converted'];
+        $data = array_map(fn ($s) => $counts[$s] ?? 0, $statuses);
+
+        return [
+            'datasets' => [
+                [
+                    'label' => 'Leads',
+                    'data' => $data,
+                    'backgroundColor' => [
+                        'rgb(107, 114, 128)',  // gray — new
+                        'rgb(14, 165, 233)',   // info — contacted
+                        'rgb(168, 85, 247)',   // purple — qualified
+                        'rgb(59, 130, 246)',   // blue — proposal
+                        'rgb(234, 179, 8)',    // warning — negotiation
+                        'rgb(34, 197, 94)',    // success — converted
+                        'rgb(239, 68, 68)',    // danger — not converted
+                    ],
+                    'borderWidth' => 0,
+                ],
+            ],
+            'labels' => $labels,
+        ];
+    }
+
+    protected function getType(): string
+    {
+        return 'bar';
+    }
+
+    protected function getOptions(): array
+    {
+        return [
+            'responsive' => true,
+            'maintainAspectRatio' => false,
+            'plugins' => [
+                'legend' => [
+                    'display' => true,
+                    'position' => 'right',
+                ],
+            ],
+        ];
+    }
+}
