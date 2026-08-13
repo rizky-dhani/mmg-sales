@@ -2,12 +2,16 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Traits\HasVisibilityScope;
 use App\Models\Lead;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Database\Eloquent\Builder;
 
 class LeadStatusOverview extends BaseWidget
 {
+    use HasVisibilityScope;
+
     protected int|string|array $columnSpan = 'full';
 
     protected int|array|null $columns = 4;
@@ -19,14 +23,26 @@ class LeadStatusOverview extends BaseWidget
 
     protected function getStats(): array
     {
-        $totalCount = Lead::count();
-        $newCount = Lead::where('status', 'new')->count();
-        $contactedCount = Lead::where('status', 'contacted')->count();
-        $inProgressCount = Lead::whereNotIn('status', ['new', 'won', 'lost'])->count();
-        $proposalCount = Lead::where('status', 'proposal')->count();
-        $negotiationCount = Lead::where('status', 'negotiation')->count();
-        $wonCount = Lead::where('status', 'won')->count();
-        $lostCount = Lead::where('status', 'lost')->count();
+        $user = auth()->user();
+
+        $baseQuery = Lead::query();
+
+        // Apply role-based visibility: staff sees own, managers see subordinates, etc.
+        self::applyVisibilityScope($baseQuery, 'created_by');
+
+        // Include leads where user is a collaborator (skip for Super Admin)
+        if ($user && ! $user->hasRole('Super Admin')) {
+            $baseQuery->orWhereHas('collaborators', fn (Builder $q) => $q->where('users.id', $user->id));
+        }
+
+        $totalCount = (clone $baseQuery)->count();
+        $newCount = (clone $baseQuery)->where('status', 'new')->count();
+        $contactedCount = (clone $baseQuery)->where('status', 'contacted')->count();
+        $inProgressCount = (clone $baseQuery)->whereNotIn('status', ['new', 'won', 'lost'])->count();
+        $proposalCount = (clone $baseQuery)->where('status', 'proposal')->count();
+        $negotiationCount = (clone $baseQuery)->where('status', 'negotiation')->count();
+        $wonCount = (clone $baseQuery)->where('status', 'won')->count();
+        $lostCount = (clone $baseQuery)->where('status', 'lost')->count();
 
         return [
             Stat::make('New', $newCount)

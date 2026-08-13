@@ -42,7 +42,9 @@ class OrdersTable
                 TextColumn::make('customer.name')
                     ->label('End Customer')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->limit(25)
+                    ->tooltip(fn ($state) => $state),
 
                 TextColumn::make('net_sales_total')
                     ->label('Net Sales')

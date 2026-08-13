@@ -2,11 +2,15 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Traits\HasVisibilityScope;
 use App\Models\Lead;
 use Filament\Widgets\ChartWidget;
+use Illuminate\Database\Eloquent\Builder;
 
 class LeadStatusChart extends ChartWidget
 {
+    use HasVisibilityScope;
+
     protected ?string $heading = 'Lead Status Distribution';
 
     protected static bool $isLazy = false;
@@ -20,8 +24,19 @@ class LeadStatusChart extends ChartWidget
 
     protected function getData(): array
     {
+        $user = auth()->user();
+
+        $baseQuery = Lead::query();
+
+        self::applyVisibilityScope($baseQuery, 'created_by');
+
+        if ($user && ! $user->hasRole('Super Admin')) {
+            $baseQuery->orWhereHas('collaborators', fn (Builder $q) => $q->where('users.id', $user->id));
+        }
+
         $statuses = ['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'won', 'lost'];
-        $counts = Lead::whereIn('status', $statuses)
+        $counts = (clone $baseQuery)
+            ->whereIn('status', $statuses)
             ->selectRaw('status, COUNT(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status')

@@ -21,13 +21,13 @@ class KanbanLeads extends BoardPage
 {
     use HasVisibilityScope;
 
-    protected static ?string $navigationLabel = 'Leads';
+    protected static ?string $navigationLabel = 'Kanban';
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedLightBulb;
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';
 
-    protected static ?string $navigationParentItem = LeadResource::class;
+    protected static ?string $navigationParentItem = 'Leads';
 
     protected static ?int $navigationSort = 1;
 
