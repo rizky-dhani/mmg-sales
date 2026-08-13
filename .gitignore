@@ -42,3 +42,6 @@ openspec
 # Graphify outputs
 graphify-out/
 /.superpowers
+.omp/
+TODO.md
+mmg-feedback-*.md
