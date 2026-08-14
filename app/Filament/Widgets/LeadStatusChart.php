@@ -44,6 +44,15 @@ class LeadStatusChart extends ChartWidget
 
         $labels = ['New', 'Contacted', 'Qualified', 'Proposal', 'Negotiation', 'Converted', 'Not Converted'];
         $data = array_map(fn ($s) => $counts[$s] ?? 0, $statuses);
+        $total = array_sum($data);
+
+        $labels = array_map(
+            fn ($label, $count) => $total > 0
+                ? "{$label} ({$count} | " . round($count / $total * 100) . '%)'
+                : $label,
+            $labels,
+            $data,
+        );
 
         return [
             'datasets' => [
