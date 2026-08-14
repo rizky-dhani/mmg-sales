@@ -23,11 +23,9 @@ class KanbanLeads extends BoardPage
 
     protected static ?string $navigationLabel = 'Lead Board';
 
-    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedLightBulb;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedViewColumns;
 
     protected static string|\UnitEnum|null $navigationGroup = 'CRM';
-
-    protected static ?string $navigationParentItem = 'Leads';
 
     protected static ?int $navigationSort = 1;
 
