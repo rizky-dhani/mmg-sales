@@ -29,11 +29,11 @@ return new class extends Migration
 
         // Management roles
         $managementRoles = [
-            'Director - Management',
-            'Manager - Sales',
-            'Manager - Marketing',
-            'Regional Sales Manager - Sales',
-            'Area Sales Manager - Sales',
+            'Management Director',
+            'Sales Manager',
+            'Marketing Manager',
+            'Sales Regional Manager',
+            'Sales Area Manager',
         ];
 
         foreach ($managementRoles as $roleName) {
