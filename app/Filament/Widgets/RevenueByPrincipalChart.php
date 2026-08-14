@@ -66,6 +66,7 @@ class RevenueByPrincipalChart extends ChartWidget
         return [
             'datasets' => [
                 [
+                    'label' => 'Revenue',
                     'data' => $values,
                     'backgroundColor' => array_slice($colors, 0, count($values)),
                     'borderWidth' => 0,
@@ -77,7 +78,7 @@ class RevenueByPrincipalChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'doughnut';
+        return 'bar';
     }
 
     protected function getOptions(): array
@@ -87,8 +88,13 @@ class RevenueByPrincipalChart extends ChartWidget
             'maintainAspectRatio' => false,
             'plugins' => [
                 'legend' => [
-                    'display' => true,
-                    'position' => 'right',
+                    'display' => false,
+                ],
+            ],
+            'indexAxis' => 'y',
+            'scales' => [
+                'x' => [
+                    'beginAtZero' => true,
                 ],
             ],
         ];
