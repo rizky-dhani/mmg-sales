@@ -24,14 +24,14 @@ class ActivityObserver
         if ($lead->status === 'new') {
             // New -> Contacted
             $lead->status = 'contacted';
-        } elseif ($activity->outcome === 'Not Interested') {
+        } elseif ($activity->outcome === 'Not Interested' || in_array(strtolower($activity->outcome), ['tidak tertarik', 'batal', 'gagal'])) {
             // Hard Stop -> Lost
             $lead->status = 'lost';
             $lead->converted_at = now();
-        } elseif ($lead->status === 'contacted' && in_array(strtolower($activity->type), ['presentation', 'demo', 'meeting'])) {
-            // Contacted -> Qualified
+        } elseif ($lead->status === 'contacted' && (str_contains(strtolower($activity->type), 'presentation') || str_contains(strtolower($activity->type), 'demo') || str_contains(strtolower($activity->type), 'meeting'))) {
+            // Contacted -> Qualified (presentation, demo, in-person meeting, online meeting)
             $lead->status = 'qualified';
-        } elseif (in_array($lead->status, ['contacted', 'qualified']) && (str_contains(strtolower($activity->subject), 'proposal') || str_contains(strtolower($activity->subject), 'quote') || str_contains(strtolower($activity->subject), 'penawaran'))) {
+        } elseif (in_array($lead->status, ['contacted', 'qualified']) && (str_contains(strtolower($activity->subject), 'proposal') || str_contains(strtolower($activity->subject), 'quote') || str_contains(strtolower($activity->subject), 'kuotasi') || str_contains(strtolower($activity->subject), 'penawaran'))) {
             // Contacted/Qualified -> Proposal (if a proposal/quote/penawaran is sent)
             $lead->status = 'proposal';
         }

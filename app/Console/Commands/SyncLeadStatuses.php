@@ -62,7 +62,8 @@ class SyncLeadStatuses extends Command
 
         foreach ($activities as $activity) {
             // Hard stop
-            if ($activity->outcome === 'Not Interested') {
+            $outcome = strtolower($activity->outcome ?? '');
+            if ($activity->outcome === 'Not Interested' || in_array($outcome, ['tidak tertarik', 'batal', 'gagal'])) {
                 return 'lost';
             }
 
@@ -71,15 +72,18 @@ class SyncLeadStatuses extends Command
                 $status = 'contacted';
             }
 
-            // contacted → qualified (meeting/presentation/demo)
-            if ($status === 'contacted' && in_array(strtolower($activity->type), ['presentation', 'demo', 'in-person meeting'])) {
-                $status = 'qualified';
+            // contacted → qualified (meeting/presentation/demo — str_contains for "In-person Meeting", "Online Meeting")
+            if ($status === 'contacted') {
+                $type = strtolower($activity->type ?? '');
+                if (str_contains($type, 'presentation') || str_contains($type, 'demo') || str_contains($type, 'meeting')) {
+                    $status = 'qualified';
+                }
             }
 
             // contacted/qualified → proposal (subject match)
             if (in_array($status, ['contacted', 'qualified'])) {
                 $subject = strtolower($activity->subject ?? '');
-                if (str_contains($subject, 'proposal') || str_contains($subject, 'quote') || str_contains($subject, 'penawaran')) {
+                if (str_contains($subject, 'proposal') || str_contains($subject, 'quote') || str_contains($subject, 'kuotasi') || str_contains($subject, 'penawaran')) {
                     $status = 'proposal';
                 }
             }
