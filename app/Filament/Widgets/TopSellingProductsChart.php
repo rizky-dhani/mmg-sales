@@ -21,7 +21,13 @@ class TopSellingProductsChart extends ChartWidget
 
     public static function canView(): bool
     {
-        return true;
+        $user = auth()->user();
+
+        if (! $user) {
+            return false;
+        }
+
+        return $user->hasRole('Super Admin') || $user->hasPermissionTo('view_top_selling_products_widget');
     }
 
     protected function getData(): array

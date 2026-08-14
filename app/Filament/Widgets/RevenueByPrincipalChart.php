@@ -21,7 +21,13 @@ class RevenueByPrincipalChart extends ChartWidget
 
     public static function canView(): bool
     {
-        return true;
+        $user = auth()->user();
+
+        if (! $user) {
+            return false;
+        }
+
+        return $user->hasRole('Super Admin') || $user->hasPermissionTo('view_principal_revenue_widget');
     }
 
     protected function getData(): array
