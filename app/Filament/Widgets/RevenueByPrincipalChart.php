@@ -33,9 +33,10 @@ class RevenueByPrincipalChart extends ChartWidget
         self::applyVisibilityScope($baseQuery, 'created_by');
 
         $data = (clone $baseQuery)
-            ->where('order_date', '>=', now()->subMonths(11)->startOfMonth())
-            ->join('principals', 'orders.principal_id', '=', 'principals.id')
-            ->selectRaw('principals.name as principal_name, SUM(orders.total_amount) as total')
+            ->where('orders.order_date', '>=', now()->subMonths(11)->startOfMonth())
+            ->join('order_items', 'orders.id', '=', 'order_items.order_id')
+            ->join('principals', 'order_items.principal_id', '=', 'principals.id')
+            ->selectRaw('principals.name as principal_name, SUM(order_items.subtotal) as total')
             ->groupBy('principals.name')
             ->orderByDesc('total')
             ->limit(8)
