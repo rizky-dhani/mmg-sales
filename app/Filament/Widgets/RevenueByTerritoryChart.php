@@ -21,7 +21,18 @@ class RevenueByTerritoryChart extends ChartWidget
 
     public static function canView(): bool
     {
-        return true;
+        $user = auth()->user();
+
+        if (! $user) {
+            return false;
+        }
+
+        if ($user->hasRole('Super Admin')) {
+            return true;
+        }
+
+        // Hide for Sales department
+        return ! $user->roles->contains(fn ($role) => $role->department?->name === 'Sales');
     }
 
     protected function getData(): array
