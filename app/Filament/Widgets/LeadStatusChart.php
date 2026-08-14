@@ -11,7 +11,7 @@ class LeadStatusChart extends ChartWidget
 {
     use HasVisibilityScope;
 
-    protected ?string $heading = 'Lead Status Distribution';
+    protected ?string $heading = 'Lead Status';
 
     protected static bool $isLazy = false;
 
@@ -68,7 +68,7 @@ class LeadStatusChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'bar';
+        return 'doughnut';
     }
 
     protected function getOptions(): array
