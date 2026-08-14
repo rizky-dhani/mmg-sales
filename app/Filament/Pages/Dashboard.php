@@ -3,6 +3,10 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Widgets\LeadStatusChart;
+use App\Filament\Widgets\MonthlyRevenueTrendChart;
+use App\Filament\Widgets\RevenueByPrincipalChart;
+use App\Filament\Widgets\RevenueByTerritoryChart;
+use App\Filament\Widgets\TopSellingProductsChart;
 use App\Filament\Widgets\TopSalesRepresentativeVisitsWidget;
 use App\Filament\Widgets\TopVisitedCustomersWidget;
 use Filament\Pages\Dashboard as BaseDashboard;
@@ -19,6 +23,10 @@ class Dashboard extends BaseDashboard
     {
         return [
             LeadStatusChart::class,
+            MonthlyRevenueTrendChart::class,
+            RevenueByPrincipalChart::class,
+            TopSellingProductsChart::class,
+            RevenueByTerritoryChart::class,
             TopVisitedCustomersWidget::class,
             TopSalesRepresentativeVisitsWidget::class,
         ];
