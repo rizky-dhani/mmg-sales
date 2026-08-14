@@ -25,6 +25,11 @@ class DistributorResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->can('view_any_distributor');
+    }
+
     public static function form(Schema $schema): Schema
     {
         return DistributorForm::configure($schema);
