@@ -21,7 +21,7 @@ class KanbanLeads extends BoardPage
 {
     use HasVisibilityScope;
 
-    protected static ?string $navigationLabel = 'Kanban';
+    protected static ?string $navigationLabel = 'Lead Board';
 
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedLightBulb;
 
@@ -40,33 +40,11 @@ class KanbanLeads extends BoardPage
             ->positionIdentifier('position')
             ->cardSchema(fn (Schema $schema) => $schema
                 ->components([
-                    TextEntry::make('title')
-                        ->label('')
-                        ->weight('bold')
-                        ->size(TextSize::Medium)
-                        ->placeholder('Untitled Lead')
-                        ->url(fn (Lead $record) => route('filament.admin.resources.leads.edit', $record)),
-
                     TextEntry::make('customer_name')
                         ->label('')
                         ->size(TextSize::Small)
                         ->icon('heroicon-m-building-office')
                         ->color('gray'),
-
-                    TextEntry::make('status')
-                        ->label('')
-                        ->badge()
-                        ->formatStateUsing(fn (string $state): string => ucfirst($state))
-                        ->color(fn (string $state): string => match ($state) {
-                            'new' => 'gray',
-                            'contacted' => 'info',
-                            'qualified' => 'warning',
-                            'proposal' => 'info',
-                            'negotiation' => 'primary',
-                            'won' => 'success',
-                            'lost' => 'danger',
-                            default => 'gray',
-                        }),
 
                     Group::make([
                         TextEntry::make('assignedUser.name')
