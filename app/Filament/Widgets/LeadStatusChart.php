@@ -15,7 +15,7 @@ class LeadStatusChart extends ChartWidget
 
     protected static bool $isLazy = false;
 
-    protected static ?string $height = '200px';
+    protected static ?string $height = '150px';
 
     public static function canView(): bool
     {
