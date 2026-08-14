@@ -31,6 +31,11 @@ class KanbanLeads extends BoardPage
 
     protected static ?int $navigationSort = 1;
 
+    public function getHeading(): string
+    {
+        return 'Lead Board';
+    }
+
     public function board(Board $board): Board
     {
         return $board
