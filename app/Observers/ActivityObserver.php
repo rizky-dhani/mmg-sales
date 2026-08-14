@@ -31,8 +31,8 @@ class ActivityObserver
         } elseif ($lead->status === 'contacted' && in_array(strtolower($activity->type), ['presentation', 'demo', 'meeting'])) {
             // Contacted -> Qualified
             $lead->status = 'qualified';
-        } elseif (in_array($lead->status, ['contacted', 'qualified']) && (str_contains(strtolower($activity->subject), 'proposal') || str_contains(strtolower($activity->subject), 'quote'))) {
-            // Contacted/Qualified -> Proposal (if a proposal is sent)
+        } elseif (in_array($lead->status, ['contacted', 'qualified']) && (str_contains(strtolower($activity->subject), 'proposal') || str_contains(strtolower($activity->subject), 'quote') || str_contains(strtolower($activity->subject), 'penawaran'))) {
+            // Contacted/Qualified -> Proposal (if a proposal/quote/penawaran is sent)
             $lead->status = 'proposal';
         }
 
