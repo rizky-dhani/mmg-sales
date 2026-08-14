@@ -27,12 +27,7 @@ class RevenueByTerritoryChart extends ChartWidget
             return false;
         }
 
-        if ($user->hasRole('Super Admin')) {
-            return true;
-        }
-
-        // Hide for Sales department
-        return ! $user->roles->contains(fn ($role) => $role->department?->name === 'Sales');
+        return $user->hasRole('Super Admin') || $user->hasPermissionTo('view_sales_reports');
     }
 
     protected function getData(): array
