@@ -4,7 +4,6 @@ namespace App\Filament\Widgets;
 
 use App\Filament\Traits\HasVisibilityScope;
 use App\Models\Lead;
-use Filament\Support\RawJs;
 use Filament\Widgets\ChartWidget;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -72,32 +71,17 @@ class LeadStatusChart extends ChartWidget
         return 'doughnut';
     }
 
-    protected function getOptions(): RawJs
+    protected function getOptions(): array
     {
-        return RawJs::make(<<<JS
-            {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'right',
-                    },
-                    datalabels: {
-                        color: '#fff',
-                        font: {
-                            weight: 'bold',
-                            size: 11,
-                        },
-                        formatter: (value, ctx) => {
-                            const dataset = ctx.chart.data.datasets[0];
-                            const total = dataset.data.reduce((a, b) => a + b, 0);
-                            if (total === 0 || value === 0) return '';
-                            return Math.round(value / total * 100) + '%';
-                        },
-                    },
-                },
-            }
-        JS);
+        return [
+            'responsive' => true,
+            'maintainAspectRatio' => false,
+            'plugins' => [
+                'legend' => [
+                    'display' => true,
+                    'position' => 'right',
+                ],
+            ],
+        ];
     }
 }
