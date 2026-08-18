@@ -68,7 +68,7 @@ class LeadStatusChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'doughnut';
+        return 'bar';
     }
 
     protected function getOptions(): array
@@ -79,7 +79,7 @@ class LeadStatusChart extends ChartWidget
             'plugins' => [
                 'legend' => [
                     'display' => true,
-                    'position' => 'right',
+                    'position' => 'top',
                 ],
             ],
         ];
