@@ -13,9 +13,6 @@ use App\Filament\Widgets\Reports\CustomerRevenueBySegmentWidget;
 use App\Filament\Widgets\Reports\TopCustomersWidget;
 use App\Models\Customer;
 use App\Models\CustomerGroup;
-use App\Models\Segment;
-use App\Models\Territory;
-use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -92,26 +89,11 @@ class CustomerReportPage extends Page
                                     ->options(CustomerGroup::pluck('name', 'id'))
                                     ->searchable()
                                     ->preload(),
-                                Select::make('segment_id')
-                                    ->label('Segment')
-                                    ->options(Segment::pluck('name', 'id'))
-                                    ->searchable()
-                                    ->preload(),
-                                Select::make('territory_id')
-                                    ->label('Territory')
-                                    ->options(Territory::pluck('name', 'id'))
-                                    ->searchable()
-                                    ->preload(),
-                                Select::make('user_id')
-                                    ->label('Sales Representative')
-                                    ->options(User::pluck('name', 'id'))
-                                    ->searchable()
-                                    ->preload(),
                                 Select::make('cd_ncd_type')
-                                    ->label('CD/NCD Type')
+                                    ->label('CD / LS Type')
                                     ->options([
                                         'CD' => 'CD',
-                                        'NCD' => 'NCD',
+                                        'LS' => 'LS',
                                     ]),
                             ]),
                     ])
