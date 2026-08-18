@@ -72,7 +72,7 @@ class PipelineReportPage extends Page
                 Section::make('Filters')
                     ->columnSpan(4)
                     ->schema([
-                        Grid::make(4)
+                        Grid::make(5)
                             ->schema([
                                 Select::make('user_id')
                                     ->label('Sales Representative')
