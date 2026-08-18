@@ -33,8 +33,10 @@ class PipelineReportService
         $wonValue = (clone $primaryQuery)->where('status', 'won')->sum('estimated_revenue');
         $lostValue = (clone $primaryQuery)->where('status', 'lost')->sum('estimated_revenue');
 
-        $winRate = ($wonProjects + $lostProjects) > 0
-            ? ($wonProjects / ($wonProjects + $lostProjects)) * 100
+        $nonWonProjects = (clone $primaryQuery)->where('status', '!=', 'won')->count();
+
+        $winRate = $nonWonProjects > 0
+            ? ($wonProjects / $nonWonProjects) * 100
             : 0;
 
         $averageDealSize = $wonProjects > 0 ? $wonValue / $wonProjects : 0;

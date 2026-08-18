@@ -33,7 +33,7 @@ class PipelineReportStatsWidget extends StatsOverviewWidget
                 ->description('Total estimated value'),
 
             Stat::make('Win Rate', number_format($data->winRate, 1).'%')
-                ->description('Won vs total closed'),
+                ->description('Won vs all other statuses'),
             Stat::make('Total Leads', number_format($data->totalProjects))
                 ->description("Converted: {$data->wonProjects} | Not Won: {$data->lostProjects}"),
 
