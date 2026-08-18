@@ -67,9 +67,9 @@ class ProductReportPage extends Page
         return $schema
             ->components([
                 Section::make('Date Range')
-                    ->columnSpan(2)
+                    ->columnSpan(1)
                     ->schema([
-                        Grid::make(4)
+                        Grid::make(2)
                             ->schema([
                                 DatePicker::make('start_date')
                                     ->label('Start Date')
@@ -84,9 +84,9 @@ class ProductReportPage extends Page
                     ->collapsible(),
 
                 Section::make('Filters')
-                    ->columnSpan(2)
+                    ->columnSpan(3)
                     ->schema([
-                        Grid::make(4)
+                        Grid::make(5)
                             ->schema([
                                 Select::make('principal_id')
                                     ->label('Principal')
@@ -115,8 +115,7 @@ class ProductReportPage extends Page
                                     ->preload(),
                             ]),
                     ])
-                    ->collapsible()
-                    ->collapsed(),
+                    ->collapsible(),
             ]);
     }
 
