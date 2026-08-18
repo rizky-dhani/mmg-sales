@@ -7,6 +7,7 @@ use App\DTOs\ReportFilterData;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 
@@ -101,6 +102,18 @@ class CustomerReportService
         return $periodCustomerIds->diff($beforePeriodCustomers);
     }
 
+    private function buildBreakdownQuery(ReportFilterData $filters): Builder
+    {
+        $query = $this->buildBaseQuery($filters);
+
+        $hasCustomersJoin = collect($query->getQuery()->joins ?? [])
+            ->contains(fn ($join) => ($join instanceof JoinClause ? $join->table : $join) === 'customers');
+
+        return $hasCustomersJoin
+            ? $query
+            : $query->join('customers', 'orders.end_customer_id', '=', 'customers.id');
+    }
+
     private function getTopCustomers(ReportFilterData $filters): Collection
     {
         return $this->buildBaseQuery($filters)
@@ -122,8 +135,7 @@ class CustomerReportService
 
     private function getRevenueByCustomerGroup(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
-            ->join('customers', 'orders.end_customer_id', '=', 'customers.id')
+        return $this->buildBreakdownQuery($filters)
             ->leftJoin('customer_groups', 'customers.customer_group_id', '=', 'customer_groups.id')
             ->selectRaw('customers.customer_group_id, customer_groups.name as group_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
             ->whereNotNull('customers.customer_group_id')
@@ -140,8 +152,7 @@ class CustomerReportService
 
     private function getRevenueBySegment(ReportFilterData $filters): Collection
     {
-        return $this->buildBaseQuery($filters)
-            ->join('customers', 'orders.end_customer_id', '=', 'customers.id')
+        return $this->buildBreakdownQuery($filters)
             ->leftJoin('segments', 'customers.segment_id', '=', 'segments.id')
             ->selectRaw('customers.segment_id, segments.name as segment_name, SUM(orders.total_amount) as revenue, COUNT(*) as orders')
             ->whereNotNull('customers.segment_id')
