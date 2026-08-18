@@ -55,7 +55,7 @@ class PipelineReportStatsWidget extends StatsOverviewWidget
                 ->description("{$data->wonProjects} partnerships established")
                 ->color('success'),
 
-            Stat::make('Not Won', $formatter->formatCurrency($data->lostValue, 'IDR'))
+            Stat::make('Not Converted', $formatter->formatCurrency($data->lostValue, 'IDR'))
                 ->description("{$data->lostProjects} opportunities not converted")
                 ->color('danger'),
 
