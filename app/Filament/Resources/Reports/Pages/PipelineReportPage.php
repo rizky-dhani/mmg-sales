@@ -53,7 +53,7 @@ class PipelineReportPage extends Page
         return $schema
             ->components([
                 Section::make('Date Range')
-                    ->columnSpan(2)
+                    ->columnSpan(1)
                     ->schema([
                         Grid::make(4)
                             ->schema([
@@ -70,7 +70,7 @@ class PipelineReportPage extends Page
                     ->collapsible(),
 
                 Section::make('Filters')
-                    ->columnSpan(4)
+                    ->columnSpan(3)
                     ->schema([
                         Grid::make(5)
                             ->schema([
