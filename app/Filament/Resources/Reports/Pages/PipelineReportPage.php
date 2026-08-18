@@ -70,7 +70,7 @@ class PipelineReportPage extends Page
                     ->collapsible(),
 
                 Section::make('Filters')
-                    ->columnSpan(2)
+                    ->columnSpan(4)
                     ->schema([
                         Grid::make(4)
                             ->schema([
