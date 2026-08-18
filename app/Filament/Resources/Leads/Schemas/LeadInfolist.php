@@ -45,7 +45,7 @@ class LeadInfolist
                             ->formatStateUsing(fn ($state) => $state ? strtoupper(Carbon::parse($state)->translatedFormat('M Y')) : '-')
                             ->weight('bold'),
                         TextEntry::make('collaborators')
-                            ->label('Sales Rep')
+                            ->label('Collaborator')
                             ->getStateUsing(fn ($record) => $record->collaborators->pluck('name')->join(', '))
                             ->placeholder('-'),
                         TextEntry::make('creator.name')
