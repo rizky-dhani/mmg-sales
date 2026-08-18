@@ -55,7 +55,7 @@ class PipelineReportPage extends Page
                 Section::make('Date Range')
                     ->columnSpan(1)
                     ->schema([
-                        Grid::make(4)
+                        Grid::make(2)
                             ->schema([
                                 DatePicker::make('start_date')
                                     ->label('Start Date')
