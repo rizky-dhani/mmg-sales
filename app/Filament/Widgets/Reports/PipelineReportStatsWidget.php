@@ -28,6 +28,20 @@ class PipelineReportStatsWidget extends StatsOverviewWidget
         $formatter = new NumberFormatter('id_ID', NumberFormatter::CURRENCY);
         $formatter->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, 0);
 
+        $statusLabels = [
+            'New' => 'New',
+            'Contacted' => 'Contacted',
+            'Qualified' => 'Qualified',
+            'Proposal' => 'Proposal',
+            'Negotiation' => 'Negotiation',
+            'Won' => 'Converted',
+            'Lost' => 'Not Converted',
+        ];
+
+        $statusSummary = $data->pipelineByStatus
+            ->map(fn ($row) => ($statusLabels[$row['status']] ?? $row['status']).': '.$row['count'])
+            ->implode(' | ');
+
         return [
             Stat::make('Total Pipeline Value', $formatter->formatCurrency($data->totalPipelineValue, 'IDR'))
                 ->description('Total estimated value'),
@@ -35,7 +49,7 @@ class PipelineReportStatsWidget extends StatsOverviewWidget
             Stat::make('Win Rate', number_format($data->winRate, 1).'%')
                 ->description('Leads converted to Sales'),
             Stat::make('Total Leads', number_format($data->totalProjects))
-                ->description("Converted: {$data->wonProjects} | Not Won: {$data->lostProjects}"),
+                ->description($statusSummary ?: '-'),
 
             Stat::make('Converted', $formatter->formatCurrency($data->wonValue, 'IDR'))
                 ->description("{$data->wonProjects} partnerships established")
