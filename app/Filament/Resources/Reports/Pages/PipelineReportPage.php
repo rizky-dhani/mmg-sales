@@ -115,8 +115,7 @@ class PipelineReportPage extends Page
                                     ]),
                             ]),
                     ])
-                    ->collapsible()
-                    ->collapsed(),
+                    ->collapsible(),
             ]);
     }
 
