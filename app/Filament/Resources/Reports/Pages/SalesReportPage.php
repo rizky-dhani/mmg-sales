@@ -137,10 +137,10 @@ class SalesReportPage extends Page
                                     ->preload()
                                     ->visible(fn ($get) => $get('segment_id') !== null),
                                 Select::make('cd_ncd_type')
-                                    ->label('CD/NCD Type')
+                                    ->label('CD / LS Type')
                                     ->options([
                                         'CD' => 'CD',
-                                        'NCD' => 'NCD',
+                                        'LS' => 'LS',
                                     ]),
                             ]),
                     ])
